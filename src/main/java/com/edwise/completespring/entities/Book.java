@@ -4,6 +4,8 @@ import com.edwise.completespring.util.CustomLocalDateSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.joda.time.LocalDate;
 
 import java.util.List;
@@ -11,16 +13,24 @@ import java.util.List;
 /**
  * Created by user EAnton on 04/04/2014.
  */
+@ApiModel("Book entity")
 public class Book {
 
+    @ApiModelProperty(value = "The id of the book", required = false)
     private long id;
 
+    @ApiModelProperty(value = "The title of the book", required = true)
     private String title;
+
+    @ApiModelProperty(value = "The authors of the book", required = true)
     private List<String> authors;
+
+    @ApiModelProperty(value = "The isbn of the book", required = true)
     private String isbn;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = CustomLocalDateSerializer.class)
+    @ApiModelProperty(value = "The release date of the book", required = true)
     private LocalDate releaseDate;
 
     public Book() {

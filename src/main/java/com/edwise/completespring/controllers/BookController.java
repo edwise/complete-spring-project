@@ -3,6 +3,8 @@ package com.edwise.completespring.controllers;
 import com.edwise.completespring.assemblers.BookResource;
 import com.edwise.completespring.assemblers.BookResourceAssembler;
 import com.edwise.completespring.entities.Book;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/book")
+@Api(value = "books", description = "Books API")
 public class BookController {
     private final Logger log = LoggerFactory.getLogger(BookController.class);
 
@@ -26,6 +29,7 @@ public class BookController {
     private BookResourceAssembler bookResourceAssembler;
 
     @RequestMapping(method = RequestMethod.GET)
+    @ApiOperation(value = "Get Books", notes = "Returns all books")
     public ResponseEntity<List<BookResource>> getAllBooks() {
         // TODO implementar en condiciones...
         List books = Arrays.asList(new Book(3, "Libro prueba", Arrays.asList("Edu"), "11-333-12", new LocalDate()),
@@ -37,6 +41,7 @@ public class BookController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    @ApiOperation(value = "Get one Book", notes = "Returns one book")
     public ResponseEntity<BookResource> getBook(@PathVariable long id) {
         // TODO implementar en condiciones...
         BookResource resource = bookResourceAssembler.toResource(
@@ -46,6 +51,7 @@ public class BookController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
+    @ApiOperation(value = "Create Book", notes = "Create a book")
     public void createBook(@RequestBody Book book) {
         // TODO implementar en condiciones...
         log.info("Book created: " + book.toString());
@@ -53,6 +59,7 @@ public class BookController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    @ApiOperation(value = "Update Book", notes = "Update a book")
     public void updateBook(@PathVariable long id, @RequestBody Book book) {
         // TODO implementar en condiciones...
         book.setId(id);
@@ -61,6 +68,7 @@ public class BookController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @ApiOperation(value = "Delete Book", notes = "Delete a book")
     public void deleteBook(@PathVariable long id) {
         // TODO implementar en condiciones...
         log.info("Book deleted: " + id);
