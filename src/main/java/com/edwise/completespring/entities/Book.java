@@ -1,7 +1,6 @@
 package com.edwise.completespring.entities;
 
 import com.edwise.completespring.util.CustomLocalDateSerializer;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
