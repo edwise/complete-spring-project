@@ -3,6 +3,7 @@ package com.edwise.completespring.controllers;
 import com.edwise.completespring.assemblers.BookResource;
 import com.edwise.completespring.assemblers.BookResourceAssembler;
 import com.edwise.completespring.entities.Book;
+import com.edwise.completespring.exceptions.InvalidRequestException;
 import com.edwise.completespring.services.BookService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,7 +65,10 @@ public class BookController {
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful create of a book")
     })
-    public void createBook(@RequestBody Book book) {
+    public void createBook(@RequestBody Book book, BindingResult errors) {
+        if (errors.hasErrors()) {
+            throw new InvalidRequestException(errors);
+        }
         Book bookCreated = bookService.create(book);
 
         log.info("Book created: " + bookCreated.toString());
@@ -75,7 +80,10 @@ public class BookController {
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful update of book")
     })
-    public void updateBook(@PathVariable long id, @RequestBody Book book) {
+    public void updateBook(@PathVariable long id, @RequestBody Book book, BindingResult errors) {
+        if (errors.hasErrors()) {
+            throw new InvalidRequestException(errors);
+        }
         Book dbBook = bookService.findOne(id);
         dbBook = bookService.save(dbBook.copyFrom(book));
 

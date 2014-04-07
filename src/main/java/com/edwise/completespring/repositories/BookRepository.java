@@ -12,7 +12,7 @@ import java.util.List;
 public interface BookRepository extends MongoRepository<Book, Long> {
     public static final String BOOK_COLLECTION = "books";
 
-    public Book findByTitle(String title);
+    public List<Book> findByTitle(String title);
     public List<Book> findByReleaseDate(LocalDate releaseDate);
 
 }

@@ -25,15 +25,17 @@ public class SequenceId {
         return id;
     }
 
-    public void setId(String id) {
+    public SequenceId setId(String id) {
         this.id = id;
+        return this;
     }
 
     public long getSeq() {
         return seq;
     }
 
-    public void setSeq(long seq) {
+    public SequenceId setSeq(long seq) {
         this.seq = seq;
+        return this;
     }
 }

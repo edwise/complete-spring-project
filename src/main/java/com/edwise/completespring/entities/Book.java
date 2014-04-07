@@ -22,7 +22,7 @@ public class Book {
 
     @Id
     @ApiModelProperty(value = "The id of the book", required = false)
-    private long id;
+    private Long id;
 
     @ApiModelProperty(value = "The title of the book", required = true)
     private String title;
@@ -41,7 +41,7 @@ public class Book {
     public Book() {
     }
 
-    public Book(long id, String title, List<String> authors, String isbn, LocalDate releaseDate) {
+    public Book(Long id, String title, List<String> authors, String isbn, LocalDate releaseDate) {
         this.id = id;
         this.title = title;
         this.authors = authors;
@@ -49,20 +49,22 @@ public class Book {
         this.releaseDate = releaseDate;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public Book setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public Book setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public List<String> getAuthors() {
@@ -77,16 +79,18 @@ public class Book {
         return isbn;
     }
 
-    public void setIsbn(String isbn) {
+    public Book setIsbn(String isbn) {
         this.isbn = isbn;
+        return this;
     }
 
     public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(LocalDate releaseDate) {
+    public Book setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+        return this;
     }
 
     public Book copyFrom(Book other) {
