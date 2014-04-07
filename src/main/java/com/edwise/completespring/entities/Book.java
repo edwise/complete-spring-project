@@ -6,16 +6,21 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
 /**
  * Created by user EAnton on 04/04/2014.
  */
-@ApiModel("Book entity")
+@Document(collection = "books")
+@ApiModel(value = "Book entity", description = "Complete info of a entity book")
 public class Book {
 
+    @Id
     @ApiModelProperty(value = "The id of the book", required = false)
     private long id;
 
@@ -82,6 +87,23 @@ public class Book {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public Book copyFrom(Book other) {
+        if (StringUtils.isNotBlank(other.title)) {
+            this.title = other.title;
+        }
+        if (other.authors != null && other.authors.size() > 0) {
+            this.authors = other.authors;
+        }
+        if (StringUtils.isNotBlank(other.isbn)) {
+            this.isbn = other.isbn;
+        }
+        if (other.releaseDate != null) {
+            this.releaseDate = other.releaseDate;
+        }
+
+        return this;
     }
 
     @Override

@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 

@@ -73,7 +73,7 @@ public class SwaggerConfig {
         ApiInfo apiInfo = new ApiInfo(
                 "Books API",
                 "Your book database!",
-                "https://twitter.com/edwise",
+                "/termsService.html",
                 "edwise.null@gmail.com",
                 "Apache 2.0",
                 "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -85,7 +85,7 @@ public class SwaggerConfig {
      * Configure a SwaggerApiResourceListing for each swagger instance within your app. e.g. 1. private  2. external apis
      * Required to be a spring bean as spring will call the postConstruct method to bootstrap swagger scanning.
      *
-     * @return
+     * @return SwaggerApiResourceListing
      */
     @Bean
     public SwaggerApiResourceListing swaggerApiResourceListing() {
