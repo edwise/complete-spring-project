@@ -34,17 +34,8 @@ public class ApiPathProvider implements SwaggerPathProvider {
     }
 
     @Override
-    public String getSwaggerDocumentationBasePath() {
-        return UriComponentsBuilder
-                .fromHttpUrl(getAppBasePath())
-                .pathSegment("api-docs/")
-                .build()
-                .toString();
-    }
-
-    @Override
-    public String getRequestMappingEndpoint(String requestMappingPattern) {
-        return defaultSwaggerPathProvider.getRequestMappingEndpoint(requestMappingPattern);
+    public String sanitizeRequestMappingPattern(String requestMappingPattern) {
+        return defaultSwaggerPathProvider.sanitizeRequestMappingPattern(requestMappingPattern);
     }
 
     public void setDefaultSwaggerPathProvider(SwaggerPathProvider defaultSwaggerPathProvider) {

@@ -21,24 +21,18 @@ import java.util.List;
 public class Book {
 
     @Id
-    @ApiModelProperty(value = "The id of the book", required = false)
     private Long id;
 
-    @ApiModelProperty(value = "The title of the book", required = true)
     private String title;
 
-    @ApiModelProperty(value = "The authors of the book", required = true, dataType = "java.util.List")
     private List<Author> authors;
 
-    @ApiModelProperty(value = "The isbn of the book", required = true)
     private String isbn;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = CustomLocalDateSerializer.class)
-    @ApiModelProperty(value = "The release date of the book", required = true)
     private LocalDate releaseDate;
 
-    @ApiModelProperty(value = "The publisher of the book", required = true)
     private Publisher publisher;
 
     public Book() {
@@ -53,6 +47,7 @@ public class Book {
         this.publisher = publisher;
     }
 
+    @ApiModelProperty(value = "The id of the book", required = false)
     public Long getId() {
         return id;
     }
@@ -62,6 +57,7 @@ public class Book {
         return this;
     }
 
+    @ApiModelProperty(value = "The title of the book", required = true)
     public String getTitle() {
         return title;
     }
@@ -71,6 +67,7 @@ public class Book {
         return this;
     }
 
+    @ApiModelProperty(value = "The authors of the book", required = true)
     public List<Author> getAuthors() {
         return authors;
     }
@@ -80,6 +77,7 @@ public class Book {
         return this;
     }
 
+    @ApiModelProperty(value = "The isbn of the book", required = true)
     public String getIsbn() {
         return isbn;
     }
@@ -89,6 +87,8 @@ public class Book {
         return this;
     }
 
+    @ApiModelProperty(value = "The release date of the book", required = true, allowableValues = "YYYY-MM-DD",
+            dataType = "org.joda.time.LocalDate")
     public LocalDate getReleaseDate() {
         return releaseDate;
     }
@@ -98,6 +98,7 @@ public class Book {
         return this;
     }
 
+    @ApiModelProperty(value = "The publisher of the book", required = true)
     public Publisher getPublisher() {
         return publisher;
     }

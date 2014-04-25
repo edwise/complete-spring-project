@@ -5,10 +5,7 @@ import com.edwise.completespring.assemblers.BookResourceAssembler;
 import com.edwise.completespring.entities.Book;
 import com.edwise.completespring.exceptions.InvalidRequestException;
 import com.edwise.completespring.services.BookService;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
+import com.wordnik.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +49,8 @@ public class BookController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Exists this book")
     })
-    public ResponseEntity<BookResource> getBook(@PathVariable long id) {
+    public ResponseEntity<BookResource> getBook(@ApiParam(defaultValue = "1", value = "The id of the book to return")
+                                                @PathVariable long id) {
         Book book = bookService.findOne(id);
 
         BookResource resource = bookResourceAssembler.toResource(book);
@@ -80,7 +78,9 @@ public class BookController {
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful update of book")
     })
-    public void updateBook(@PathVariable long id, @RequestBody Book book, BindingResult errors) {
+    public void updateBook(@ApiParam(defaultValue = "1", value = "The id of the book to update")
+                           @PathVariable long id,
+                           @RequestBody Book book, BindingResult errors) {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }
@@ -96,7 +96,8 @@ public class BookController {
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful delete of a book")
     })
-    public void deleteBook(@PathVariable long id) {
+    public void deleteBook(@ApiParam(defaultValue = "1", value = "The id of the book to delete")
+                           @PathVariable long id) {
         bookService.delete(id);
 
         log.info("Book deleted: " + id);

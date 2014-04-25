@@ -9,15 +9,13 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "Publisher entity", description = "Complete info of a entity publisher")
 public class Publisher {
 
-    @ApiModelProperty(value = "The name of the publisher", required = true)
     private String name;
 
-    @ApiModelProperty(value = "The country of the publisher", required = true)
     private String country;
 
-    @ApiModelProperty(value = "If the publisher is online or not", required = true)
     private boolean isOnline;
 
+    @ApiModelProperty(value = "The name of the publisher", required = true)
     public String getName() {
         return name;
     }
@@ -27,6 +25,7 @@ public class Publisher {
         return this;
     }
 
+    @ApiModelProperty(value = "The country of the publisher", required = true)
     public String getCountry() {
         return country;
     }
@@ -36,6 +35,7 @@ public class Publisher {
         return this;
     }
 
+    @ApiModelProperty(value = "If the publisher is online or not", required = true)
     public boolean isOnline() {
         return isOnline;
     }

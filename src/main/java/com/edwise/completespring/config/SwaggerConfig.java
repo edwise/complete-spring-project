@@ -1,44 +1,49 @@
 package com.edwise.completespring.config;
 
+import com.fasterxml.classmate.TypeResolver;
 import com.mangofactory.swagger.configuration.JacksonScalaSupport;
 import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
-import com.mangofactory.swagger.configuration.SpringSwaggerModelConfig;
 import com.mangofactory.swagger.configuration.SwaggerGlobalSettings;
 import com.mangofactory.swagger.core.DefaultSwaggerPathProvider;
 import com.mangofactory.swagger.core.SwaggerApiResourceListing;
 import com.mangofactory.swagger.core.SwaggerPathProvider;
+import com.mangofactory.swagger.models.alternates.AlternateTypeProvider;
+import com.mangofactory.swagger.models.alternates.WildcardType;
 import com.mangofactory.swagger.scanners.ApiListingReferenceScanner;
 import com.wordnik.swagger.model.*;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.mangofactory.swagger.models.alternates.Alternates.newRule;
 
 /**
  * Created by user EAnton on 04/04/2014.
  */
 @Configuration
-@ComponentScan(basePackages = "com.mangofactory.swagger")
+@ComponentScan(basePackages = "com.mangofactory.swagger.configuration")
 public class SwaggerConfig {
 
     public static final List<String> DEFAULT_INCLUDE_PATTERNS = Arrays.asList("/.*");
-//    public static final List<String> DEFAULT_INCLUDE_PATTERNS = Arrays.asList("/news/.*");
     public static final String SWAGGER_GROUP = "book-api";
+    public static final String RELATIVE_GROUP = "";
 
     @Value("${app.swagger.docs}")
     private String docsLocation;
 
     @Autowired
     private SpringSwaggerConfig springSwaggerConfig;
-    @Autowired
-    private SpringSwaggerModelConfig springSwaggerModelConfig;
 
     /**
      * Adds the jackson scala module to the MappingJackson2HttpMessageConverter registered with spring
@@ -61,8 +66,21 @@ public class SwaggerConfig {
     public SwaggerGlobalSettings swaggerGlobalSettings() {
         SwaggerGlobalSettings swaggerGlobalSettings = new SwaggerGlobalSettings();
         swaggerGlobalSettings.setGlobalResponseMessages(springSwaggerConfig.defaultResponseMessages());
-        swaggerGlobalSettings.setIgnorableParameterTypes(springSwaggerConfig.defaultIgnorableParameterTypes());
-        swaggerGlobalSettings.setParameterDataTypes(springSwaggerModelConfig.defaultParameterDataTypes());
+
+        Set<Class> ignorableParameterTypes = springSwaggerConfig.defaultIgnorableParameterTypes();
+        ignorableParameterTypes.add(LocalDate.class);
+        swaggerGlobalSettings.setIgnorableParameterTypes(ignorableParameterTypes);
+
+        AlternateTypeProvider alternateTypeProvider = springSwaggerConfig.defaultAlternateTypeProvider();
+        TypeResolver typeResolver = new TypeResolver();
+        alternateTypeProvider.addRule(newRule(typeResolver.resolve(ResponseEntity.class),
+                typeResolver.resolve(Void.class)));
+        alternateTypeProvider.addRule(newRule(typeResolver.resolve(ResponseEntity.class, WildcardType.class),
+                typeResolver.resolve(WildcardType.class)));
+        alternateTypeProvider.addRule(newRule(typeResolver.resolve(HttpEntity.class, WildcardType.class),
+                typeResolver.resolve(WildcardType.class)));
+        swaggerGlobalSettings.setAlternateTypeProvider(alternateTypeProvider);
+
         return swaggerGlobalSettings;
     }
 
@@ -73,7 +91,7 @@ public class SwaggerConfig {
         ApiInfo apiInfo = new ApiInfo(
                 "Books API",
                 "Your book database!",
-                "/termsService.html",
+                "http://en.wikipedia.org/wiki/Terms_of_service",
                 "edwise.null@gmail.com",
                 "Apache 2.0",
                 "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -166,6 +184,18 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public ApiListingReferenceScanner relativeApiListingReferenceScanner() {
+        ApiListingReferenceScanner apiListingReferenceScanner = new ApiListingReferenceScanner();
+        apiListingReferenceScanner.setRequestMappingHandlerMapping(springSwaggerConfig.swaggerRequestMappingHandlerMappings());
+        apiListingReferenceScanner.setExcludeAnnotations(springSwaggerConfig.defaultExcludeAnnotations());
+        apiListingReferenceScanner.setResourceGroupingStrategy(springSwaggerConfig.defaultResourceGroupingStrategy());
+        apiListingReferenceScanner.setSwaggerPathProvider(relativeSwaggerPathProvider());
+        apiListingReferenceScanner.setSwaggerGroup(RELATIVE_GROUP);
+        apiListingReferenceScanner.setIncludePatterns(DEFAULT_INCLUDE_PATTERNS);
+        return apiListingReferenceScanner;
+    }
+
+    @Bean
     public SwaggerPathProvider relativeSwaggerPathProvider() {
         return new ApiRelativeSwaggerPathProvider();
     }
@@ -174,11 +204,6 @@ public class SwaggerConfig {
         @Override
         public String getAppBasePath() {
             return "/";
-        }
-
-        @Override
-        public String getSwaggerDocumentationBasePath() {
-            return "/api-docs";
         }
     }
 }

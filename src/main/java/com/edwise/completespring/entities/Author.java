@@ -9,12 +9,11 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "Author entity", description = "Complete info of a entity author")
 public class Author {
 
-    @ApiModelProperty(value = "The name of the author", required = true)
     private String name;
 
-    @ApiModelProperty(value = "The surname of the author", required = false)
     private String surname;
 
+    @ApiModelProperty(value = "The name of the author", required = true)
     public String getName() {
         return name;
     }
@@ -24,6 +23,7 @@ public class Author {
         return this;
     }
 
+    @ApiModelProperty(value = "The surname of the author", required = false)
     public String getSurname() {
         return surname;
     }
