@@ -18,9 +18,10 @@ import java.util.List;
 
 /**
  * Created by user EAnton on 04/04/2014.
+ *
+ * Url: /api/book
  */
 @RestController
-@RequestMapping("/api/book")
 @Api(value = "books", description = "Books API")
 public class BookController {
     private final Logger log = LoggerFactory.getLogger(BookController.class);
@@ -32,7 +33,7 @@ public class BookController {
     private BookService bookService;
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value = "/api/book")
     @ApiOperation(value = "Get Books", notes = "Returns all books")
     @ApiResponses({
             @ApiResponse(code = 200, response = BookResource.class, message = "Exits one book at least")
@@ -44,7 +45,7 @@ public class BookController {
         return new ResponseEntity<>(resourceList, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/book/{id}")
     @ApiOperation(value = "Get one Book", response = BookResource.class, notes = "Returns one book")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Exists this book")
@@ -58,7 +59,7 @@ public class BookController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, value = "/api/book")
     @ApiOperation(value = "Create Book", notes = "Create a book")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful create of a book")
@@ -73,7 +74,7 @@ public class BookController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/book/{id}")
     @ApiOperation(value = "Update Book", notes = "Update a book")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful update of book")
@@ -91,7 +92,7 @@ public class BookController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/api/book/{id}")
     @ApiOperation(value = "Delete Book", notes = "Delete a book")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful delete of a book")

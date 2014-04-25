@@ -36,7 +36,7 @@ import static com.mangofactory.swagger.models.alternates.Alternates.newRule;
 public class SwaggerConfig {
 
     public static final List<String> DEFAULT_INCLUDE_PATTERNS = Arrays.asList("/.*");
-    public static final String SWAGGER_GROUP = "book-api";
+    public static final String SWAGGER_GROUP = "external";
     public static final String RELATIVE_GROUP = "";
 
     @Value("${app.swagger.docs}")
