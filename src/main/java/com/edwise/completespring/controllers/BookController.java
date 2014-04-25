@@ -38,7 +38,7 @@ public class BookController {
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Get Books", notes = "Returns all books")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Exits one book at least")
+            @ApiResponse(code = 200, response = BookResource.class, message = "Exits one book at least")
     })
     public ResponseEntity<List<BookResource>> getAllBooks() {
         List books = bookService.findAll();
@@ -48,7 +48,7 @@ public class BookController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    @ApiOperation(value = "Get one Book", notes = "Returns one book")
+    @ApiOperation(value = "Get one Book", response = BookResource.class, notes = "Returns one book")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Exists this book")
     })

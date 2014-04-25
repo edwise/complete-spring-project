@@ -1,6 +1,8 @@
 package com.edwise.completespring.services;
 
+import com.edwise.completespring.entities.Author;
 import com.edwise.completespring.entities.Book;
+import com.edwise.completespring.entities.Publisher;
 import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
@@ -42,9 +44,14 @@ public class BookServiceTest {
 
     @Test
     public void testFindAll() {
-        List books = Arrays.asList(new Book(3l, "Libro prueba", Arrays.asList("Edu"), "11-333-12", new LocalDate()),
-                new Book(400l, "Libro prueba 2", Arrays.asList("Otro", "S. King"), "12-1234-12", new LocalDate()),
-                new Book(14l, "Libro prueba 3", Arrays.asList("Nadie"), "12-9999-92", new LocalDate()));
+        List<Book> books = Arrays.asList(new Book(3l, "Libro prueba", Arrays.asList(new Author().setName("Edu")), "11-333-12",
+                        new LocalDate(), new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)),
+                new Book(400l, "Libro prueba 2", Arrays.asList(new Author().setName("Otro"), new Author().setName("S. King")),
+                        "12-1234-12",
+                        new LocalDate(), new Publisher().setName("Editorial 5").setCountry("US").setOnline(false)),
+                new Book(14l, "Libro prueba 3", Arrays.asList(new Author().setName("Nadie")), "12-9999-92", new LocalDate(),
+                        new Publisher().setName("Editorial 4").setCountry("UK").setOnline(true))
+        );
 
         when(bookRepository.findAll()).thenReturn(books);
         List<Book> result = service.findAll();
@@ -97,8 +104,11 @@ public class BookServiceTest {
     @Test
     public void testFindByTitle() {
         String comunTitle = "Titulo igual";
-        List books = Arrays.asList(new Book(3l, comunTitle, Arrays.asList("Edu"), "11-333-12", new LocalDate()),
-                new Book(14l, comunTitle, Arrays.asList("Nadie"), "12-9999-92", new LocalDate()));
+        List books = Arrays.asList(new Book(3l, comunTitle, Arrays.asList(new Author().setName("Edu")), "11-333-12", new LocalDate(),
+                        new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)),
+                new Book(14l, comunTitle, Arrays.asList(new Author().setName("Nadie")), "12-9999-92", new LocalDate(),
+                        new Publisher().setName("Editorial 5").setCountry("US").setOnline(true))
+        );
 
         when(bookRepository.findByTitle(comunTitle)).thenReturn(books);
         List<Book> result = service.findByTitle(comunTitle);
@@ -109,8 +119,11 @@ public class BookServiceTest {
     @Test
     public void testFindByReleaseDate() {
         LocalDate comunLocalDate = new LocalDate();
-        List books = Arrays.asList(new Book(3l, "Libro prueba", Arrays.asList("Edu"), "11-333-12", comunLocalDate),
-                new Book(14l, "Libro prueba 2", Arrays.asList("Nadie"), "12-9999-92", comunLocalDate));
+        List books = Arrays.asList(new Book(3l, "Libro prueba", Arrays.asList(new Author().setName("Edu")), "11-333-12", comunLocalDate,
+                        new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)),
+                new Book(14l, "Libro prueba 2", Arrays.asList(new Author().setName("Nadie")), "12-9999-92", comunLocalDate,
+                        new Publisher().setName("Editorial 5").setCountry("US").setOnline(true))
+        );
 
         when(bookRepository.findByReleaseDate(comunLocalDate)).thenReturn(books);
         List<Book> result = service.findByReleaseDate(comunLocalDate);

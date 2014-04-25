@@ -32,7 +32,7 @@ public class SwaggerConfig {
 //    public static final List<String> DEFAULT_INCLUDE_PATTERNS = Arrays.asList("/news/.*");
     public static final String SWAGGER_GROUP = "book-api";
 
-    @Value("${app.docs}")
+    @Value("${app.swagger.docs}")
     private String docsLocation;
 
     @Autowired

@@ -27,8 +27,8 @@ public class Book {
     @ApiModelProperty(value = "The title of the book", required = true)
     private String title;
 
-    @ApiModelProperty(value = "The authors of the book", required = true)
-    private List<String> authors;
+    @ApiModelProperty(value = "The authors of the book", required = true, dataType = "java.util.List")
+    private List<Author> authors;
 
     @ApiModelProperty(value = "The isbn of the book", required = true)
     private String isbn;
@@ -38,15 +38,19 @@ public class Book {
     @ApiModelProperty(value = "The release date of the book", required = true)
     private LocalDate releaseDate;
 
+    @ApiModelProperty(value = "The publisher of the book", required = true)
+    private Publisher publisher;
+
     public Book() {
     }
 
-    public Book(Long id, String title, List<String> authors, String isbn, LocalDate releaseDate) {
+    public Book(Long id, String title, List<Author> authors, String isbn, LocalDate releaseDate, Publisher publisher) {
         this.id = id;
         this.title = title;
         this.authors = authors;
         this.isbn = isbn;
         this.releaseDate = releaseDate;
+        this.publisher = publisher;
     }
 
     public Long getId() {
@@ -67,12 +71,13 @@ public class Book {
         return this;
     }
 
-    public List<String> getAuthors() {
+    public List<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<String> authors) {
+    public Book setAuthors(List<Author> authors) {
         this.authors = authors;
+        return this;
     }
 
     public String getIsbn() {
@@ -93,11 +98,21 @@ public class Book {
         return this;
     }
 
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
+    public Book setPublisher(Publisher publisher) {
+        this.publisher = publisher;
+        return this;
+    }
+
     public Book copyFrom(Book other) {
         if (StringUtils.isNotBlank(other.title)) {
             this.title = other.title;
         }
         if (other.authors != null && other.authors.size() > 0) {
+            // TODO revisar si hacer un "clone" o similar para los authors
             this.authors = other.authors;
         }
         if (StringUtils.isNotBlank(other.isbn)) {
@@ -105,6 +120,11 @@ public class Book {
         }
         if (other.releaseDate != null) {
             this.releaseDate = other.releaseDate;
+        }
+
+        if (other.publisher != null) {
+            // TODO revisar si hacer un "clone" o similar para los publisher
+            this.publisher = other.publisher;
         }
 
         return this;
@@ -118,6 +138,7 @@ public class Book {
                 ", authors=" + authors +
                 ", isbn='" + isbn + '\'' +
                 ", releaseDate=" + releaseDate +
+                ", publisher=" + publisher +
                 '}';
     }
 }

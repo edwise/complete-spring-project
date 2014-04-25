@@ -2,7 +2,9 @@ package com.edwise.completespring.controllers;
 
 import com.edwise.completespring.assemblers.BookResource;
 import com.edwise.completespring.assemblers.BookResourceAssembler;
+import com.edwise.completespring.entities.Author;
 import com.edwise.completespring.entities.Book;
+import com.edwise.completespring.entities.Publisher;
 import com.edwise.completespring.exceptions.InvalidRequestException;
 import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.services.BookService;
@@ -71,7 +73,7 @@ public class BookControllerTest {
 
     @Test
     public void testCreate() {
-        Book bookReq = new Book(-1l, "Libro prueba", Arrays.asList("Edu"), "11-333-12", new LocalDate());
+        Book bookReq = new Book(-1l, "Libro prueba", Arrays.asList(new Author().setName("Edu")), "11-333-12", new LocalDate(), new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
         Book bookResp = new Book().copyFrom(bookReq).setId(1l);
         when(errors.hasErrors()).thenReturn(false);
         when(bookService.create(bookReq)).thenReturn(bookResp);
@@ -92,7 +94,7 @@ public class BookControllerTest {
     @Test
     public void testUpdate() {
         Long id = 1l;
-        Book bookReq = new Book(1l, "Libro prueba", Arrays.asList("Edu"), "11-333-12", new LocalDate());
+        Book bookReq = new Book(1l, "Libro prueba", Arrays.asList(new Author().setName("Edu")), "11-333-12", new LocalDate(), new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
         Book fooDB = new Book().setId(1l);
         when(bookService.findOne(id)).thenReturn(fooDB);
         when(bookService.save(fooDB.copyFrom(bookReq))).thenReturn(fooDB.copyFrom(bookReq));
@@ -107,10 +109,11 @@ public class BookControllerTest {
         Long id = 1l;
         String sampleTitle = "Sample Text";
         String sampleIsbn = "Sample Isbn";
-        List<String> sampleAuthors = Arrays.asList("SampleAuthor");
+        List<Author> sampleAuthors = Arrays.asList(new Author().setName("SampleAuthor"));
         LocalDate sampleDate = new LocalDate();
+        Publisher samplePublisher = new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false);
 
-        Book bookReq = new Book(id, sampleTitle, sampleAuthors, sampleIsbn, sampleDate);
+        Book bookReq = new Book(id, sampleTitle, sampleAuthors, sampleIsbn, sampleDate, samplePublisher);
         when(bookService.findOne(id)).thenReturn(bookReq);
         ResponseEntity<BookResource> result = controller.getBook(id);
         verify(bookService, times(1)).findOne(id);
@@ -127,7 +130,8 @@ public class BookControllerTest {
     @Test(expected = NotFoundException.class)
     public void testUpdateNotFound() {
         Long id = 1l;
-        Book bookReq = new Book(1l, "Libro prueba", Arrays.asList("Edu"), "11-333-12", new LocalDate());
+        Book bookReq = new Book(1l, "Libro prueba", Arrays.asList(new Author().setName("Edu")), "11-333-12", new LocalDate(),
+                new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
         when(bookService.findOne(id)).thenThrow(new NotFoundException());
         controller.updateBook(id, bookReq, errors);
     }
@@ -143,9 +147,14 @@ public class BookControllerTest {
     @Test
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void testFindAll() {
-        List books = Arrays.asList(new Book(3l, "Libro prueba", Arrays.asList("Edu"), "11-333-12", new LocalDate()),
-                new Book(400l, "Libro prueba 2", Arrays.asList("Otro", "S. King"), "12-1234-12", new LocalDate()),
-                new Book(14l, "Libro prueba 3", Arrays.asList("Nadie"), "12-9999-92", new LocalDate()));
+        List books = Arrays.asList(new Book(3l, "Libro prueba", Arrays.asList(new Author().setName("Edu")), "11-333-12", new LocalDate(),
+                        new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)),
+                new Book(400l, "Libro prueba 2", Arrays.asList(new Author().setName("Otro"), new Author().setName("S. King")),
+                        "12-1234-12",
+                        new LocalDate(), new Publisher().setName("Editorial 2").setCountry("UK").setOnline(true)),
+                new Book(14l, "Libro prueba 3", Arrays.asList(new Author().setName("Nadie")), "12-9999-92", new LocalDate(),
+                        new Publisher().setName("Editorial 4").setCountry("ES").setOnline(false))
+        );
 
         when(bookService.findAll()).thenReturn(books);
         ResponseEntity<List<BookResource>> result = controller.getAllBooks();
