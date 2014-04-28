@@ -6,6 +6,7 @@ import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * Created by user EAnton on 04/04/2014.
@@ -20,7 +21,7 @@ public class BookResourceAssembler extends ResourceAssemblerSupport<Book, BookRe
     public BookResource toResource(Book book) {
         BookResource result = instantiateResource(book);
         result.book = book;
-        result.add(linkTo(BookController.class).slash(book.getId()).withSelfRel());
+        result.add(linkTo(methodOn(BookController.class).getAll()).slash(book.getId()).withSelfRel());
 
         return result;
     }

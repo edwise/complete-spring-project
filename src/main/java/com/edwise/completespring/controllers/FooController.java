@@ -35,8 +35,8 @@ public class FooController {
     @ApiResponses({
             @ApiResponse(code = 200, response = FooResource.class, message = "Exits one foo at least")
     })
-    public ResponseEntity<List<FooResource>> getAllFoos() {
-        List foos = Arrays.asList(
+    public ResponseEntity<List<FooResource>> getAll() {
+        List<Foo> foos = Arrays.asList(
                 new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(new LocalDate()),
                 new Foo().setId(2l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(new LocalDate())
         );

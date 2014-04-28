@@ -145,9 +145,9 @@ public class BookControllerTest {
     }
 
     @Test
-    @SuppressWarnings({"rawtypes", "unchecked"})
     public void testFindAll() {
-        List books = Arrays.asList(new Book(3l, "Libro prueba", Arrays.asList(new Author().setName("Edu")), "11-333-12", new LocalDate(),
+        List<Book> books = Arrays.asList(new Book(3l, "Libro prueba", Arrays.asList(new Author().setName("Edu")), "11-333-12",
+                        new LocalDate(),
                         new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)),
                 new Book(400l, "Libro prueba 2", Arrays.asList(new Author().setName("Otro"), new Author().setName("S. King")),
                         "12-1234-12",
@@ -157,7 +157,7 @@ public class BookControllerTest {
         );
 
         when(bookService.findAll()).thenReturn(books);
-        ResponseEntity<List<BookResource>> result = controller.getAllBooks();
+        ResponseEntity<List<BookResource>> result = controller.getAll();
         assertNotNull(result.getBody());
     }
 }

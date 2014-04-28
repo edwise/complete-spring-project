@@ -88,7 +88,7 @@ public class SwaggerConfig {
      * API Info as it appears on the swagger-ui page
      */
     private ApiInfo apiInfo() {
-        ApiInfo apiInfo = new ApiInfo(
+        return new ApiInfo(
                 "Books API",
                 "Your book database!",
                 "http://en.wikipedia.org/wiki/Terms_of_service",
@@ -96,7 +96,6 @@ public class SwaggerConfig {
                 "Apache 2.0",
                 "http://www.apache.org/licenses/LICENSE-2.0.html"
         );
-        return apiInfo;
     }
 
     /**

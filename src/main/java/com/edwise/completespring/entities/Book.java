@@ -11,6 +11,7 @@ import org.joda.time.LocalDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -113,8 +114,10 @@ public class Book {
             this.title = other.title;
         }
         if (other.authors != null && other.authors.size() > 0) {
-            // TODO revisar si hacer un "clone" o similar para los authors
-            this.authors = other.authors;
+            this.authors = new ArrayList<>();
+            for (Author author : other.authors) {
+                this.authors.add(new Author().copyFrom(author));
+            }
         }
         if (StringUtils.isNotBlank(other.isbn)) {
             this.isbn = other.isbn;
@@ -124,11 +127,33 @@ public class Book {
         }
 
         if (other.publisher != null) {
-            // TODO revisar si hacer un "clone" o similar para los publisher
-            this.publisher = other.publisher;
+            this.publisher = new Publisher().copyFrom(other.publisher);
         }
 
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Book book = (Book) o;
+        return !(authors != null ? !authors.equals(book.authors) : book.authors != null) && !(isbn != null ? !isbn.equals(book.isbn) :
+                book.isbn != null) && !(publisher != null ? !publisher.equals(book.publisher) : book.publisher != null) && !(releaseDate
+                != null ? !releaseDate.equals(book.releaseDate) : book.releaseDate != null) && !(title != null ? !title.equals(book
+                .title) : book.title != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title != null ? title.hashCode() : 0;
+        result = 31 * result + (authors != null ? authors.hashCode() : 0);
+        result = 31 * result + (isbn != null ? isbn.hashCode() : 0);
+        result = 31 * result + (releaseDate != null ? releaseDate.hashCode() : 0);
+        result = 31 * result + (publisher != null ? publisher.hashCode() : 0);
+        return result;
     }
 
     @Override

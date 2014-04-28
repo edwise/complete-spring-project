@@ -2,6 +2,7 @@ package com.edwise.completespring.entities;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by user EAnton on 25/04/2014.
@@ -43,5 +44,45 @@ public class Publisher {
     public Publisher setOnline(boolean isOnline) {
         this.isOnline = isOnline;
         return this;
+    }
+
+    public Publisher copyFrom(Publisher other) {
+        if (StringUtils.isNotBlank(other.name)) {
+            this.name = other.name;
+        }
+        if (StringUtils.isNotBlank(other.country)) {
+            this.country = other.country;
+        }
+        this.isOnline = other.isOnline;
+
+
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Publisher publisher = (Publisher) o;
+        return isOnline == publisher.isOnline && !(country != null ? !country.equals(publisher.country) : publisher.country != null) && !
+                (name != null ? !name.equals(publisher.name) : publisher.name != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        result = 31 * result + (isOnline ? 1 : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Publisher{" +
+                "name='" + name + '\'' +
+                ", country='" + country + '\'' +
+                ", isOnline=" + isOnline +
+                '}';
     }
 }

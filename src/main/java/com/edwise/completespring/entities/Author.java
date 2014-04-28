@@ -2,6 +2,7 @@ package com.edwise.completespring.entities;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by user EAnton on 24/04/2014.
@@ -31,6 +32,35 @@ public class Author {
     public Author setSurname(String surname) {
         this.surname = surname;
         return this;
+    }
+
+    public Author copyFrom(Author other) {
+        if (StringUtils.isNotBlank(other.name)) {
+            this.name = other.name;
+        }
+        if (StringUtils.isNotBlank(other.surname)) {
+            this.surname = other.surname;
+        }
+
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Author author = (Author) o;
+        return !(name != null ? !name.equals(author.name) : author.name != null) && !(surname != null ? !surname.equals(author.surname) :
+                author.surname != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (surname != null ? surname.hashCode() : 0);
+        return result;
     }
 
     @Override
