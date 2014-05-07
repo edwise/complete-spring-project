@@ -8,6 +8,8 @@ Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / fu
 
  - Capa de base de datos con Spring DATA mongoDB
 
+ - Jacoco para la cobertura de tests (plugin para maven)
+
 
 
  Requisitos:
@@ -25,6 +27,8 @@ Urls de acceso:
  - Swagger UI    -> http://localhost:8080/index.html
 
  - REST Books    -> http://localhost:8080/api/book
+
+ - Jacoco        -> DIRECTORIO_PROYECTO/target/sites/jacoco/index.html
 
 
 
