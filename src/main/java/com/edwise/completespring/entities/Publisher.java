@@ -2,7 +2,6 @@ package com.edwise.completespring.entities;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by user EAnton on 25/04/2014.
@@ -47,14 +46,9 @@ public class Publisher {
     }
 
     public Publisher copyFrom(Publisher other) {
-        if (StringUtils.isNotBlank(other.name)) {
-            this.name = other.name;
-        }
-        if (StringUtils.isNotBlank(other.country)) {
-            this.country = other.country;
-        }
+        this.name = other.name;
+        this.country = other.country;
         this.isOnline = other.isOnline;
-
 
         return this;
     }

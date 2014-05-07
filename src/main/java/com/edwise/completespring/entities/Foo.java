@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 
 /**
@@ -53,12 +52,8 @@ public class Foo {
     }
 
     public Foo copyFrom(Foo other) {
-        if (StringUtils.isNotBlank(other.sampleTextAttribute)) {
-            this.sampleTextAttribute = other.sampleTextAttribute;
-        }
-        if (other.sampleLocalDateAttribute != null) {
-            this.sampleLocalDateAttribute = other.sampleLocalDateAttribute;
-        }
+        this.sampleTextAttribute = other.sampleTextAttribute;
+        this.sampleLocalDateAttribute = other.sampleLocalDateAttribute;
 
         return this;
     }

@@ -38,4 +38,12 @@ public class SequenceId {
         this.seq = seq;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "SequenceId{" +
+                "id='" + id + '\'' +
+                ", seq=" + seq +
+                '}';
+    }
 }

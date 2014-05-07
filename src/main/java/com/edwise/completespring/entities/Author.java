@@ -2,7 +2,6 @@ package com.edwise.completespring.entities;
 
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by user EAnton on 24/04/2014.
@@ -35,12 +34,8 @@ public class Author {
     }
 
     public Author copyFrom(Author other) {
-        if (StringUtils.isNotBlank(other.name)) {
-            this.name = other.name;
-        }
-        if (StringUtils.isNotBlank(other.surname)) {
-            this.surname = other.surname;
-        }
+        this.name = other.name;
+        this.surname = other.surname;
 
         return this;
     }

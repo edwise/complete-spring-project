@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -110,22 +109,15 @@ public class Book {
     }
 
     public Book copyFrom(Book other) {
-        if (StringUtils.isNotBlank(other.title)) {
-            this.title = other.title;
-        }
-        if (other.authors != null && other.authors.size() > 0) {
+        this.title = other.title;
+        if (other.authors != null) {
             this.authors = new ArrayList<>();
             for (Author author : other.authors) {
                 this.authors.add(new Author().copyFrom(author));
             }
         }
-        if (StringUtils.isNotBlank(other.isbn)) {
-            this.isbn = other.isbn;
-        }
-        if (other.releaseDate != null) {
-            this.releaseDate = other.releaseDate;
-        }
-
+        this.isbn = other.isbn;
+        this.releaseDate = other.releaseDate;
         if (other.publisher != null) {
             this.publisher = new Publisher().copyFrom(other.publisher);
         }

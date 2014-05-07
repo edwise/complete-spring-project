@@ -35,7 +35,7 @@ public class BookServiceTest {
 
 
     @Before
-    public void init() {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         service = new BookServiceImpl();
         ReflectionTestUtils.setField(this.service, "bookRepository", this.bookRepository); // inject bookRepository
@@ -101,6 +101,7 @@ public class BookServiceTest {
         assertEquals(saved.getId(), Long.valueOf(5l));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testFindByTitle() {
         String comunTitle = "Titulo igual";
@@ -116,6 +117,7 @@ public class BookServiceTest {
         assertEquals("2 elements in page", 2, result.size());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testFindByReleaseDate() {
         LocalDate comunLocalDate = new LocalDate();

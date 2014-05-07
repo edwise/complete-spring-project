@@ -44,7 +44,7 @@ public class BookControllerTest {
 
 
     @Before
-    public void init() {
+    public void setUp() {
         this.request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(this.request));
         MockitoAnnotations.initMocks(this);
@@ -123,7 +123,7 @@ public class BookControllerTest {
     @Test(expected = NotFoundException.class)
     public void testGetNotFound() {
         Long id = 1000l;
-        when(bookService.findOne(id)).thenThrow(new NotFoundException());
+        when(bookService.findOne(id)).thenThrow(new NotFoundException("Book not exist"));
         controller.getBook(id);
     }
 
@@ -132,7 +132,7 @@ public class BookControllerTest {
         Long id = 1l;
         Book bookReq = new Book(1l, "Libro prueba", Arrays.asList(new Author().setName("Edu")), "11-333-12", new LocalDate(),
                 new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
-        when(bookService.findOne(id)).thenThrow(new NotFoundException());
+        when(bookService.findOne(id)).thenThrow(new NotFoundException("Book not exist"));
         controller.updateBook(id, bookReq, errors);
     }
 

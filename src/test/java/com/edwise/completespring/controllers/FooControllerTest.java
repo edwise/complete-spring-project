@@ -36,7 +36,7 @@ public class FooControllerTest {
 
 
     @Before
-    public void init() {
+    public void setUp() {
         this.request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(this.request));
         MockitoAnnotations.initMocks(this);

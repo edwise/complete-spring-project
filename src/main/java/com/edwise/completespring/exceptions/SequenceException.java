@@ -5,9 +5,6 @@ package com.edwise.completespring.exceptions;
  */
 public class SequenceException extends RuntimeException {
 
-    public SequenceException() {
-    }
-
     public SequenceException(String msg) {
         super(msg);
     }
