@@ -10,6 +10,8 @@ Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / fu
 
  - Jacoco para la cobertura de tests (plugin para maven)
 
+ - Lombok para evitar algo de código 'boilerplate'
+
 
 
  Requisitos:

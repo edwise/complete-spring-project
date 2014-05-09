@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
  */
 public class BookServiceTest {
 
-    BookService service;
+    private BookService service;
 
     @Mock
     BookRepository bookRepository;

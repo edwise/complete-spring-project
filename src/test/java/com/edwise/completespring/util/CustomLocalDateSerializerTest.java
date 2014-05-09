@@ -10,11 +10,8 @@ import static org.junit.Assert.assertEquals;
 
 public class CustomLocalDateSerializerTest {
 
-    private CustomLocalDateSerializer serializer;
-
     @Before
     public void setUp() {
-        serializer = new CustomLocalDateSerializer();
     }
 
     @Test
