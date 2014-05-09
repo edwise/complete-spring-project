@@ -12,6 +12,8 @@ Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / fu
 
  - Lombok para evitar algo de código 'boilerplate'
 
+ - Spring Exception Handling en los controllers
+
 
 
  Requisitos:
