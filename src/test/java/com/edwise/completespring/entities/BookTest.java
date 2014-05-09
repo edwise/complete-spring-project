@@ -69,9 +69,9 @@ public class BookTest {
     public void testToString() {
         Book book = new Book();
         assertTrue(book.toString().contains("id=null"));
-        assertTrue(book.toString().contains("title='null'"));
+        assertTrue(book.toString().contains("title=null"));
         assertTrue(book.toString().contains("authors=null"));
-        assertTrue(book.toString().contains("isbn='null'"));
+        assertTrue(book.toString().contains("isbn=null"));
         assertTrue(book.toString().contains("releaseDate=null"));
         assertTrue(book.toString().contains("publisher=null"));
     }

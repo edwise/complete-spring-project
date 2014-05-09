@@ -6,12 +6,22 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.joda.time.LocalDate;
 
 /**
  * Created by user EAnton on 25/04/2014.
  */
+
+
 @ApiModel(value = "Foo entity", description = "Complete info of a entity foo")
+@Setter
+@Accessors(chain = true)
+@EqualsAndHashCode(exclude = {"id"}, doNotUseGetters = true)
+@ToString(doNotUseGetters = true)
 public class Foo {
 
     private Long id;
@@ -26,19 +36,9 @@ public class Foo {
         return id;
     }
 
-    public Foo setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
     @ApiModelProperty(value = "Sample Text Attribute", required = true)
     public String getSampleTextAttribute() {
         return sampleTextAttribute;
-    }
-
-    public Foo setSampleTextAttribute(String sampleTextAttribute) {
-        this.sampleTextAttribute = sampleTextAttribute;
-        return this;
     }
 
     @ApiModelProperty(value = "Sample Local Date Attribute", required = true)
@@ -46,43 +46,10 @@ public class Foo {
         return sampleLocalDateAttribute;
     }
 
-    public Foo setSampleLocalDateAttribute(LocalDate sampleLocalDateAttribute) {
-        this.sampleLocalDateAttribute = sampleLocalDateAttribute;
-        return this;
-    }
-
     public Foo copyFrom(Foo other) {
         this.sampleTextAttribute = other.sampleTextAttribute;
         this.sampleLocalDateAttribute = other.sampleLocalDateAttribute;
 
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Foo foo = (Foo) o;
-        return !(sampleLocalDateAttribute != null ? !sampleLocalDateAttribute.equals(foo.sampleLocalDateAttribute) : foo
-                .sampleLocalDateAttribute != null) && !(sampleTextAttribute != null ? !sampleTextAttribute.equals(foo
-                .sampleTextAttribute) : foo.sampleTextAttribute != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = sampleTextAttribute != null ? sampleTextAttribute.hashCode() : 0;
-        result = 31 * result + (sampleLocalDateAttribute != null ? sampleLocalDateAttribute.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Foo{" +
-                "id=" + id +
-                ", sampleTextAttribute='" + sampleTextAttribute + '\'' +
-                ", sampleLocalDateAttribute=" + sampleLocalDateAttribute +
-                '}';
     }
 }

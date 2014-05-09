@@ -54,8 +54,8 @@ public class PublisherTest {
     @Test
     public void testToString(){
         Publisher publisher = new Publisher();
-        assertTrue(publisher.toString().contains("name='null'"));
-        assertTrue(publisher.toString().contains("country='null'"));
+        assertTrue(publisher.toString().contains("name=null"));
+        assertTrue(publisher.toString().contains("country=null"));
         assertTrue(publisher.toString().contains("isOnline=false"));
     }
 }

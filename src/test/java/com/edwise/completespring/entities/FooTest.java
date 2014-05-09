@@ -60,7 +60,7 @@ public class FooTest {
     public void testToString(){
         Foo foo = new Foo();
         assertTrue(foo.toString().contains("id=null"));
-        assertTrue(foo.toString().contains("sampleTextAttribute='null'"));
+        assertTrue(foo.toString().contains("sampleTextAttribute=null"));
         assertTrue(foo.toString().contains("sampleLocalDateAttribute=null"));
     }
 }

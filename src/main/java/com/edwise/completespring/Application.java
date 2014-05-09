@@ -40,7 +40,10 @@ public class Application implements CommandLineRunner {
 
     private void fillDBData() {
         // create the sequence
-        sequenceRepository.save(new SequenceId(BookRepository.BOOK_COLLECTION, 4));
+        sequenceRepository.save(new SequenceId()
+                                        .setId(BookRepository.BOOK_COLLECTION)
+                                        .setSeq(4)
+        );
 
         // save a couple of books
         bookRepository.deleteAll();

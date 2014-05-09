@@ -56,7 +56,7 @@ public class AuthorTest {
     @Test
     public void testToString() {
         Author author = new Author();
-        assertTrue(author.toString().contains("name='null'"));
-        assertTrue(author.toString().contains("surname='null'"));
+        assertTrue(author.toString().contains("name=null"));
+        assertTrue(author.toString().contains("surname=null"));
     }
 }
