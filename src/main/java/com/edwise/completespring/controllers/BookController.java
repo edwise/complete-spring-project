@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class BookController {
     private BookService bookService;
 
     @SuppressWarnings("unchecked")
-    @RequestMapping(method = RequestMethod.GET, value = "/api/book")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/book", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get Books", notes = "Returns all books")
     @ApiResponses({
             @ApiResponse(code = 200, response = BookResource.class, message = "Exits one book at least")
@@ -45,7 +46,7 @@ public class BookController {
         return new ResponseEntity<>(resourceList, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/book/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/book/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get one Book", response = BookResource.class, notes = "Returns one book")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Exists this book")
@@ -59,7 +60,7 @@ public class BookController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(method = RequestMethod.POST, value = "/api/book")
+    @RequestMapping(method = RequestMethod.POST, value = "/api/book", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Create Book", notes = "Create a book")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful create of a book")
@@ -74,7 +75,7 @@ public class BookController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping(method = RequestMethod.PUT, value = "/api/book/{id}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/book/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Update Book", notes = "Update a book")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful update of book")
@@ -92,7 +93,7 @@ public class BookController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping(method = RequestMethod.DELETE, value = "/api/book/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/api/book/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Delete Book", notes = "Delete a book")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful delete of a book")

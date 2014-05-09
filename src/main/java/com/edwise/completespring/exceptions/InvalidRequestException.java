@@ -10,7 +10,7 @@ public class InvalidRequestException extends RuntimeException {
     private BindingResult errors;
 
     public InvalidRequestException(BindingResult errors) {
-        super();
+        super("Request invalida");
         this.errors = errors;
     }
 
