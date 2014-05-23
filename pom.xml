@@ -13,8 +13,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.7</java.version>
-        <spring.version>4.0.2.RELEASE</spring.version>
-        <war-plugin-version>2.4</war-plugin-version>
+        <spring.version>4.0.5.RELEASE</spring.version>
+        <spring.hateoas.version>0.12.0.RELEASE</spring.hateoas.version>
+        <spring.data.mongodb.version>1.5.0.RELEASE</spring.data.mongodb.version>
+        <swagger.springmvc.version>0.8.3</swagger.springmvc.version>
+        <lombok.version>1.12.6</lombok.version>
+        <jacoco.mavenplugin.version>0.7.1.201405082137</jacoco.mavenplugin.version>
     </properties>
 
     <parent>
@@ -57,19 +61,19 @@
         <dependency>
             <groupId>org.springframework.hateoas</groupId>
             <artifactId>spring-hateoas</artifactId>
-            <version>0.9.0.RELEASE</version>
+            <version>${spring.hateoas.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.mangofactory</groupId>
             <artifactId>swagger-springmvc</artifactId>
-            <version>0.8.3</version>
+            <version>${swagger.springmvc.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
-            <version>1.4.1.RELEASE</version>
+            <version>${spring.data.mongodb.version}</version>
         </dependency>
 
         <dependency>
@@ -93,7 +97,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.12.6</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -117,7 +121,12 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.0.201403182114</version>
+                <version>${jacoco.mavenplugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/com/edwise/completespring/config/*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>pre-unit-test</id>
