@@ -1,15 +1,10 @@
 package com.edwise.completespring.exceptions.helpers;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class ErrorInfoTest {
-
-    @Before
-    public void setUp() {
-    }
 
     @Test
     public void testEquals() {

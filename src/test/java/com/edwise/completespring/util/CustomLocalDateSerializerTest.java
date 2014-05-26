@@ -3,16 +3,11 @@ package com.edwise.completespring.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.joda.time.LocalDate;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class CustomLocalDateSerializerTest {
-
-    @Before
-    public void setUp() {
-    }
 
     @Test
     public void testSerialize() throws Exception {

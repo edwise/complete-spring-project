@@ -1,7 +1,6 @@
 package com.edwise.completespring.entities;
 
 import org.joda.time.LocalDate;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -11,22 +10,16 @@ import static org.junit.Assert.*;
  */
 public class FooTest {
 
-    @Before
-    public void setUp() {
-    }
-
     @Test
     public void testCopyFrom() {
         Foo fooFrom = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(new LocalDate());
         Foo foo = new Foo().setId(15l);
 
-        foo.copyFrom(fooFrom);
-
-        assertEquals("No son iguales", foo, fooFrom);
+        assertEquals("No son iguales", foo.copyFrom(fooFrom), fooFrom);
     }
 
     @Test
-    public void testEquals(){
+    public void testEquals() {
         // same fields
         LocalDate date = new LocalDate();
         Foo foo1 = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(date);
@@ -57,7 +50,7 @@ public class FooTest {
     }
 
     @Test
-    public void testToString(){
+    public void testToString() {
         Foo foo = new Foo();
         assertTrue(foo.toString().contains("id=null"));
         assertTrue(foo.toString().contains("sampleTextAttribute=null"));

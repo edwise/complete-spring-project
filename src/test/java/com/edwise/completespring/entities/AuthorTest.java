@@ -1,6 +1,5 @@
 package com.edwise.completespring.entities;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,10 +8,6 @@ import static org.junit.Assert.*;
  * Created by user EAnton on 28/04/2014.
  */
 public class AuthorTest {
-
-    @Before
-    public void setUp() {
-    }
 
     @Test
     public void testCopyFrom() {
