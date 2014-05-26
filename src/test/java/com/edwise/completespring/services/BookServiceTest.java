@@ -101,11 +101,10 @@ public class BookServiceTest {
         assertEquals(saved.getId(), Long.valueOf(5l));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testFindByTitle() {
         String comunTitle = "Titulo igual";
-        List books = Arrays.asList(new Book(3l, comunTitle, Arrays.asList(new Author().setName("Edu")), "11-333-12", new LocalDate(),
+        List<Book> books = Arrays.asList(new Book(3l, comunTitle, Arrays.asList(new Author().setName("Edu")), "11-333-12", new LocalDate(),
                         new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)),
                 new Book(14l, comunTitle, Arrays.asList(new Author().setName("Nadie")), "12-9999-92", new LocalDate(),
                         new Publisher().setName("Editorial 5").setCountry("US").setOnline(true))
@@ -117,15 +116,13 @@ public class BookServiceTest {
         assertEquals("2 elements in page", 2, result.size());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testFindByReleaseDate() {
         LocalDate comunLocalDate = new LocalDate();
-        List books = Arrays.asList(new Book(3l, "Libro prueba", Arrays.asList(new Author().setName("Edu")), "11-333-12", comunLocalDate,
-                        new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)),
-                new Book(14l, "Libro prueba 2", Arrays.asList(new Author().setName("Nadie")), "12-9999-92", comunLocalDate,
-                        new Publisher().setName("Editorial 5").setCountry("US").setOnline(true))
-        );
+        List<Book> books = Arrays.asList(new Book(3l, "Libro prueba", Arrays.asList(new Author().setName("Edu")), "11-333-12",
+                comunLocalDate, new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)), new Book(14l,
+                "Libro prueba 2", Arrays.asList(new Author().setName("Nadie")), "12-9999-92", comunLocalDate,
+                new Publisher().setName("Editorial 5").setCountry("US").setOnline(true)));
 
         when(bookRepository.findByReleaseDate(comunLocalDate)).thenReturn(books);
         List<Book> result = service.findByReleaseDate(comunLocalDate);

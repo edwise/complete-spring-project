@@ -33,14 +33,13 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @SuppressWarnings("unchecked")
     @RequestMapping(method = RequestMethod.GET, value = "/api/book", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get Books", notes = "Returns all books")
     @ApiResponses({
             @ApiResponse(code = 200, response = BookResource.class, message = "Exits one book at least")
     })
     public ResponseEntity<List<BookResource>> getAll() {
-        List books = bookService.findAll();
+        List<Book> books = bookService.findAll();
 
         List<BookResource> resourceList = bookResourceAssembler.toResources(books);
         return new ResponseEntity<>(resourceList, HttpStatus.OK);
