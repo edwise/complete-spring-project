@@ -13,12 +13,16 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.7</java.version>
+
         <spring.version>4.0.5.RELEASE</spring.version>
         <spring.hateoas.version>0.12.0.RELEASE</spring.hateoas.version>
         <spring.data.mongodb.version>1.5.0.RELEASE</spring.data.mongodb.version>
         <swagger.springmvc.version>0.8.3</swagger.springmvc.version>
         <lombok.version>1.12.6</lombok.version>
         <jacoco.mavenplugin.version>0.7.1.201405082137</jacoco.mavenplugin.version>
+        <joda.time.version>2.3</joda.time.version>
+        <jackson.datatype.joda.version>2.3.3</jackson.datatype.joda.version>
+        <apache.commons.lang3.version>3.3.2</apache.commons.lang3.version>
     </properties>
 
     <parent>
@@ -79,19 +83,19 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.3</version>
+            <version>${joda.time.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
-            <version>2.3.1</version>
+            <version>${jackson.datatype.joda.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.3.1</version>
+            <version>${apache.commons.lang3.version}</version>
         </dependency>
 
         <dependency>

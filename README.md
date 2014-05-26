@@ -1,5 +1,8 @@
 Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / funcionalidades:
 
+ - Spring Boot: posibilidad de arrancar directamente con el plugin de maven o generar un war para despliegue en 
+ tomcat o similar 
+
  - Servicio completo RESTful con Spring 4 (Books)
 
  - Uso de HATEOAS en el servicio
@@ -22,6 +25,21 @@ Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / fu
 
  - mongoDB server (instalado y arrancado, en localhost y con el puerto por defecto)
 
+
+Comandos
+
+ - Arrancar directamente con el plugin de SpringBoot:
+ 
+    ```
+    mvn spring-boot:run
+    ```
+  
+  
+ - Generar war (así como generar informes de jacoco):
+ 
+    ```
+    mvn clean package
+    ```
 
 
 Urls de acceso:
