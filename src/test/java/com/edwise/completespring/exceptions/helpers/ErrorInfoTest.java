@@ -9,13 +9,13 @@ public class ErrorInfoTest {
     @Test
     public void testEquals() {
         // same fields
-        ErrorInfo errorInfo1 = new ErrorInfo().setUrl("URL_test").setMessage("Message test");
-        ErrorInfo errorInfo2 = new ErrorInfo().setUrl("URL_test").setMessage("Message test");
+        ErrorInfo errorInfo1 = new ErrorInfo().setUrl("URL_test").setErrors("Message test");
+        ErrorInfo errorInfo2 = new ErrorInfo().setUrl("URL_test").setErrors("Message test");
         assertTrue("Deben ser iguales", errorInfo1.equals(errorInfo2) && errorInfo2.equals(errorInfo1));
 
         // same id, different text
-        errorInfo1 = new ErrorInfo().setUrl("URL_test").setMessage("Message test");
-        errorInfo2 = new ErrorInfo().setUrl("URL_test").setMessage("Message test different");
+        errorInfo1 = new ErrorInfo().setUrl("URL_test").setErrors("Message test");
+        errorInfo2 = new ErrorInfo().setUrl("URL_test").setErrors("Message test different");
         assertFalse("No deben ser iguales", errorInfo1.equals(errorInfo2) || errorInfo2.equals(errorInfo1));
 
         // different object
@@ -25,13 +25,13 @@ public class ErrorInfoTest {
     @Test
     public void testHashCode() {
         // same fields
-        ErrorInfo errorInfo1 = new ErrorInfo().setUrl("URL_test").setMessage("Message test");
-        ErrorInfo errorInfo2 = new ErrorInfo().setUrl("URL_test").setMessage("Message test");
+        ErrorInfo errorInfo1 = new ErrorInfo().setUrl("URL_test").setErrors("Message test");
+        ErrorInfo errorInfo2 = new ErrorInfo().setUrl("URL_test").setErrors("Message test");
         assertEquals("Deben ser iguales", errorInfo1.hashCode(), errorInfo2.hashCode());
 
         // different fields
-        errorInfo1 = new ErrorInfo().setUrl("URL_test").setMessage("Message test");
-        errorInfo2 = new ErrorInfo().setUrl("URL_test").setMessage("Message test different");
+        errorInfo1 = new ErrorInfo().setUrl("URL_test").setErrors("Message test");
+        errorInfo2 = new ErrorInfo().setUrl("URL_test").setErrors("Message test different");
         assertNotEquals("No deben ser iguales", errorInfo1.hashCode(), errorInfo2.hashCode());
     }
 
@@ -39,6 +39,6 @@ public class ErrorInfoTest {
     public void testToString() {
         ErrorInfo errorInfo = new ErrorInfo();
         assertTrue(errorInfo.toString().contains("url=null"));
-        assertTrue(errorInfo.toString().contains("message=null"));
+        assertTrue(errorInfo.toString().contains("errors=null"));
     }
 }

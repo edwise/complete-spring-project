@@ -16,5 +16,5 @@ import lombok.experimental.Accessors;
 @ToString(doNotUseGetters = true)
 public class ErrorInfo {
     private String url;
-    private String message;
+    private String errors;
 }

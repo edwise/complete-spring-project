@@ -37,7 +37,7 @@ public class RestExceptionProcessorTest {
         NotFoundException exception = new NotFoundException("No existe la entidad");
         ErrorInfo errorInfo = restExceptionProcessor.entityNotFound(request, exception);
         assertNotNull("No puede ser nulo", errorInfo);
-        assertEquals("Deben ser mensajes iguales", errorInfo.getMessage(), exception.getMessage());
+        assertEquals("Deben ser mensajes iguales", errorInfo.getErrors(), exception.getMessage());
     }
 
     @Test
@@ -45,6 +45,6 @@ public class RestExceptionProcessorTest {
         InvalidRequestException exception = new InvalidRequestException(errors);
         ErrorInfo errorInfo = restExceptionProcessor.invalidPostData(request, exception);
         assertNotNull("No puede ser nulo", errorInfo);
-        assertEquals("Deben ser mensajes iguales", errorInfo.getMessage(), exception.getMessage());
+        assertEquals("Deben ser mensajes iguales", errorInfo.getErrors(), exception.getMessage());
     }
 }

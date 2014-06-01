@@ -13,7 +13,6 @@ import lombok.experimental.Accessors;
 import org.joda.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 /**
  * Created by user EAnton on 25/04/2014.

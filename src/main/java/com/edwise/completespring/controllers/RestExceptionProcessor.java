@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 @ControllerAdvice
 public class RestExceptionProcessor {
-    // TODO afinar los mensajes a mostar, el json, etc
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
@@ -26,7 +25,7 @@ public class RestExceptionProcessor {
 
         return new ErrorInfo()
                 .setUrl(errorURL)
-                .setMessage(ex.getMessage());
+                .setErrors(ex.getMessage());
     }
 
 
@@ -36,9 +35,11 @@ public class RestExceptionProcessor {
     public ErrorInfo invalidPostData(HttpServletRequest req, InvalidRequestException ex) {
         String errorURL = req.getRequestURL().toString();
 
+        // TODO montar un array de strings en errors, para devolver un json guapo
         return new ErrorInfo()
                 .setUrl(errorURL)
-                .setMessage(ex.getMessage());
+//                .setErrors(ex.getErrors().getFieldErrors().get(0).getField());
+                .setErrors(ex.getMessage());
     }
 
 }
