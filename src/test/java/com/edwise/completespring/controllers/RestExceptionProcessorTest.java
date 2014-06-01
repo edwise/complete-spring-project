@@ -45,6 +45,6 @@ public class RestExceptionProcessorTest {
         InvalidRequestException exception = new InvalidRequestException(errors);
         ErrorInfo errorInfo = restExceptionProcessor.invalidPostData(request, exception);
         assertNotNull("No puede ser nulo", errorInfo);
-        assertEquals("Deben ser mensajes iguales", errorInfo.getMessage(), exception.getErrors().toString());
+        assertEquals("Deben ser mensajes iguales", errorInfo.getMessage(), exception.getMessage());
     }
 }

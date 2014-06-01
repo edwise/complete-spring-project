@@ -52,7 +52,7 @@ public class FooControllerTest {
     @Test(expected = InvalidRequestException.class)
     public void testUpdateInvalidRequest() {
         Long id = 1l;
-        Foo fooReq = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(new LocalDate());
+        Foo fooReq = new Foo().setId(1l).setSampleTextAttribute(null).setSampleLocalDateAttribute(null);
         when(errors.hasErrors()).thenReturn(true);
         controller.updateFoo(id, fooReq, errors);
         verify(errors, times(1)).hasErrors();

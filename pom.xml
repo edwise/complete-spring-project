@@ -23,6 +23,7 @@
         <joda.time.version>2.3</joda.time.version>
         <jackson.datatype.joda.version>2.3.3</jackson.datatype.joda.version>
         <apache.commons.lang3.version>3.3.2</apache.commons.lang3.version>
+        <hibernate.validator.version>5.1.1.Final</hibernate.validator.version>
     </properties>
 
     <parent>
@@ -103,6 +104,12 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate.validator.version}</version>
         </dependency>
 
         <dependency>

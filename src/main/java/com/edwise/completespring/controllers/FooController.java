@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class FooController {
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful create of a foo")
     })
-    public void createFoo(@RequestBody Foo foo, BindingResult errors) {
+    public void createFoo(@Valid @RequestBody Foo foo, BindingResult errors) {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }
@@ -79,7 +80,7 @@ public class FooController {
     })
     public void updateFoo(@ApiParam(defaultValue = "1", value = "The id of the foo to update")
                           @PathVariable long id,
-                          @RequestBody Foo foo, BindingResult errors) {
+                          @Valid @RequestBody Foo foo, BindingResult errors) {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }

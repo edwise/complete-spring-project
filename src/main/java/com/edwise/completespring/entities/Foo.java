@@ -12,6 +12,9 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.joda.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 /**
  * Created by user EAnton on 25/04/2014.
  */
@@ -25,8 +28,11 @@ import org.joda.time.LocalDate;
 public class Foo {
 
     private Long id;
+
+    @NotNull
     private String sampleTextAttribute;
 
+    @NotNull
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = CustomLocalDateSerializer.class)
     private LocalDate sampleLocalDateAttribute;
