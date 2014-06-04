@@ -6,8 +6,6 @@ import static org.junit.Assert.*;
 
 public class ErrorInfoTest {
 
-     // TODO revisar como probar bien ErrorInfo...
-
     @Test
     public void testAddError() {
         ErrorInfo errorInfo = new ErrorInfo().addError("Field1", "MessageText").addError("Field2",
