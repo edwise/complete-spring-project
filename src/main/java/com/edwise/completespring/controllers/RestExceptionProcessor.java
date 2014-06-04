@@ -4,6 +4,8 @@ import com.edwise.completespring.exceptions.InvalidRequestException;
 import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.exceptions.helpers.ErrorInfo;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @ControllerAdvice
 public class RestExceptionProcessor {
+    private static final String FIELD_ID = "id";
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
@@ -25,7 +28,7 @@ public class RestExceptionProcessor {
 
         return new ErrorInfo()
                 .setUrl(errorURL)
-                .setErrors(ex.getMessage());
+                .addError(FIELD_ID, ex.getMessage());
     }
 
 
@@ -34,12 +37,15 @@ public class RestExceptionProcessor {
     @ResponseBody
     public ErrorInfo invalidPostData(HttpServletRequest req, InvalidRequestException ex) {
         String errorURL = req.getRequestURL().toString();
-
-        // TODO montar un array de strings en errors, para devolver un json guapo
-        return new ErrorInfo()
-                .setUrl(errorURL)
-//                .setErrors(ex.getErrors().getFieldErrors().get(0).getField());
-                .setErrors(ex.getMessage());
+        return generateErrorInfoFromBindingResult(ex.getErrors()).setUrl(errorURL);
     }
 
+    private ErrorInfo generateErrorInfoFromBindingResult(BindingResult errors) {
+        ErrorInfo errorInfo = new ErrorInfo();
+        for (FieldError fieldError : errors.getFieldErrors()) {
+            errorInfo.addError(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+
+        return errorInfo;
+    }
 }

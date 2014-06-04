@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -64,7 +65,7 @@ public class BookController {
     @ApiResponses({
             @ApiResponse(code = 204, message = "Successful create of a book")
     })
-    public void createBook(@RequestBody Book book, BindingResult errors) {
+    public void createBook(@Valid @RequestBody Book book, BindingResult errors) {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }
@@ -81,7 +82,7 @@ public class BookController {
     })
     public void updateBook(@ApiParam(defaultValue = "1", value = "The id of the book to update")
                            @PathVariable long id,
-                           @RequestBody Book book, BindingResult errors) {
+                           @Valid @RequestBody Book book, BindingResult errors) {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }

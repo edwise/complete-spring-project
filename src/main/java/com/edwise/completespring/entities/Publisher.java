@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * Created by user EAnton on 25/04/2014.
@@ -17,7 +18,9 @@ import lombok.experimental.Accessors;
 @ToString(doNotUseGetters = true)
 public class Publisher {
 
+    @NotEmpty
     private String name;
+
     private String country;
     private boolean isOnline;
 

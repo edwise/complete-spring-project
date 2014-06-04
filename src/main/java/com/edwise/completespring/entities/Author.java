@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * Created by user EAnton on 24/04/2014.
@@ -17,7 +18,10 @@ import lombok.experimental.Accessors;
 @ToString(doNotUseGetters = true)
 public class Author {
 
+    @NotEmpty
     private String name;
+
+    @NotEmpty
     private String surname;
 
     @ApiModelProperty(value = "The name of the author", required = true)

@@ -10,10 +10,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +34,22 @@ public class Book {
     @Id
     private Long id;
 
+    @NotEmpty
     private String title;
+
+    @Valid
     private List<Author> authors;
+
+    @NotEmpty
     private String isbn;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = CustomLocalDateSerializer.class)
+    @NotNull
     private LocalDate releaseDate;
 
+    @Valid
+    @NotNull
     private Publisher publisher;
 
     public Book() {
