@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 
 public class ErrorItemTest {
 
+    // TODO refactorizar tests...
+
     @Test
     public void testEquals() {
         // same fields

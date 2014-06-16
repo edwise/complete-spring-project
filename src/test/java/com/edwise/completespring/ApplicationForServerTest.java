@@ -11,11 +11,12 @@ import static org.mockito.Mockito.verify;
 
 public class ApplicationForServerTest {
 
+    private static final int ONE_TIME = 1;
+
     private ApplicationForServer applicationForServer;
 
     @Mock
     private SpringApplicationBuilder springApplicationBuilder;
-
 
     @Before
     public void setUp() {
@@ -26,6 +27,7 @@ public class ApplicationForServerTest {
     @Test
     public void testConfigure() throws Exception {
         applicationForServer.configure(springApplicationBuilder);
-        verify(springApplicationBuilder, times(1)).sources(Application.class);
+
+        verify(springApplicationBuilder, times(ONE_TIME)).sources(Application.class);
     }
 }

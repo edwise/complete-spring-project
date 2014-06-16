@@ -13,6 +13,7 @@ public class CustomLocalDateSerializerTest {
     public void testSerialize() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         LocalDate date = new LocalDate(2010, 11, 12);
+
         assertEquals("{\"date\":\"2010-11-12\"}", mapper.writeValueAsString(new SampleTest(date)));
     }
 

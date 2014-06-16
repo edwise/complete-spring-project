@@ -9,6 +9,8 @@ import static org.junit.Assert.*;
  */
 public class AuthorTest {
 
+    // TODO refactorizar tests...
+
     @Test
     public void testCopyFrom() {
         Author authorFrom = new Author().setName("Nombre").setSurname("App");

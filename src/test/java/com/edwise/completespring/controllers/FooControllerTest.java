@@ -27,6 +27,8 @@ import static org.mockito.Mockito.*;
  */
 public class FooControllerTest {
 
+    // TODO refactorizar tests...
+
     private FooController controller;
 
     private MockHttpServletRequest request;

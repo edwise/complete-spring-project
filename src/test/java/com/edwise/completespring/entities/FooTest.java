@@ -10,6 +10,8 @@ import static org.junit.Assert.*;
  */
 public class FooTest {
 
+    // TODO refactorizar tests...
+
     @Test
     public void testCopyFrom() {
         Foo fooFrom = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(new LocalDate());

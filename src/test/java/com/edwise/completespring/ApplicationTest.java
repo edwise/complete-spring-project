@@ -19,6 +19,8 @@ import static org.mockito.Mockito.verify;
  */
 public class ApplicationTest {
 
+    private static final int ONE_TIME = 1;
+    private static final int FOUR_TIMES = 4;
     private Application application;
 
     @Mock
@@ -38,8 +40,9 @@ public class ApplicationTest {
     @Test
     public void testRun() throws Exception {
         application.run("");
-        verify(sequenceRepository, times(1)).save(any(SequenceId.class));
-        verify(bookRepository, times(1)).deleteAll();
-        verify(bookRepository, times(4)).save(any(Book.class)); // Número de libros insertados de ejemplo al arrancar: 4
+
+        verify(sequenceRepository, times(ONE_TIME)).save(any(SequenceId.class));
+        verify(bookRepository, times(ONE_TIME)).deleteAll();
+        verify(bookRepository, times(FOUR_TIMES)).save(any(Book.class)); // Número de libros insertados de ejemplo al arrancar
     }
 }

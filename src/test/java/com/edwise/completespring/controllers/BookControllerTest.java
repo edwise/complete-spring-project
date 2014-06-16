@@ -32,6 +32,8 @@ import static org.mockito.Mockito.*;
  */
 public class BookControllerTest {
 
+    // TODO refactorizar tests...
+
     private BookController controller;
 
     private MockHttpServletRequest request;

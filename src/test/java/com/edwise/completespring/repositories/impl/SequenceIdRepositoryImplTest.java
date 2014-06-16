@@ -18,6 +18,9 @@ import static org.mockito.Mockito.*;
 
 public class SequenceIdRepositoryImplTest {
 
+    private static final long TEST_SEQUENCE_ID = 7l;
+    private static final int ONE_TIME = 1;
+
     private SequenceIdRepositoryImpl repository;
 
     @Mock
@@ -34,8 +37,10 @@ public class SequenceIdRepositoryImplTest {
     public void testGetNextSequenceId() {
         when(mongoOperation.findAndModify(any(Query.class), any(Update.class), any(FindAndModifyOptions.class),
                 eq(SequenceId.class))).thenReturn(new SequenceId().setId(BookRepository.BOOK_COLLECTION).setSeq(6l));
+
         long seqId = repository.getNextSequenceId(BookRepository.BOOK_COLLECTION);
-        verify(mongoOperation, times(1)).findAndModify(any(Query.class), any(Update.class),
+
+        verify(mongoOperation, times(ONE_TIME)).findAndModify(any(Query.class), any(Update.class),
                 any(FindAndModifyOptions.class), eq(SequenceId.class));
         assertTrue("Debe devolver un sequence valido", seqId > 0);
     }
@@ -44,11 +49,14 @@ public class SequenceIdRepositoryImplTest {
     public void testGetNextSequenceIdWhenNotExistsSequence() {
         when(mongoOperation.findAndModify(any(Query.class), any(Update.class), any(FindAndModifyOptions.class),
                 eq(SequenceId.class))).thenReturn(null);
+
         repository.getNextSequenceId(BookRepository.BOOK_COLLECTION);
     }
 
     @Test
     public void testSave() throws Exception {
-        repository.save(new SequenceId().setId(BookRepository.BOOK_COLLECTION).setSeq(7l));
+        repository.save(new SequenceId().setId(BookRepository.BOOK_COLLECTION).setSeq(TEST_SEQUENCE_ID));
+
+        verify(mongoOperation, times(ONE_TIME)).save(any(SequenceId.class));
     }
 }

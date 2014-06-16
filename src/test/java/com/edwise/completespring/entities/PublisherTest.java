@@ -9,6 +9,8 @@ import static org.junit.Assert.*;
  */
 public class PublisherTest {
 
+    // TODO refactorizar tests...
+
     @Test
     public void testCopyFrom() {
         Publisher publisherFrom = new Publisher().setName("Nombre").setCountry("ES").setOnline(true);

@@ -21,6 +21,8 @@ import static org.mockito.Mockito.when;
 
 public class RestExceptionProcessorTest {
 
+    // TODO refactorizar tests...
+
     private RestExceptionProcessor restExceptionProcessor;
 
     private MockHttpServletRequest request;
