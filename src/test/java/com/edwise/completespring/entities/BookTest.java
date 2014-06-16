@@ -13,6 +13,8 @@ import static org.hamcrest.core.StringContains.containsString;
  */
 public class BookTest {
 
+    // TODO refactor de news de publisher y author, en un metodo factory (con parametros)
+
     private static final long BOOK_ID_TEST1 = 31l;
     private static final String BOOK_TITLE_TEST1 = "Libro prueba";
     private static final String BOOK_TITLE_TEST2 = "Libro prueba2";
@@ -149,7 +151,7 @@ public class BookTest {
     }
 
     private void assertThatBookStringContainsAllFields(String bookString) {
-        assertThat(bookString,  containsString("id=null"));
+        assertThat(bookString, containsString("id=null"));
         assertThat(bookString, containsString("title=null"));
         assertThat(bookString, containsString("authors=null"));
         assertThat(bookString, containsString("isbn=null"));

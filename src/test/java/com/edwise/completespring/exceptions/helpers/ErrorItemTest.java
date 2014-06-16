@@ -2,46 +2,66 @@ package com.edwise.completespring.exceptions.helpers;
 
 import org.junit.Test;
 
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
 
 public class ErrorItemTest {
+    private static final String FIELD_TEST1 = "Field1";
+    private static final String MESSAGE_TEXT1 = "MessageText1";
+    private static final String MESSAGE_TEXT2 = "MessageText2";
 
     // TODO refactorizar tests...
 
     @Test
     public void testEquals() {
-        // same fields
-        ErrorItem errorItem1 = new ErrorItem().setField("Field1").setMessage("MessageText1");
-        ErrorItem errorItem2 = new ErrorItem().setField("Field1").setMessage("MessageText1");
+        ErrorItem errorItem1 = new ErrorItem().setField(FIELD_TEST1).setMessage(MESSAGE_TEXT1);
+        ErrorItem errorItem2 = new ErrorItem().setField(FIELD_TEST1).setMessage(MESSAGE_TEXT1);
+
         assertTrue("Deben ser iguales", errorItem1.equals(errorItem2) && errorItem2.equals(errorItem1));
+    }
 
-        // same id, different text
-        errorItem1 = new ErrorItem().setField("Field1").setMessage("MessageText1");
-        errorItem2 = new ErrorItem().setField("Field1").setMessage("MessageText2");
+    @Test
+    public void testNotEqualsWithDifferentFields() {
+        ErrorItem errorItem1 = new ErrorItem().setField(FIELD_TEST1).setMessage(MESSAGE_TEXT1);
+        ErrorItem errorItem2 = new ErrorItem().setField(FIELD_TEST1).setMessage(MESSAGE_TEXT2);
+
         assertFalse("No deben ser iguales", errorItem1.equals(errorItem2) || errorItem2.equals(errorItem1));
+    }
 
-        // different object
-        assertFalse("No deben ser iguales", new ErrorItem().setField("Field1").equals(new Object()));
+    @Test
+    public void testNotEqualsWithDifferentObjects() {
+        assertFalse("No deben ser iguales", new ErrorItem().setField(FIELD_TEST1).equals(new Object()));
     }
 
     @Test
     public void testHashCode() {
-        // same fields
-        ErrorItem errorItem1 = new ErrorItem().setField("Field1").setMessage("MessageText1");
-        ErrorItem errorItem2 = new ErrorItem().setField("Field1").setMessage("MessageText1");
-        assertEquals("Deben ser iguales", errorItem1.hashCode(), errorItem2.hashCode());
+        ErrorItem errorItem1 = new ErrorItem().setField(FIELD_TEST1).setMessage(MESSAGE_TEXT1);
+        ErrorItem errorItem2 = new ErrorItem().setField(FIELD_TEST1).setMessage(MESSAGE_TEXT1);
 
-        // different fields
-        errorItem1 = new ErrorItem().setField("Field1").setMessage("MessageText1");
-        errorItem2 = new ErrorItem().setField("Field1").setMessage("MessageText2");
+        assertEquals("Deben ser iguales", errorItem1.hashCode(), errorItem2.hashCode());
+    }
+
+    @Test
+    public void testHasCodeWithDifferentFields() {
+        ErrorItem errorItem1 = new ErrorItem().setField(FIELD_TEST1).setMessage(MESSAGE_TEXT1);
+        ErrorItem errorItem2 = new ErrorItem().setField(FIELD_TEST1).setMessage(MESSAGE_TEXT2);
+
         assertNotEquals("No deben ser iguales", errorItem1.hashCode(), errorItem2.hashCode());
     }
 
     @Test
     public void testToString() {
         ErrorItem errorItem = new ErrorItem();
-        assertTrue(errorItem.toString().contains("field=null"));
-        assertTrue(errorItem.toString().contains("message=null"));
+
+        String errorItemString = errorItem.toString();
+
+        assertThatErrorItemStringContainsAllFields(errorItemString);
+    }
+
+    private void assertThatErrorItemStringContainsAllFields(String errorItemString) {
+        assertThat(errorItemString, containsString("field=null"));
+        assertThat(errorItemString, containsString("message=null"));
     }
 
 }
