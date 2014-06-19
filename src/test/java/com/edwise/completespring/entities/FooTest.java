@@ -3,59 +3,85 @@ package com.edwise.completespring.entities;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by user EAnton on 28/04/2014.
  */
 public class FooTest {
-
-    // TODO refactorizar tests...
+    private static final long ID_TEST1 = 123l;
+    private static final long ID_TEST2 = 456l;
+    private static final String TEXT_ATTR_TEST1 = "AttText1";
+    private static final String TEXT_ATTR_TEST2 = "AttText2";
+    private static final LocalDate DATE_TEST1 = new LocalDate(2013, 1, 26);
 
     @Test
     public void testCopyFrom() {
-        Foo fooFrom = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(new LocalDate());
-        Foo foo = new Foo().setId(15l);
+        Foo fooFrom = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
+        Foo foo = createFoo(ID_TEST2, null, null);
 
         assertEquals("No son iguales", foo.copyFrom(fooFrom), fooFrom);
     }
 
     @Test
     public void testEquals() {
-        // same fields
-        LocalDate date = new LocalDate();
-        Foo foo1 = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(date);
-        Foo foo2 = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(date);
+        Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
+        Foo foo2 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
+
         assertTrue("Deben ser iguales", foo1.equals(foo2) && foo2.equals(foo1));
+    }
 
-        // same id, different text
-        foo1 = new Foo().setId(1l).setSampleTextAttribute("AttText1");
-        foo2 = new Foo().setId(1l).setSampleTextAttribute("AttText2");
+    @Test
+    public void testNotEqualsWithDifferentsFields() {
+        Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, null);
+        Foo foo2 = createFoo(ID_TEST1, TEXT_ATTR_TEST2, null);
+
         assertFalse("No deben ser iguales", foo1.equals(foo2) || foo2.equals(foo1));
+    }
 
-        // different object
-        assertFalse("No deben ser iguales", new Foo().setId(1l).equals(new Object()));
+    @Test
+    public void testNotEqualsWithDifferentsObjects() {
+        Foo foo = createFoo(ID_TEST1, null, null);
+
+        assertFalse("No deben ser iguales", foo.equals(new Object()));
     }
 
     @Test
     public void testHashCode() {
-        // same fields
-        LocalDate date = new LocalDate();
-        Foo foo1 = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(date);
-        Foo foo2 = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(date);
-        assertEquals("Deben ser iguales", foo1.hashCode(), foo2.hashCode());
+        Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
+        Foo foo2 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
 
-        // different fields
-        foo1 = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(date);
-        foo2 = new Foo().setId(3l).setSampleTextAttribute("AttText3").setSampleLocalDateAttribute(date);
+        assertEquals("Deben ser iguales", foo1.hashCode(), foo2.hashCode());
+    }
+
+    @Test
+    public void testHasCodeWithDifferentFields() {
+        Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
+        Foo foo2 = createFoo(ID_TEST2, TEXT_ATTR_TEST2, DATE_TEST1);
+
         assertNotEquals("No deben ser iguales", foo1.hashCode(), foo2.hashCode());
     }
 
     @Test
     public void testToString() {
-        Foo foo = new Foo();
-        assertTrue(foo.toString().contains("id=null"));
-        assertTrue(foo.toString().contains("sampleTextAttribute=null"));
-        assertTrue(foo.toString().contains("sampleLocalDateAttribute=null"));
+        Foo foo = createFoo(null, null, null);
+        String fooString = foo.toString();
+
+        assertThatFooStringContainsAllFields(fooString);
+    }
+
+    private void assertThatFooStringContainsAllFields(String fooString) {
+        assertThat(fooString, containsString("id=null"));
+        assertThat(fooString, containsString("sampleTextAttribute=null"));
+        assertThat(fooString, containsString("sampleLocalDateAttribute=null"));
+    }
+
+    private Foo createFoo(Long id, String textAttribute, LocalDate localDateAttribute) {
+        return new Foo()
+                .setId(id)
+                .setSampleTextAttribute(textAttribute)
+                .setSampleLocalDateAttribute(localDateAttribute);
     }
 }

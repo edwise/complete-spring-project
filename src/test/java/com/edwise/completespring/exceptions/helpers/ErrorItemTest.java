@@ -7,9 +7,9 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotEquals;
 
 public class ErrorItemTest {
-    private static final String FIELD_TEST1 = "Field1";
-    private static final String MESSAGE_TEXT1 = "MessageText1";
-    private static final String MESSAGE_TEXT2 = "MessageText2";
+    private static final String FIELD_TEST1 = "authorName";
+    private static final String MESSAGE_TEXT1 = "El campo no puede ser nulo";
+    private static final String MESSAGE_TEXT2 = "El campo no puede venir vacio";
 
     @Test
     public void testEquals() {

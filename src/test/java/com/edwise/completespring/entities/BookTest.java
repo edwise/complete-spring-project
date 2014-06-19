@@ -13,18 +13,17 @@ import static org.hamcrest.core.StringContains.containsString;
  */
 public class BookTest {
 
-    // TODO refactor de news de publisher y author, en un metodo factory (con parametros)
-
     private static final long BOOK_ID_TEST1 = 31l;
-    private static final String BOOK_TITLE_TEST1 = "Libro prueba";
-    private static final String BOOK_TITLE_TEST2 = "Libro prueba2";
-    private static final String AUTHOR_NAME_TEST1 = "Edu";
-    private static final String AUTHOR_SURNAME_TEST1 = "Surname";
+    private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";
+    private static final String BOOK_TITLE_TEST2 = "Bautismo de Fuego";
+    private static final String AUTHOR_NAME_TEST1 = "J.R.R.";
+    private static final String AUTHOR_SURNAME_TEST1 = "Tolkien";
     private static final String BOOK_ISBN_TEST1 = "11-333-12";
     private static final String BOOK_ISBN_TEST2 = "21-929-34";
-    private static final String PUBLISHER_NAME_TEST1 = "Editorial 1";
-    private static final String PUBLISHER_NAME_TEST2 = "Editorial 3";
+    private static final String PUBLISHER_NAME_TEST1 = "Editorial Planeta";
+    private static final String PUBLISHER_NAME_TEST2 = "Gigamesh";
     private static final String PUBLISHER_COUNTRY_TEST1 = "ES";
+    private static final LocalDate DATE_TEST1 = new LocalDate(2013, 1, 26);
 
     @Test
     public void testCopyFrom() {
@@ -33,7 +32,7 @@ public class BookTest {
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
-                .releaseDate(new LocalDate())
+                .releaseDate(DATE_TEST1)
                 .publisher(createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
                 .build();
         Book bookTo = new BookBuilder().build();
@@ -45,13 +44,12 @@ public class BookTest {
 
     @Test
     public void testEquals() {
-        LocalDate date = new LocalDate();
         Book book1 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
-                .releaseDate(date)
+                .releaseDate(DATE_TEST1)
                 .publisher(createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
                 .build();
         Book book2 = new BookBuilder()
@@ -59,7 +57,7 @@ public class BookTest {
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
-                .releaseDate(date)
+                .releaseDate(DATE_TEST1)
                 .publisher(createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
                 .build();
 
@@ -68,13 +66,12 @@ public class BookTest {
 
     @Test
     public void testNotEqualsWithDifferentsFields() {
-        LocalDate date = new LocalDate();
         Book book1 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
-                .releaseDate(date)
+                .releaseDate(DATE_TEST1)
                 .publisher(createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
                 .build();
         Book book2 = new BookBuilder()
@@ -82,7 +79,7 @@ public class BookTest {
                 .title(BOOK_TITLE_TEST2)
                 .authors(Arrays.asList(createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST2)
-                .releaseDate(date)
+                .releaseDate(DATE_TEST1)
                 .publisher(createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST1, false))
                 .build();
 
@@ -97,13 +94,12 @@ public class BookTest {
 
     @Test
     public void testHashCode() {
-        LocalDate date = new LocalDate();
         Book book1 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
-                .releaseDate(date)
+                .releaseDate(DATE_TEST1)
                 .publisher(createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
                 .build();
         Book book2 = new BookBuilder()
@@ -111,7 +107,7 @@ public class BookTest {
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
-                .releaseDate(date)
+                .releaseDate(DATE_TEST1)
                 .publisher(createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
                 .build();
 
@@ -120,13 +116,12 @@ public class BookTest {
 
     @Test
     public void testHasCodeWithDifferentFields() {
-        LocalDate date = new LocalDate();
         Book book1 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
-                .releaseDate(date)
+                .releaseDate(DATE_TEST1)
                 .publisher(createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
                 .build();
         Book book2 = new BookBuilder()
@@ -134,7 +129,7 @@ public class BookTest {
                 .title(BOOK_TITLE_TEST2)
                 .authors(Arrays.asList(createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST2)
-                .releaseDate(date)
+                .releaseDate(DATE_TEST1)
                 .publisher(createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST1, false))
                 .build();
 
@@ -160,10 +155,15 @@ public class BookTest {
     }
 
     private Author createAuthor(String name, String surname) {
-        return new Author().setName(name).setSurname(surname);
+        return new Author()
+                .setName(name)
+                .setSurname(surname);
     }
 
     private Publisher createPublisher(String name, String country, boolean isOnline) {
-        return new Publisher().setName(name).setCountry(country).setOnline(isOnline);
+        return new Publisher()
+                .setName(name)
+                .setCountry(country)
+                .setOnline(isOnline);
     }
 }

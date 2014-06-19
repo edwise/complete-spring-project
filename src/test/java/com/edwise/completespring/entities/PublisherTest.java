@@ -10,8 +10,8 @@ import static org.junit.Assert.assertNotEquals;
  * Created by user EAnton on 28/04/2014.
  */
 public class PublisherTest {
-    private static final String NAME_TEST1 = "Nombre";
-    private static final String NAME_TEST2 = "Nombre2";
+    private static final String NAME_TEST1 = "Alfaguara";
+    private static final String NAME_TEST2 = "Gigamesh";
     private static final String COUNTRY_TEST1 = "ES";
     private static final String COUNTRY_TEST2 = "US";
 

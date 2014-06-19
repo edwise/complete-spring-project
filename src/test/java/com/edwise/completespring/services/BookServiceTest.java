@@ -29,17 +29,17 @@ public class BookServiceTest {
 
     private static final long BOOK_ID_TEST = 3l;
     private static final long BOOK_ID_TEST_2 = 400l;
-    private static final String BOOK_TITLE_TEST = "Libro prueba";
-    private static final String BOOK_TITLE_TEST_2 = "Libro prueba 2";
+    private static final String BOOK_TITLE_TEST = "Lord of the Rings";
+    private static final String BOOK_TITLE_TEST_2 = "La espada del destino";
     private static final String BOOK_ISBN_TEST = "11-333-12";
     private static final String BOOK_ISBN_TEST_2 = "12-1234-12";
-    private static final String PUBLISHER_NAME_TEST = "Editorial 1";
-    private static final String PUBLISHER_NAME_TEST_2 = "Editorial 5";
+    private static final String PUBLISHER_NAME_TEST = "Editorial Alfaguara";
+    private static final String PUBLISHER_NAME_TEST_2 = "Gigamesh";
     private static final String PUBLISHER_COUNTRY_TEST = "ES";
     private static final String PUBLISHER_COUNTRY_TEST_2 = "US";
-    private static final String AUTHOR_NAME_TEST = "Edu";
-    private static final String AUTHOR_NAME_TEST_2 = "Otro";
-    private static final String AUTHOR_NAME_TEST_3 = "S. King";
+    private static final String AUTHOR_NAME_TEST = "Stephen";
+    private static final String AUTHOR_NAME_TEST_2 = "William";
+    private static final String AUTHOR_NAME_TEST_3 = "Miguel";
 
     private BookService service;
 
