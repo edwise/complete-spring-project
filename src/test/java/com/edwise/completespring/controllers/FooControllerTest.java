@@ -3,6 +3,7 @@ package com.edwise.completespring.controllers;
 import com.edwise.completespring.assemblers.FooResource;
 import com.edwise.completespring.assemblers.FooResourceAssembler;
 import com.edwise.completespring.entities.Foo;
+import com.edwise.completespring.entities.FooTest;
 import com.edwise.completespring.exceptions.InvalidRequestException;
 import org.joda.time.LocalDate;
 import org.junit.After;
@@ -26,8 +27,10 @@ import static org.mockito.Mockito.*;
  * Created by user EAnton on 25/04/2014.
  */
 public class FooControllerTest {
-
-    // TODO refactorizar tests...
+    private static final long FOO_ID_TEST1 = 1l;
+    private static final String FOO_TEXT_ATTR_TEST1 = "AttText1";
+    private static final LocalDate DATE_TEST1 = new LocalDate(2013, 1, 26);
+    public static final String RIGHT_URL_FOO_1 = "http://localhost/api/foo/1";
 
     private FooController controller;
 
@@ -35,7 +38,6 @@ public class FooControllerTest {
 
     @Mock
     BindingResult errors;
-
 
     @Before
     public void setUp() {
@@ -53,58 +55,62 @@ public class FooControllerTest {
 
     @Test(expected = InvalidRequestException.class)
     public void testUpdateInvalidRequest() {
-        Long id = 1l;
-        Foo fooReq = new Foo().setId(1l).setSampleTextAttribute(null).setSampleLocalDateAttribute(null);
+        Foo fooReq = FooTest.createFoo(FOO_ID_TEST1, null, null);
         when(errors.hasErrors()).thenReturn(true);
-        controller.updateFoo(id, fooReq, errors);
-        verify(errors, times(1)).hasErrors();
-        fail("Expected exception");
+
+        controller.updateFoo(FOO_ID_TEST1, fooReq, errors);
     }
 
 
     @Test
     public void testCreate() {
-        Foo FooReq = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(new LocalDate());
+        Foo FooReq = FooTest.createFoo(FOO_ID_TEST1, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
         when(errors.hasErrors()).thenReturn(false);
+
         controller.createFoo(FooReq, errors);
+
         verify(errors, times(1)).hasErrors();
         assertFalse(errors.hasErrors());
     }
 
     @Test(expected = InvalidRequestException.class)
     public void testCreateInvalidRequest() {
-        Foo FooReq = new Foo();
+        Foo FooReq = FooTest.createFoo(null, null, null);
         when(errors.hasErrors()).thenReturn(true);
+
         controller.createFoo(FooReq, errors);
+
         verify(errors, times(1)).hasErrors();
     }
 
     @Test
     public void testUpdate() {
-        Long id = 1l;
-        Foo FooReq = new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(new LocalDate());
-        controller.updateFoo(id, FooReq, errors);
+        Foo FooReq = FooTest.createFoo(FOO_ID_TEST1, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
+
+        controller.updateFoo(FOO_ID_TEST1, FooReq, errors);
+
         assertTrue(true);
     }
 
 
     @Test
     public void testGet() {
-        Long id = 1l;
-        ResponseEntity<FooResource> result = controller.getFoo(id);
-        assertEquals("http://localhost/api/foo/1", result.getBody().getLink("self").getHref());
+        ResponseEntity<FooResource> result = controller.getFoo(FOO_ID_TEST1);
+
+        assertEquals("Deben ser iguales", RIGHT_URL_FOO_1, result.getBody().getLink("self").getHref());
     }
 
     @Test
     public void testDelete() {
-        Long id = 1l;
-        controller.deleteFoo(id);
+        controller.deleteFoo(FOO_ID_TEST1);
+
         assertTrue(true);
     }
 
     @Test
     public void testFindAll() {
         ResponseEntity<List<FooResource>> result = controller.getAll();
+
         assertNotNull(result.getBody());
     }
 }

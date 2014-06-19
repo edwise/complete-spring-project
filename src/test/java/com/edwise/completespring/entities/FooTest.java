@@ -78,7 +78,7 @@ public class FooTest {
         assertThat(fooString, containsString("sampleLocalDateAttribute=null"));
     }
 
-    private Foo createFoo(Long id, String textAttribute, LocalDate localDateAttribute) {
+    public static Foo createFoo(Long id, String textAttribute, LocalDate localDateAttribute) {
         return new Foo()
                 .setId(id)
                 .setSampleTextAttribute(textAttribute)

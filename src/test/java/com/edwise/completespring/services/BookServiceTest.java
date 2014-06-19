@@ -1,8 +1,9 @@
 package com.edwise.completespring.services;
 
-import com.edwise.completespring.entities.Author;
+import com.edwise.completespring.entities.AuthorTest;
 import com.edwise.completespring.entities.Book;
-import com.edwise.completespring.entities.Publisher;
+import com.edwise.completespring.entities.BookBuilder;
+import com.edwise.completespring.entities.PublisherTest;
 import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
@@ -24,22 +25,25 @@ import static org.mockito.Mockito.*;
  * Created by user EAnton on 07/04/2014.
  */
 public class BookServiceTest {
-
-    // TODO refactorizar tests...
-
-    private static final long BOOK_ID_TEST = 3l;
-    private static final long BOOK_ID_TEST_2 = 400l;
-    private static final String BOOK_TITLE_TEST = "Lord of the Rings";
-    private static final String BOOK_TITLE_TEST_2 = "La espada del destino";
-    private static final String BOOK_ISBN_TEST = "11-333-12";
-    private static final String BOOK_ISBN_TEST_2 = "12-1234-12";
-    private static final String PUBLISHER_NAME_TEST = "Editorial Alfaguara";
-    private static final String PUBLISHER_NAME_TEST_2 = "Gigamesh";
-    private static final String PUBLISHER_COUNTRY_TEST = "ES";
-    private static final String PUBLISHER_COUNTRY_TEST_2 = "US";
-    private static final String AUTHOR_NAME_TEST = "Stephen";
-    private static final String AUTHOR_NAME_TEST_2 = "William";
-    private static final String AUTHOR_NAME_TEST_3 = "Miguel";
+    private static final long BOOK_ID_TEST1 = 3l;
+    private static final long BOOK_ID_TEST2 = 400l;
+    private static final long BOOK_ID_TEST3 = 401l;
+    private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";
+    private static final String BOOK_TITLE_TEST2 = "La espada del destino";
+    private static final String BOOK_ISBN_TEST1 = "11-333-12";
+    private static final String BOOK_ISBN_TEST2 = "12-1234-12";
+    private static final String PUBLISHER_NAME_TEST1 = "Editorial Alfaguara";
+    private static final String PUBLISHER_NAME_TEST2 = "Gigamesh";
+    private static final String PUBLISHER_COUNTRY_TEST1 = "ES";
+    private static final String PUBLISHER_COUNTRY_TEST2 = "US";
+    private static final String AUTHOR_NAME_TEST1 = "Stephen";
+    private static final String AUTHOR_NAME_TEST2 = "William";
+    private static final String AUTHOR_SURNAME_TEST1 = "King";
+    private static final String AUTHOR_SURNAME_TEST2 = "Shakespeare";
+    private static final LocalDate BOOK_RELEASEDATE_TEST1 = new LocalDate(2013, 1, 26);
+    private static final LocalDate BOOK_RELEASEDATE_TEST2 = new LocalDate(2011, 11, 12);
+    private static final int ONE_TIME = 1;
+    private static final int TWO_ITEMS = 2;
 
     private BookService service;
 
@@ -53,8 +57,8 @@ public class BookServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         service = new BookServiceImpl();
-        ReflectionTestUtils.setField(this.service, "bookRepository", this.bookRepository); // inject bookRepository
-        ReflectionTestUtils.setField(this.service, "sequenceIdRepository", this.sequenceIdRepository); // inject
+        ReflectionTestUtils.setField(this.service, "bookRepository", this.bookRepository);
+        ReflectionTestUtils.setField(this.service, "sequenceIdRepository", this.sequenceIdRepository);
         // sequenceIdRepository
     }
 
@@ -65,97 +69,103 @@ public class BookServiceTest {
 
         List<Book> result = service.findAll();
 
-        verify(bookRepository, timeout(1)).findAll();
-        assertEquals("2 elements in page", 2, result.size());
-    }
-
-    private List<Book> createTestBookList() {
-        return Arrays.asList(new Book(BOOK_ID_TEST, BOOK_TITLE_TEST, Arrays.asList(new Author().setName(AUTHOR_NAME_TEST)),
-                BOOK_ISBN_TEST, new LocalDate(), new Publisher().setName(PUBLISHER_NAME_TEST).setCountry
-                (PUBLISHER_COUNTRY_TEST).setOnline(false)), new Book(BOOK_ID_TEST_2, BOOK_TITLE_TEST_2,
-                Arrays.asList(new Author().setName(AUTHOR_NAME_TEST_2), new Author().setName(AUTHOR_NAME_TEST_3)),
-                BOOK_ISBN_TEST_2, new LocalDate(), new Publisher().setName(PUBLISHER_NAME_TEST_2).setCountry
-                (PUBLISHER_COUNTRY_TEST_2).setOnline(false)));
+        verify(bookRepository, times(ONE_TIME)).findAll();
+        assertEquals("2 elements in page", TWO_ITEMS, result.size());
     }
 
     @Test
     public void testDelete() {
-        long id = 1l;
-        doNothing().when(bookRepository).delete(id);
+        doNothing().when(bookRepository).delete(BOOK_ID_TEST1);
 
-        service.delete(id);
+        service.delete(BOOK_ID_TEST1);
 
-        verify(bookRepository, times(1)).delete(id);
+        verify(bookRepository, times(ONE_TIME)).delete(BOOK_ID_TEST1);
     }
 
     @Test
     public void testFindOne() {
-        when(bookRepository.findOne(1l)).thenReturn(new Book().setId(1l));
+        when(bookRepository.findOne(BOOK_ID_TEST1)).thenReturn(new Book().setId(BOOK_ID_TEST1));
 
-        Book result = service.findOne(1l);
+        Book result = service.findOne(BOOK_ID_TEST1);
 
-        verify(bookRepository, timeout(1)).findOne(1l);
-        assertEquals("Deben ser iguales", Long.valueOf(1l), result.getId());
+        verify(bookRepository, timeout(ONE_TIME)).findOne(BOOK_ID_TEST1);
+        assertEquals("Deben ser iguales", Long.valueOf(BOOK_ID_TEST1), result.getId());
     }
 
     @Test(expected = NotFoundException.class)
     public void testNotFound() {
-        when(bookRepository.findOne(1l)).thenReturn(null);
+        when(bookRepository.findOne(BOOK_ID_TEST1)).thenReturn(null);
 
-        service.findOne(1l);
+        service.findOne(BOOK_ID_TEST1);
     }
 
     @Test
     public void testSave() {
-        Book foo = new Book().setTitle("sample Text");
-        Book dbBook = new Book().copyFrom(foo).setId(1l);
+        Book foo = new BookBuilder().title(BOOK_TITLE_TEST2).build();
+        Book emptyFoo = new BookBuilder().build();
+        Book dbBook = emptyFoo.copyFrom(foo).setId(BOOK_ID_TEST1);
         when(bookRepository.save(foo)).thenReturn(dbBook);
 
         Book saved = service.save(foo);
 
-        assertEquals(dbBook, saved);
+        assertEquals("Deben ser iguales", dbBook, saved);
     }
 
     @Test
     public void testCreate() {
-        Book foo = new Book().setTitle("sample Text");
-        Book dbBook = new Book().copyFrom(foo).setId(1l);
-        when(sequenceIdRepository.getNextSequenceId(BookRepository.BOOK_COLLECTION)).thenReturn(5l);
-        when(bookRepository.save(foo)).thenReturn(dbBook.setId(5l));
+        Book foo = new BookBuilder().title(BOOK_TITLE_TEST2).build();
+        Book emptyFoo = new BookBuilder().build();
+        Book dbBook = emptyFoo.copyFrom(foo).setId(BOOK_ID_TEST1);
+        when(sequenceIdRepository.getNextSequenceId(BookRepository.BOOK_COLLECTION)).thenReturn(BOOK_ID_TEST3);
+        when(bookRepository.save(foo)).thenReturn(dbBook.setId(BOOK_ID_TEST3));
 
         Book saved = service.create(foo);
 
-        assertEquals(dbBook, saved);
-        assertEquals(saved.getId(), Long.valueOf(5l));
+        assertEquals("Deben ser iguales", dbBook, saved);
+        assertEquals("Deben ser iguales", Long.valueOf(BOOK_ID_TEST3), saved.getId());
     }
 
     @Test
     public void testFindByTitle() {
-        String comunTitle = "Titulo igual";
-        List<Book> books = Arrays.asList(new Book(BOOK_ID_TEST, comunTitle, Arrays.asList(new Author().setName
-                (AUTHOR_NAME_TEST)), "11-333-12", new LocalDate(), new Publisher().setName(PUBLISHER_NAME_TEST).setCountry
-                ("ES").setOnline(false)), new Book(14l, comunTitle, Arrays.asList(new Author().setName("Nadie")), "12-9999-92",
-                new LocalDate(), new Publisher().setName("Editorial 5").setCountry(PUBLISHER_COUNTRY_TEST_2).setOnline(true)));
-        when(bookRepository.findByTitle(comunTitle)).thenReturn(books);
+        List<Book> bookResults = Arrays.asList(new BookBuilder().id(BOOK_ID_TEST1).title(BOOK_TITLE_TEST1).build());
+        when(bookRepository.findByTitle(BOOK_TITLE_TEST1)).thenReturn(bookResults);
 
-        List<Book> result = service.findByTitle(comunTitle);
+        List<Book> result = service.findByTitle(BOOK_TITLE_TEST1);
 
-        verify(bookRepository, timeout(1)).findByTitle(comunTitle);
-        assertEquals("2 elements in page", 2, result.size());
+        verify(bookRepository, timeout(ONE_TIME)).findByTitle(BOOK_TITLE_TEST1);
+        assertEquals("Deben ser iguales", ONE_TIME, result.size());
     }
 
     @Test
     public void testFindByReleaseDate() {
-        LocalDate comunLocalDate = new LocalDate();
-        List<Book> books = Arrays.asList(new Book(BOOK_ID_TEST, BOOK_TITLE_TEST, Arrays.asList(new Author().setName
-                (AUTHOR_NAME_TEST)), "11-333-12", comunLocalDate, new Publisher().setName(PUBLISHER_NAME_TEST).setCountry("ES")
-                .setOnline(false)), new Book(14l, "Libro prueba 2", Arrays.asList(new Author().setName("Nadie")), "12-9999-92",
-                comunLocalDate, new Publisher().setName("Editorial 5").setCountry(PUBLISHER_COUNTRY_TEST_2).setOnline(true)));
-        when(bookRepository.findByReleaseDate(comunLocalDate)).thenReturn(books);
+        List<Book> bookResults = Arrays.asList(new BookBuilder().id(BOOK_ID_TEST1).releaseDate(BOOK_RELEASEDATE_TEST1).build());
+        when(bookRepository.findByReleaseDate(BOOK_RELEASEDATE_TEST1)).thenReturn(bookResults);
 
-        List<Book> result = service.findByReleaseDate(comunLocalDate);
+        List<Book> result = service.findByReleaseDate(BOOK_RELEASEDATE_TEST1);
 
-        verify(bookRepository, timeout(1)).findByReleaseDate(comunLocalDate);
-        assertEquals("2 elements in page", 2, result.size());
+        verify(bookRepository, timeout(ONE_TIME)).findByReleaseDate(BOOK_RELEASEDATE_TEST1);
+        assertEquals("Deben ser iguales", ONE_TIME, result.size());
     }
+
+    private List<Book> createTestBookList() {
+        Book book1 = new BookBuilder()
+                .id(BOOK_ID_TEST1)
+                .title(BOOK_TITLE_TEST1)
+                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .isbn(BOOK_ISBN_TEST1)
+                .releaseDate(BOOK_RELEASEDATE_TEST1)
+                .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, false))
+                .build();
+        Book book2 = new BookBuilder()
+                .id(BOOK_ID_TEST2)
+                .title(BOOK_TITLE_TEST2)
+                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST2, AUTHOR_SURNAME_TEST2)))
+                .isbn(BOOK_ISBN_TEST2)
+                .releaseDate(BOOK_RELEASEDATE_TEST2)
+                .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST2, true))
+                .build();
+
+        return Arrays.asList(book1, book2);
+    }
+
 }

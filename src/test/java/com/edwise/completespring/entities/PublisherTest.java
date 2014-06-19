@@ -79,7 +79,7 @@ public class PublisherTest {
         assertThat(publisherString, containsString("isOnline=false"));
     }
 
-    private Publisher createPublisher(String name, String country, boolean isOnline) {
+    public static Publisher createPublisher(String name, String country, boolean isOnline) {
         return new Publisher()
                 .setName(name)
                 .setCountry(country)

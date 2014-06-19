@@ -20,8 +20,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 public class RestExceptionProcessorTest {
-
-    // TODO refactorizar tests...
+    private static final int ONE_ITEM = 1;
+    private static final int TWO_ITEMS = 2;
+    private static final String FIELD_ERROR_OBJECT_TEST1 = "Book";
+    private static final String FIELD_ERROR_FIELD_TEST1 = "title";
+    private static final String FIELD_ERROR_FIELD_TEST2 = "isbn";
+    private static final String FIELD_ERROR_MESSAGE_TEST1 = "No puede ser nulo";
+    private static final String FIELD_ERROR_MESSAGE_TEST2 = "No puede ser vacio";
+    private static final String EXCEPTION_MESSAGE_TEST1 = "No existe la entidad";
 
     private RestExceptionProcessor restExceptionProcessor;
 
@@ -40,23 +46,31 @@ public class RestExceptionProcessorTest {
 
     @Test
     public void testEntityNotFound() {
-        NotFoundException exception = new NotFoundException("No existe la entidad");
+        NotFoundException exception = new NotFoundException(EXCEPTION_MESSAGE_TEST1);
+
         ErrorInfo errorInfo = restExceptionProcessor.entityNotFound(request, exception);
+
         assertNotNull("No puede ser nulo", errorInfo);
-        assertEquals("Deben ser urls iguales", errorInfo.getUrl(), request.getRequestURL().toString());
-        assertEquals("Deben ser mensajes iguales", errorInfo.getErrors().size(), 1);
+        assertEquals("Deben ser urls iguales", request.getRequestURL().toString(), errorInfo.getUrl());
+        assertEquals("Deben ser mensajes iguales", ONE_ITEM, errorInfo.getErrors().size());
     }
 
     @Test
     public void testInvalidPostData() {
         when(errors.getFieldErrors()).thenReturn(Arrays.asList(
-                new FieldError("field1", "field1", "No puede ser nulo"),
-                new FieldError("field2", "field2", "No puede ser vacio")));
+                createFieldError(FIELD_ERROR_OBJECT_TEST1, FIELD_ERROR_FIELD_TEST1, FIELD_ERROR_MESSAGE_TEST1),
+                createFieldError(FIELD_ERROR_OBJECT_TEST1, FIELD_ERROR_FIELD_TEST2, FIELD_ERROR_MESSAGE_TEST2)));
         InvalidRequestException exception = new InvalidRequestException(errors);
+
         ErrorInfo errorInfo = restExceptionProcessor.invalidPostData(request, exception);
+
         assertNotNull("No puede ser nulo", errorInfo);
-        assertEquals("Deben ser urls iguales", errorInfo.getUrl(), request.getRequestURL().toString());
-        assertEquals("Deben ser mensajes iguales", errorInfo.getErrors().size(), 2);
+        assertEquals("Deben ser urls iguales", request.getRequestURL().toString(), errorInfo.getUrl());
+        assertEquals("Deben ser mensajes iguales", TWO_ITEMS, errorInfo.getErrors().size());
+    }
+
+    private FieldError createFieldError(String object, String field, String message) {
+        return new FieldError(object, field, message);
     }
 
 }

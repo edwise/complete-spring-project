@@ -77,7 +77,7 @@ public class AuthorTest {
         assertThat(authorString, containsString("surname=null"));
     }
 
-    private Author createAuthor(String name, String surname) {
+    public static Author createAuthor(String name, String surname) {
         return new Author()
                 .setName(name)
                 .setSurname(surname);
