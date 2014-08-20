@@ -20,7 +20,7 @@ public class FooResourceAssembler extends ResourceAssemblerSupport<Foo, FooResou
 
     public FooResource toResource(Foo foo) {
         FooResource result = instantiateResource(foo);
-        result.foo = foo;
+        result.setFoo(foo);
         result.add(linkTo(methodOn(FooController.class).getAll()).slash(foo.getId()).withSelfRel());
 
         return result;

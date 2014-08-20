@@ -13,6 +13,6 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(doNotUseGetters = true)
 @ToString(doNotUseGetters = true)
 class ErrorItem {
-    protected String field;
-    protected String message;
+    private String field;
+    private String message;
 }

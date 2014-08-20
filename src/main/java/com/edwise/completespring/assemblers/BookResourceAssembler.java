@@ -20,7 +20,7 @@ public class BookResourceAssembler extends ResourceAssemblerSupport<Book, BookRe
 
     public BookResource toResource(Book book) {
         BookResource result = instantiateResource(book);
-        result.book = book;
+        result.setBook(book);
         result.add(linkTo(methodOn(BookController.class).getAll()).slash(book.getId()).withSelfRel());
 
         return result;

@@ -28,6 +28,9 @@ import java.util.List;
 public class BookController {
     private final Logger log = LoggerFactory.getLogger(BookController.class);
 
+    private static final int RESPONSE_CODE_OK = 200;
+    private static final int RESPONSE_CODE_NO_RESPONSE = 204;
+
     @Autowired
     private BookResourceAssembler bookResourceAssembler;
 
@@ -37,7 +40,7 @@ public class BookController {
     @RequestMapping(method = RequestMethod.GET, value = "/api/book", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get Books", notes = "Returns all books")
     @ApiResponses({
-            @ApiResponse(code = 200, response = BookResource.class, message = "Exits one book at least")
+            @ApiResponse(code = RESPONSE_CODE_OK, response = BookResource.class, message = "Exits one book at least")
     })
     public ResponseEntity<List<BookResource>> getAll() {
         List<Book> books = bookService.findAll();
@@ -49,7 +52,7 @@ public class BookController {
     @RequestMapping(method = RequestMethod.GET, value = "/api/book/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get one Book", response = BookResource.class, notes = "Returns one book")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Exists this book")
+            @ApiResponse(code = RESPONSE_CODE_OK, message = "Exists this book")
     })
     public ResponseEntity<BookResource> getBook(@ApiParam(defaultValue = "1", value = "The id of the book to return")
                                                 @PathVariable long id) {
@@ -63,7 +66,7 @@ public class BookController {
     @RequestMapping(method = RequestMethod.POST, value = "/api/book", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Create Book", notes = "Create a book")
     @ApiResponses({
-            @ApiResponse(code = 204, message = "Successful create of a book")
+            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful create of a book")
     })
     public void createBook(@Valid @RequestBody Book book, BindingResult errors) {
         if (errors.hasErrors()) {
@@ -78,7 +81,7 @@ public class BookController {
     @RequestMapping(method = RequestMethod.PUT, value = "/api/book/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Update Book", notes = "Update a book")
     @ApiResponses({
-            @ApiResponse(code = 204, message = "Successful update of book")
+            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful update of book")
     })
     public void updateBook(@ApiParam(defaultValue = "1", value = "The id of the book to update")
                            @PathVariable long id,
@@ -96,7 +99,7 @@ public class BookController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/api/book/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Delete Book", notes = "Delete a book")
     @ApiResponses({
-            @ApiResponse(code = 204, message = "Successful delete of a book")
+            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful delete of a book")
     })
     public void deleteBook(@ApiParam(defaultValue = "1", value = "The id of the book to delete")
                            @PathVariable long id) {

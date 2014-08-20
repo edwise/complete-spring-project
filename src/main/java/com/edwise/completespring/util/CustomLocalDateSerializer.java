@@ -13,10 +13,10 @@ import java.io.IOException;
  * Created by user EAnton on 04/04/2014.
  */
 public class CustomLocalDateSerializer extends JsonSerializer<LocalDate> {
-    private final static DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
 
     @Override
     public void serialize(LocalDate value, JsonGenerator generator, SerializerProvider serializerProvider) throws IOException {
-        generator.writeString(formatter.print(value));
+        generator.writeString(DATE_TIME_FORMATTER.print(value));
     }
 }

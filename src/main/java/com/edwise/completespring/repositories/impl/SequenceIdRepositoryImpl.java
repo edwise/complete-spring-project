@@ -21,7 +21,7 @@ public class SequenceIdRepositoryImpl implements SequenceIdRepository {
     private MongoOperations mongoOperation;
 
     @Override
-    public long getNextSequenceId(String key) throws SequenceException {
+    public long getNextSequenceId(String key) {
         //get sequence id
         Query query = new Query(Criteria.where("_id").is(key));
 

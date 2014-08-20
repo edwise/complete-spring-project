@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface BookService extends Service<Book, Long> {
 
-    public List<Book> findByTitle(String title);
+    List<Book> findByTitle(String title);
 
-    public List<Book> findByReleaseDate(LocalDate releaseDate);
+    List<Book> findByReleaseDate(LocalDate releaseDate);
 
-    public Book create(Book book);
+    Book create(Book book);
 }

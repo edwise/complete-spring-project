@@ -28,13 +28,16 @@ import java.util.List;
 public class FooController {
     private final Logger log = LoggerFactory.getLogger(FooController.class);
 
+    private static final int RESPONSE_CODE_OK = 200;
+    private static final int RESPONSE_CODE_NO_RESPONSE = 204;
+
     @Autowired
     private FooResourceAssembler fooResourceAssembler;
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/foo")
     @ApiOperation(value = "Get Foos", notes = "Returns all foos")
     @ApiResponses({
-            @ApiResponse(code = 200, response = FooResource.class, message = "Exits one foo at least")
+            @ApiResponse(code = RESPONSE_CODE_OK, response = FooResource.class, message = "Exits one foo at least")
     })
     public ResponseEntity<List<FooResource>> getAll() {
         List<Foo> foos = Arrays.asList(
@@ -49,7 +52,7 @@ public class FooController {
     @RequestMapping(method = RequestMethod.GET, value = "/api/foo/{id}")
     @ApiOperation(value = "Get one Foo", response = FooResource.class, notes = "Returns one foo")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Exists this foo")
+            @ApiResponse(code = RESPONSE_CODE_OK, message = "Exists this foo")
     })
     public ResponseEntity<FooResource> getFoo(@ApiParam(defaultValue = "1", value = "The id of the foo to return")
                                               @PathVariable long id) {
@@ -63,7 +66,7 @@ public class FooController {
     @RequestMapping(method = RequestMethod.POST, value = "/api/foo")
     @ApiOperation(value = "Create Foo", notes = "Create a foo")
     @ApiResponses({
-            @ApiResponse(code = 204, message = "Successful create of a foo")
+            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful create of a foo")
     })
     public void createFoo(@Valid @RequestBody Foo foo, BindingResult errors) {
         if (errors.hasErrors()) {
@@ -76,7 +79,7 @@ public class FooController {
     @RequestMapping(method = RequestMethod.PUT, value = "/api/foo/{id}")
     @ApiOperation(value = "Update Foo", notes = "Update a foo")
     @ApiResponses({
-            @ApiResponse(code = 204, message = "Successful update of foo")
+            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful update of foo")
     })
     public void updateFoo(@ApiParam(defaultValue = "1", value = "The id of the foo to update")
                           @PathVariable long id,
@@ -91,7 +94,7 @@ public class FooController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/api/foo/{id}")
     @ApiOperation(value = "Delete Foo", notes = "Delete a foo")
     @ApiResponses({
-            @ApiResponse(code = 204, message = "Successful delete of a foo")
+            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful delete of a foo")
     })
     public void deleteFoo(@ApiParam(defaultValue = "1", value = "The id of the foo to delete")
                           @PathVariable long id) {
