@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.joda.time.LocalDate;
@@ -20,36 +20,24 @@ import javax.validation.constraints.NotNull;
 
 
 @ApiModel(value = "Foo entity", description = "Complete info of a entity foo")
-@Setter
+@Data
 @Accessors(chain = true)
 @EqualsAndHashCode(exclude = {"id"}, doNotUseGetters = true)
 @ToString(doNotUseGetters = true)
 public class Foo {
 
+    @ApiModelProperty(value = "Sample Id Attribute", required = true)
     private Long id;
 
+    @ApiModelProperty(value = "Sample Text Attribute", required = true)
     @NotNull
     private String sampleTextAttribute;
 
-    @NotNull
+    @ApiModelProperty(value = "Sample Local Date Attribute", required = true)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = CustomLocalDateSerializer.class)
+    @NotNull
     private LocalDate sampleLocalDateAttribute;
-
-    @ApiModelProperty(value = "Sample Id Attribute", required = true)
-    public Long getId() {
-        return id;
-    }
-
-    @ApiModelProperty(value = "Sample Text Attribute", required = true)
-    public String getSampleTextAttribute() {
-        return sampleTextAttribute;
-    }
-
-    @ApiModelProperty(value = "Sample Local Date Attribute", required = true)
-    public LocalDate getSampleLocalDateAttribute() {
-        return sampleLocalDateAttribute;
-    }
 
     public Foo copyFrom(Foo other) {
         this.sampleTextAttribute = other.sampleTextAttribute;
