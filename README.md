@@ -48,7 +48,7 @@ Urls de acceso:
 
  - Swagger check -> http://localhost:8080/api-docs
 
- - Swagger UI    -> http://localhost:8080/index.html
+ - Swagger UI    -> http://localhost:8080/swagger/index.html
 
  - REST Books    -> http://localhost:8080/api/book
 
@@ -61,6 +61,6 @@ Fuentes:
  - http://www.spring.io/
 
  - http://www.mkyong.com/mongodb/spring-data-mongodb-auto-sequence-id-example/
-
-
-
+ 
+ - https://github.com/martypitt/swagger-springmvc
+ 
