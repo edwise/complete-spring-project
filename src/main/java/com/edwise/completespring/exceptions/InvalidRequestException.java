@@ -7,7 +7,7 @@ import org.springframework.validation.BindingResult;
  */
 public class InvalidRequestException extends RuntimeException {
 
-    private BindingResult errors;
+    private final BindingResult errors;
 
     public InvalidRequestException(BindingResult errors) {
         super(errors.toString());

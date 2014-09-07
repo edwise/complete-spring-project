@@ -116,7 +116,7 @@ public class BookServiceTest {
         Book foo = new BookBuilder().title(BOOK_TITLE_TEST2).build();
         Book emptyFoo = new BookBuilder().build();
         Book dbBook = emptyFoo.copyFrom(foo).setId(BOOK_ID_TEST1);
-        when(sequenceIdRepository.getNextSequenceId(BookRepository.BOOK_COLLECTION)).thenReturn(BOOK_ID_TEST3);
+        when(sequenceIdRepository.getNextSequenceId(BookServiceImpl.BOOK_COLLECTION)).thenReturn(BOOK_ID_TEST3);
         when(bookRepository.save(foo)).thenReturn(dbBook.setId(BOOK_ID_TEST3));
 
         Book saved = service.create(foo);

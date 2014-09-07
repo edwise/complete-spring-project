@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @Api(value = "books", description = "Books API")
 public class BookController {
-    private final Logger log = LoggerFactory.getLogger(BookController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BookController.class);
 
     private static final int RESPONSE_CODE_OK = 200;
     private static final int RESPONSE_CODE_NO_RESPONSE = 204;
@@ -74,7 +74,7 @@ public class BookController {
         }
         Book bookCreated = bookService.create(book);
 
-        log.info("Book created: " + bookCreated.toString());
+        LOG.info("Book created: " + bookCreated.toString());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -92,7 +92,7 @@ public class BookController {
         Book dbBook = bookService.findOne(id);
         dbBook = bookService.save(dbBook.copyFrom(book));
 
-        log.info("Book updated: " + dbBook.toString());
+        LOG.info("Book updated: " + dbBook.toString());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -105,6 +105,6 @@ public class BookController {
                            @PathVariable long id) {
         bookService.delete(id);
 
-        log.info("Book deleted: " + id);
+        LOG.info("Book deleted: " + id);
     }
 }

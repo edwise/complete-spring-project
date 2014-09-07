@@ -2,7 +2,7 @@ package com.edwise.completespring.repositories.impl;
 
 import com.edwise.completespring.entities.SequenceId;
 import com.edwise.completespring.exceptions.SequenceException;
-import com.edwise.completespring.repositories.BookRepository;
+import com.edwise.completespring.services.impl.BookServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -36,9 +36,9 @@ public class SequenceIdRepositoryImplTest {
     @Test
     public void testGetNextSequenceId() {
         when(mongoOperation.findAndModify(any(Query.class), any(Update.class), any(FindAndModifyOptions.class),
-                eq(SequenceId.class))).thenReturn(new SequenceId().setId(BookRepository.BOOK_COLLECTION).setSeq(6l));
+                eq(SequenceId.class))).thenReturn(new SequenceId().setId(BookServiceImpl.BOOK_COLLECTION).setSeq(6l));
 
-        long seqId = repository.getNextSequenceId(BookRepository.BOOK_COLLECTION);
+        long seqId = repository.getNextSequenceId(BookServiceImpl.BOOK_COLLECTION);
 
         verify(mongoOperation, times(ONE_TIME)).findAndModify(any(Query.class), any(Update.class),
                 any(FindAndModifyOptions.class), eq(SequenceId.class));
@@ -50,12 +50,12 @@ public class SequenceIdRepositoryImplTest {
         when(mongoOperation.findAndModify(any(Query.class), any(Update.class), any(FindAndModifyOptions.class),
                 eq(SequenceId.class))).thenReturn(null);
 
-        repository.getNextSequenceId(BookRepository.BOOK_COLLECTION);
+        repository.getNextSequenceId(BookServiceImpl.BOOK_COLLECTION);
     }
 
     @Test
     public void testSave() throws Exception {
-        repository.save(new SequenceId().setId(BookRepository.BOOK_COLLECTION).setSeq(TEST_SEQUENCE_ID));
+        repository.save(new SequenceId().setId(BookServiceImpl.BOOK_COLLECTION).setSeq(TEST_SEQUENCE_ID));
 
         verify(mongoOperation, times(ONE_TIME)).save(any(SequenceId.class));
     }

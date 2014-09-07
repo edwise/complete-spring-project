@@ -17,6 +17,8 @@ import java.util.List;
 @Service
 public class BookServiceImpl implements BookService {
 
+    public static final String BOOK_COLLECTION = "books";
+
     @Autowired
     private BookRepository bookRepository;
 
@@ -49,7 +51,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book create(Book book) {
-        Long id = sequenceIdRepository.getNextSequenceId(BookRepository.BOOK_COLLECTION);
+        Long id = sequenceIdRepository.getNextSequenceId(BOOK_COLLECTION);
         book.setId(id);
 
         return bookRepository.save(book);

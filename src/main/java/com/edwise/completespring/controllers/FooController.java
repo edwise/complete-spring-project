@@ -26,10 +26,11 @@ import java.util.List;
 @RestController
 @Api(value = "foos", description = "Foo API")
 public class FooController {
-    private final Logger log = LoggerFactory.getLogger(FooController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FooController.class);
 
     private static final int RESPONSE_CODE_OK = 200;
     private static final int RESPONSE_CODE_NO_RESPONSE = 204;
+    private static final String TEST_ATTRIBUTE_1 = "AttText1";
 
     @Autowired
     private FooResourceAssembler fooResourceAssembler;
@@ -41,8 +42,8 @@ public class FooController {
     })
     public ResponseEntity<List<FooResource>> getAll() {
         List<Foo> foos = Arrays.asList(
-                new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(new LocalDate()),
-                new Foo().setId(2l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(new LocalDate())
+                new Foo().setId(1L).setSampleTextAttribute(TEST_ATTRIBUTE_1).setSampleLocalDateAttribute(new LocalDate()),
+                new Foo().setId(2L).setSampleTextAttribute(TEST_ATTRIBUTE_1).setSampleLocalDateAttribute(new LocalDate())
         );
 
         List<FooResource> resourceList = fooResourceAssembler.toResources(foos);
@@ -57,7 +58,7 @@ public class FooController {
     public ResponseEntity<FooResource> getFoo(@ApiParam(defaultValue = "1", value = "The id of the foo to return")
                                               @PathVariable long id) {
         FooResource resource = fooResourceAssembler.toResource(
-                new Foo().setId(1l).setSampleTextAttribute("AttText1").setSampleLocalDateAttribute(new LocalDate())
+                new Foo().setId(1L).setSampleTextAttribute(TEST_ATTRIBUTE_1).setSampleLocalDateAttribute(new LocalDate())
         );
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
@@ -72,7 +73,7 @@ public class FooController {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }
-        log.info("Foo created: " + foo.toString());
+        LOG.info("Foo created: " + foo.toString());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -87,7 +88,7 @@ public class FooController {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }
-        log.info("Foo updated: " + foo.toString());
+        LOG.info("Foo updated: " + foo.toString());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -99,6 +100,6 @@ public class FooController {
     public void deleteFoo(@ApiParam(defaultValue = "1", value = "The id of the foo to delete")
                           @PathVariable long id) {
 
-        log.info("Foo deleted: " + id);
+        LOG.info("Foo deleted: " + id);
     }
 }

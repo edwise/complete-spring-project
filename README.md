@@ -1,7 +1,7 @@
 Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / funcionalidades:
 
  - Spring Boot: posibilidad de arrancar directamente con el plugin de maven o generar un war para despliegue en 
- tomcat o similar 
+ tomcat o similar. Con 'actuator' activado.
 
  - Servicio completo RESTful con Spring 4 (Books)
 
@@ -54,7 +54,10 @@ Urls de acceso:
 
  - Jacoco        -> DIRECTORIO_PROYECTO/target/sites/jacoco/index.html
 
-
+- Spring Boot actuator endpoints -> http://localhost:8080/env
+                                    http://localhost:8080/beans
+                                    http://localhost:8080/mappings
+                                    ...
 
 Fuentes:
 
