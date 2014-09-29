@@ -4,7 +4,7 @@
 
     <groupId>com.edwise.completespring</groupId>
     <artifactId>completeSpringProject</artifactId>
-    <version>0.8.6</version>
+    <version>0.8.7</version>
     <packaging>war</packaging>
 
     <name>completeSpringProject</name>
@@ -14,22 +14,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.7</java.version>
 
-        <spring.version>4.0.6.RELEASE</spring.version>
-        <spring.hateoas.version>0.16.0.RELEASE</spring.hateoas.version>
-        <spring.data.mongodb.version>1.5.2.RELEASE</spring.data.mongodb.version>
         <swagger.springmvc.version>0.8.8</swagger.springmvc.version>
-        <lombok.version>1.14.4</lombok.version>
-        <jacoco.mavenplugin.version>0.7.1.201405082137</jacoco.mavenplugin.version>
+        <lombok.version>1.14.8</lombok.version>
+        <jacoco.mavenplugin.version>0.7.2.201409121644</jacoco.mavenplugin.version>
         <joda.time.version>2.4</joda.time.version>
         <jackson.datatype.joda.version>2.4.2</jackson.datatype.joda.version>
         <apache.commons.lang3.version>3.3.2</apache.commons.lang3.version>
         <hibernate.validator.version>5.1.2.Final</hibernate.validator.version>
+        <junit.version>4.11</junit.version>
+        <mockito.version>1.9.5</mockito.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.1.6.RELEASE</version>
+        <version>1.1.7.RELEASE</version>
     </parent>
 
     <dependencies>
@@ -52,38 +51,24 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.hateoas</groupId>
             <artifactId>spring-hateoas</artifactId>
-            <version>${spring.hateoas.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.mangofactory</groupId>
             <artifactId>swagger-springmvc</artifactId>
             <version>${swagger.springmvc.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
-            <version>${spring.data.mongodb.version}</version>
         </dependency>
 
         <dependency>
@@ -120,14 +105,14 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>1.9.5</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 
