@@ -5,9 +5,6 @@ import com.edwise.completespring.entities.Book;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 /**
  * Created by user EAnton on 04/04/2014.
  */
@@ -18,11 +15,15 @@ public class BookResourceAssembler extends ResourceAssemblerSupport<Book, BookRe
         super(BookController.class, BookResource.class);
     }
 
-    public BookResource toResource(Book book) {
-        BookResource result = instantiateResource(book);
-        result.setBook(book);
-        result.add(linkTo(methodOn(BookController.class).getAll()).slash(book.getId()).withSelfRel());
+    @Override
+    protected BookResource instantiateResource(Book book) {
+        BookResource bookResource = super.instantiateResource(book);
+        bookResource.setBook(book);
 
-        return result;
+        return bookResource;
+    }
+
+    public BookResource toResource(Book book) {
+        return createResourceWithId(book.getId(), book);
     }
 }

@@ -5,9 +5,6 @@ import com.edwise.completespring.entities.Foo;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 /**
  * Created by user EAnton on 25/04/2014.
  */
@@ -18,11 +15,15 @@ public class FooResourceAssembler extends ResourceAssemblerSupport<Foo, FooResou
         super(FooController.class, FooResource.class);
     }
 
-    public FooResource toResource(Foo foo) {
-        FooResource result = instantiateResource(foo);
-        result.setFoo(foo);
-        result.add(linkTo(methodOn(FooController.class).getAll()).slash(foo.getId()).withSelfRel());
+    @Override
+    protected FooResource instantiateResource(Foo foo) {
+        FooResource fooResource = super.instantiateResource(foo);
+        fooResource.setFoo(foo);
 
-        return result;
+        return fooResource;
+    }
+
+    public FooResource toResource(Foo foo) {
+        return this.createResourceWithId(foo.getId(), foo);
     }
 }
