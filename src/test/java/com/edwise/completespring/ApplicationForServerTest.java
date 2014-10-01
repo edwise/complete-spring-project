@@ -13,10 +13,10 @@ public class ApplicationForServerTest {
 
     private static final int ONE_TIME = 1;
 
-    private ApplicationForServer applicationForServer;
-
     @Mock
     private SpringApplicationBuilder springApplicationBuilder;
+
+    private ApplicationForServer applicationForServer;
 
     @Before
     public void setUp() {

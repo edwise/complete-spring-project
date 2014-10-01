@@ -5,32 +5,35 @@ import com.edwise.completespring.exceptions.SequenceException;
 import com.edwise.completespring.services.impl.BookServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class SequenceIdRepositoryImplTest {
 
     private static final long TEST_SEQUENCE_ID = 7l;
     private static final int ONE_TIME = 1;
 
-    private SequenceIdRepositoryImpl repository;
-
     @Mock
     private MongoOperations mongoOperation;
+
+    @InjectMocks
+    private SequenceIdRepositoryImpl repository = new SequenceIdRepositoryImpl();
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        repository = new SequenceIdRepositoryImpl();
-        ReflectionTestUtils.setField(this.repository, "mongoOperation", this.mongoOperation);
     }
 
     @Test

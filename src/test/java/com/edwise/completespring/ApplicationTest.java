@@ -6,9 +6,9 @@ import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
@@ -18,7 +18,6 @@ public class ApplicationTest {
 
     private static final int ONE_TIME = 1;
     private static final int FOUR_TIMES = 4;
-    private Application application;
 
     @Mock
     BookRepository bookRepository;
@@ -26,12 +25,12 @@ public class ApplicationTest {
     @Mock
     SequenceIdRepository sequenceRepository;
 
+    @InjectMocks
+    private Application application  = new Application();
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        application = new Application();
-        ReflectionTestUtils.setField(this.application, "bookRepository", this.bookRepository);
-        ReflectionTestUtils.setField(this.application, "sequenceRepository", this.sequenceRepository);
     }
 
     @Test

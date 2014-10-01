@@ -10,6 +10,7 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,6 @@ public class BookControllerTest {
     private static final int ONE_TIME = 1;
     private static final String RIGHT_URL_WITH_BOOK_ID = "http://localhost/api/book/1";
 
-    private BookController controller;
-
     private MockHttpServletRequest request;
 
     @Mock
@@ -55,13 +54,15 @@ public class BookControllerTest {
     @Mock
     BindingResult errors;
 
+    @InjectMocks
+    private BookController controller = new BookController();
+
     @Before
     public void setUp() {
         this.request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(this.request));
         MockitoAnnotations.initMocks(this);
-        this.controller = new BookController();
-        ReflectionTestUtils.setField(this.controller, "bookService", this.bookService);
+        // TODO revisar si sacar a atributo ese resource assembler
         ReflectionTestUtils.setField(controller, "bookResourceAssembler", new BookResourceAssembler());
     }
 

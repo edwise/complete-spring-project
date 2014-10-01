@@ -29,9 +29,9 @@ public class FooControllerTest {
     private static final LocalDate DATE_TEST1 = new LocalDate(2013, 1, 26);
     public static final String RIGHT_URL_FOO_1 = "http://localhost/api/foo/1";
 
-    private FooController controller;
-
     private MockHttpServletRequest request;
+
+    private FooController controller;
 
     @Mock
     BindingResult errors;
@@ -42,6 +42,7 @@ public class FooControllerTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(this.request));
         MockitoAnnotations.initMocks(this);
         this.controller = new FooController();
+        // TODO revisar si sacar a atributo ese resource assembler
         ReflectionTestUtils.setField(controller, "fooResourceAssembler", new FooResourceAssembler());
     }
 

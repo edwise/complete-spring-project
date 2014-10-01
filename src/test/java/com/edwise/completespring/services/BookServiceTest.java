@@ -11,15 +11,19 @@ import com.edwise.completespring.services.impl.BookServiceImpl;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class BookServiceTest {
     private static final long BOOK_ID_TEST1 = 3l;
@@ -42,21 +46,18 @@ public class BookServiceTest {
     private static final int ONE_TIME = 1;
     private static final int TWO_ITEMS = 2;
 
-    private BookService service;
-
     @Mock
     BookRepository bookRepository;
 
     @Mock
     SequenceIdRepository sequenceIdRepository;
 
+    @InjectMocks
+    private BookService service = new BookServiceImpl();;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        service = new BookServiceImpl();
-        ReflectionTestUtils.setField(this.service, "bookRepository", this.bookRepository);
-        ReflectionTestUtils.setField(this.service, "sequenceIdRepository", this.sequenceIdRepository);
-        // sequenceIdRepository
     }
 
     @Test
