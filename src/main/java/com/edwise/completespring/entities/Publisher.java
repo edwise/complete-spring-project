@@ -8,9 +8,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.NotEmpty;
 
-/**
- * Created by user EAnton on 25/04/2014.
- */
 @ApiModel(value = "Publisher entity", description = "Complete info of a entity publisher")
 @Data
 @Accessors(chain = true)

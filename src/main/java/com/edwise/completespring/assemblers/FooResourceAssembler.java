@@ -5,9 +5,6 @@ import com.edwise.completespring.entities.Foo;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by user EAnton on 25/04/2014.
- */
 @Component
 public class FooResourceAssembler extends ResourceAssemblerSupport<Foo, FooResource> {
 

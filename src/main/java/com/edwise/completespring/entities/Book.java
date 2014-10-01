@@ -20,9 +20,6 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by user EAnton on 04/04/2014.
- */
 @Document(collection = "books")
 @ApiModel(value = "Book entity", description = "Complete info of a entity book")
 @Data

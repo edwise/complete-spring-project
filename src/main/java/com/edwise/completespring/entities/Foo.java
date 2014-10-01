@@ -14,11 +14,6 @@ import org.joda.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 
-/**
- * Created by user EAnton on 25/04/2014.
- */
-
-
 @ApiModel(value = "Foo entity", description = "Complete info of a entity foo")
 @Data
 @Accessors(chain = true)

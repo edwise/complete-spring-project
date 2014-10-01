@@ -4,9 +4,6 @@ import org.joda.time.LocalDate;
 
 import java.util.List;
 
-/**
- * Created by Edu on 07/06/2014.
- */
 public class BookBuilder {
 
     private Book book;

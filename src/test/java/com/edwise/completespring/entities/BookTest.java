@@ -8,9 +8,6 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 import static org.hamcrest.core.StringContains.containsString;
 
-/**
- * Created by user EAnton on 28/04/2014.
- */
 public class BookTest {
 
     private static final long BOOK_ID_TEST1 = 31l;

@@ -25,9 +25,6 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-/**
- * Created by user EAnton on 04/04/2014.
- */
 public class BookControllerTest {
     private static final long BOOK_ID_TEST1 = 1l;
     private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";

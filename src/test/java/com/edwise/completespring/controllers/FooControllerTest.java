@@ -23,9 +23,6 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-/**
- * Created by user EAnton on 25/04/2014.
- */
 public class FooControllerTest {
     private static final long FOO_ID_TEST1 = 1l;
     private static final String FOO_TEXT_ATTR_TEST1 = "AttText1";

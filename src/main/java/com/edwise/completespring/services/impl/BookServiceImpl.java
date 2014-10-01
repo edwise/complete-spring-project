@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * Created by user EAnton on 07/04/2014.
- */
 @Service
 public class BookServiceImpl implements BookService {
 

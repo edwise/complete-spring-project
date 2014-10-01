@@ -5,9 +5,6 @@ import com.edwise.completespring.entities.Book;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by user EAnton on 04/04/2014.
- */
 @Component
 public class BookResourceAssembler extends ResourceAssemblerSupport<Book, BookResource> {
 

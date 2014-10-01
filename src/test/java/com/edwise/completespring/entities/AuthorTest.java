@@ -6,9 +6,6 @@ import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotEquals;
 
-/**
- * Created by user EAnton on 28/04/2014.
- */
 public class AuthorTest {
     private static final String NAME_TEST1 = "J.";
     private static final String NAME_TEST2 = "Stephen";

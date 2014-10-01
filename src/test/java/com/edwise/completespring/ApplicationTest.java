@@ -14,9 +14,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-/**
- * Unit test for simple Application.
- */
 public class ApplicationTest {
 
     private static final int ONE_TIME = 1;

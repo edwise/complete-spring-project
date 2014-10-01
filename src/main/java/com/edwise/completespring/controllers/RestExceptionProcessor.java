@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * Created by EAnton on 09/05/2014.
- */
 @ControllerAdvice
 public class RestExceptionProcessor {
     private static final String FIELD_ID = "id";

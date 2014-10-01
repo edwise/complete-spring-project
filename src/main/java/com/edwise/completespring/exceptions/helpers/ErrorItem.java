@@ -5,9 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-/**
- * Created by Edu on 04/06/2014.
- */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(doNotUseGetters = true)

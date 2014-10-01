@@ -8,9 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Created by EAnton on 21/08/2014.
- */
 @Configuration
 @EnableSwagger
 public class SwaggerPluginConfig {

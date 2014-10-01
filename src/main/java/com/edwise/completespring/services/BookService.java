@@ -5,9 +5,6 @@ import org.joda.time.LocalDate;
 
 import java.util.List;
 
-/**
- * Created by user EAnton on 07/04/2014.
- */
 public interface BookService extends Service<Book, Long> {
 
     List<Book> findByTitle(String title);

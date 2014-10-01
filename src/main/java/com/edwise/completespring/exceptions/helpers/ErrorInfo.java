@@ -8,10 +8,6 @@ import lombok.experimental.Accessors;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by EAnton on 09/05/2014.
- */
-
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(doNotUseGetters = true)

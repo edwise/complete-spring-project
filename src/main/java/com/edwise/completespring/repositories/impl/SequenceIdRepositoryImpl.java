@@ -11,9 +11,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-/**
- * Created by user EAnton on 07/04/2014.
- */
 @Repository
 public class SequenceIdRepositoryImpl implements SequenceIdRepository {
 

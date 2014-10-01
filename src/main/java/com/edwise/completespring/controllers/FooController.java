@@ -27,11 +27,6 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by user EAnton on 25/04/2014.
- *
- * Url: /api/foo
- */
 @RestController
 @RequestMapping(value = "/api/foo/")
 @Api(value = "foos", description = "Foo API")

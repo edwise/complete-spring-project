@@ -21,9 +21,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-/**
- * Created by user EAnton on 07/04/2014.
- */
 public class BookServiceTest {
     private static final long BOOK_ID_TEST1 = 3l;
     private static final long BOOK_ID_TEST2 = 400l;

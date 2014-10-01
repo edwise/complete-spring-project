@@ -6,9 +6,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.hateoas.ResourceSupport;
 
-/**
- * Created by user EAnton on 25/04/2014.
- */
 @Getter
 @Setter
 @Accessors(chain = true)

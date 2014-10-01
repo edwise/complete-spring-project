@@ -7,9 +7,6 @@ import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotEquals;
 
-/**
- * Created by user EAnton on 28/04/2014.
- */
 public class FooTest {
     private static final long ID_TEST1 = 123l;
     private static final long ID_TEST2 = 456l;
