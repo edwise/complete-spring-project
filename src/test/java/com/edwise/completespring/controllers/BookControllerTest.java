@@ -141,7 +141,7 @@ public class BookControllerTest {
         ResponseEntity<BookResource> result = controller.getBook(id);
 
         verify(bookService, times(ONE_TIME)).findOne(id);
-        assertEquals("Deben ser iguales", RIGHT_URL_WITH_BOOK_ID, result.getBody().getLink("self").getHref());
+        assertEquals(RIGHT_URL_WITH_BOOK_ID, result.getBody().getLink("self").getHref());
     }
 
     @Test(expected = NotFoundException.class)

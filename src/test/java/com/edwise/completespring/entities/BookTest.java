@@ -36,7 +36,7 @@ public class BookTest {
 
         bookTo.copyFrom(bookFrom);
 
-        assertEquals("No son iguales", bookTo, bookFrom);
+        assertEquals(bookTo, bookFrom);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class BookTest {
                 .publisher(createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
                 .build();
 
-        assertTrue("Deben ser iguales", book1.equals(book2) && book2.equals(book1));
+        assertTrue(book1.equals(book2) && book2.equals(book1));
     }
 
     @Test
@@ -80,13 +80,13 @@ public class BookTest {
                 .publisher(createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST1, false))
                 .build();
 
-        assertFalse("No deben ser iguales", book1.equals(book2) || book2.equals(book1));
+        assertFalse(book1.equals(book2) || book2.equals(book1));
     }
 
     @Test
     public void testNotEqualsWithDifferentsObjects() {
         Book book = new BookBuilder().id(BOOK_ID_TEST1).build();
-        assertFalse("No deben ser iguales", book.equals(new Object()));
+        assertFalse(book.equals(new Object()));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class BookTest {
                 .publisher(createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
                 .build();
 
-        assertEquals("Deben ser iguales", book1.hashCode(), book2.hashCode());
+        assertEquals(book1.hashCode(), book2.hashCode());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class BookTest {
                 .publisher(createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST1, false))
                 .build();
 
-        assertNotEquals("No deben ser iguales", book1.hashCode(), book2.hashCode());
+        assertNotEquals(book1.hashCode(), book2.hashCode());
     }
 
     @Test

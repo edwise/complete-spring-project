@@ -94,7 +94,7 @@ public class FooControllerTest {
     public void testGet() {
         ResponseEntity<FooResource> result = controller.getFoo(FOO_ID_TEST1);
 
-        assertEquals("Deben ser iguales", RIGHT_URL_FOO_1, result.getBody().getLink("self").getHref());
+        assertEquals(RIGHT_URL_FOO_1, result.getBody().getLink("self").getHref());
     }
 
     @Test

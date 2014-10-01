@@ -19,7 +19,7 @@ public class AuthorTest {
 
         author.copyFrom(authorFrom);
 
-        assertEquals("No son iguales", author, authorFrom);
+        assertEquals(author, authorFrom);
     }
 
     @Test
@@ -27,7 +27,7 @@ public class AuthorTest {
         Author author1 = createAuthor(NAME_TEST1, SURNAME_TEST1);
         Author author2 = createAuthor(NAME_TEST1, SURNAME_TEST1);
 
-        assertTrue("Deben ser iguales", author1.equals(author2) && author2.equals(author1));
+        assertTrue(author1.equals(author2) && author2.equals(author1));
     }
 
     @Test
@@ -35,14 +35,14 @@ public class AuthorTest {
         Author author1 = createAuthor(NAME_TEST1, SURNAME_TEST1);
         Author author2 = createAuthor(NAME_TEST1, SURNAME_TEST2);
 
-        assertFalse("No deben ser iguales", author1.equals(author2) || author2.equals(author1));
+        assertFalse(author1.equals(author2) || author2.equals(author1));
     }
 
     @Test
     public void testNotEqualsWithDifferentsObjects() {
         Author author = createAuthor(NAME_TEST1, null);
 
-        assertFalse("No deben ser iguales", author.equals(new Object()));
+        assertFalse(author.equals(new Object()));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class AuthorTest {
         Author author1 = createAuthor(NAME_TEST1, SURNAME_TEST1);
         Author author2 = createAuthor(NAME_TEST1, SURNAME_TEST1);
 
-        assertEquals("Deben ser iguales", author1.hashCode(), author2.hashCode());
+        assertEquals(author1.hashCode(), author2.hashCode());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class AuthorTest {
         Author author1 = createAuthor(NAME_TEST1, SURNAME_TEST1);
         Author author2 = createAuthor(NAME_TEST2, SURNAME_TEST2);
 
-        assertNotEquals("No deben ser iguales", author1.hashCode(), author2.hashCode());
+        assertNotEquals(author1.hashCode(), author2.hashCode());
     }
 
     @Test

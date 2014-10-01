@@ -16,7 +16,7 @@ public class ErrorItemTest {
         ErrorItem errorItem1 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
         ErrorItem errorItem2 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
 
-        assertTrue("Deben ser iguales", errorItem1.equals(errorItem2) && errorItem2.equals(errorItem1));
+        assertTrue(errorItem1.equals(errorItem2) && errorItem2.equals(errorItem1));
     }
 
     @Test
@@ -24,14 +24,14 @@ public class ErrorItemTest {
         ErrorItem errorItem1 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
         ErrorItem errorItem2 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT2);
 
-        assertFalse("No deben ser iguales", errorItem1.equals(errorItem2) || errorItem2.equals(errorItem1));
+        assertFalse(errorItem1.equals(errorItem2) || errorItem2.equals(errorItem1));
     }
 
     @Test
     public void testNotEqualsWithDifferentObjects() {
         ErrorItem errorItem = createErrorItem(FIELD_TEST1, null);
 
-        assertFalse("No deben ser iguales", errorItem.equals(new Object()));
+        assertFalse(errorItem.equals(new Object()));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class ErrorItemTest {
         ErrorItem errorItem1 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
         ErrorItem errorItem2 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
 
-        assertEquals("Deben ser iguales", errorItem1.hashCode(), errorItem2.hashCode());
+        assertEquals(errorItem1.hashCode(), errorItem2.hashCode());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class ErrorItemTest {
         ErrorItem errorItem1 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
         ErrorItem errorItem2 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT2);
 
-        assertNotEquals("No deben ser iguales", errorItem1.hashCode(), errorItem2.hashCode());
+        assertNotEquals(errorItem1.hashCode(), errorItem2.hashCode());
     }
 
     @Test

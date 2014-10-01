@@ -86,7 +86,7 @@ public class BookServiceTest {
         Book result = service.findOne(BOOK_ID_TEST1);
 
         verify(bookRepository, timeout(ONE_TIME)).findOne(BOOK_ID_TEST1);
-        assertEquals("Deben ser iguales", Long.valueOf(BOOK_ID_TEST1), result.getId());
+        assertEquals(Long.valueOf(BOOK_ID_TEST1), result.getId());
     }
 
     @Test(expected = NotFoundException.class)
@@ -105,7 +105,7 @@ public class BookServiceTest {
 
         Book saved = service.save(foo);
 
-        assertEquals("Deben ser iguales", dbBook, saved);
+        assertEquals(dbBook, saved);
     }
 
     @Test
@@ -118,8 +118,8 @@ public class BookServiceTest {
 
         Book saved = service.create(foo);
 
-        assertEquals("Deben ser iguales", dbBook, saved);
-        assertEquals("Deben ser iguales", Long.valueOf(BOOK_ID_TEST3), saved.getId());
+        assertEquals(dbBook, saved);
+        assertEquals(Long.valueOf(BOOK_ID_TEST3), saved.getId());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class BookServiceTest {
         List<Book> result = service.findByTitle(BOOK_TITLE_TEST1);
 
         verify(bookRepository, timeout(ONE_TIME)).findByTitle(BOOK_TITLE_TEST1);
-        assertEquals("Deben ser iguales", ONE_TIME, result.size());
+        assertEquals(ONE_TIME, result.size());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class BookServiceTest {
         List<Book> result = service.findByReleaseDate(BOOK_RELEASEDATE_TEST1);
 
         verify(bookRepository, timeout(ONE_TIME)).findByReleaseDate(BOOK_RELEASEDATE_TEST1);
-        assertEquals("Deben ser iguales", ONE_TIME, result.size());
+        assertEquals(ONE_TIME, result.size());
     }
 
     private List<Book> createTestBookList() {

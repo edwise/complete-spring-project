@@ -19,7 +19,7 @@ public class PublisherTest {
 
         publisher.copyFrom(publisherFrom);
 
-        assertEquals("No son iguales", publisher, publisherFrom);
+        assertEquals(publisher, publisherFrom);
     }
 
     @Test
@@ -27,7 +27,7 @@ public class PublisherTest {
         Publisher publisher1 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
         Publisher publisher2 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
 
-        assertTrue("Deben ser iguales", publisher1.equals(publisher2) && publisher2.equals(publisher1));
+        assertTrue(publisher1.equals(publisher2) && publisher2.equals(publisher1));
     }
 
     @Test
@@ -35,14 +35,14 @@ public class PublisherTest {
         Publisher publisher1 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
         Publisher publisher2 = createPublisher(NAME_TEST1, COUNTRY_TEST2, false);
 
-        assertFalse("No deben ser iguales", publisher1.equals(publisher2) || publisher2.equals(publisher1));
+        assertFalse(publisher1.equals(publisher2) || publisher2.equals(publisher1));
     }
 
     @Test
     public void testNotEqualsWithDifferentsObjects() {
         Publisher publisher = createPublisher(NAME_TEST1, COUNTRY_TEST1, false);
 
-        assertFalse("No deben ser iguales", publisher.equals(new Object()));
+        assertFalse(publisher.equals(new Object()));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class PublisherTest {
         Publisher publisher1 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
         Publisher publisher2 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
 
-        assertEquals("Deben ser iguales", publisher1.hashCode(), publisher2.hashCode());
+        assertEquals(publisher1.hashCode(), publisher2.hashCode());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class PublisherTest {
         Publisher publisher1 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
         Publisher publisher2 = createPublisher(NAME_TEST2, COUNTRY_TEST2, false);
 
-        assertNotEquals("No deben ser iguales", publisher1.hashCode(), publisher2.hashCode());
+        assertNotEquals(publisher1.hashCode(), publisher2.hashCode());
     }
 
     @Test

@@ -19,8 +19,8 @@ public class ErrorInfoTest {
         ErrorInfo errorInfo = createErrorInfo(null).addError(FIELD_TEST1, MESSAGE_TEST1).addError(FIELD_TEST2,
                 MESSAGE_TEST2);
 
-        assertNotNull("No puede ser nulo", errorInfo.getErrors());
-        assertEquals("Deben ser igual", TWO_ITEMS, errorInfo.getErrors().size());
+        assertNotNull(errorInfo.getErrors());
+        assertEquals(TWO_ITEMS, errorInfo.getErrors().size());
     }
 
     @Test
@@ -28,7 +28,7 @@ public class ErrorInfoTest {
         ErrorInfo errorInfo1 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
         ErrorInfo errorInfo2 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
 
-        assertTrue("Deben ser iguales", errorInfo1.equals(errorInfo2) && errorInfo2.equals(errorInfo1));
+        assertTrue(errorInfo1.equals(errorInfo2) && errorInfo2.equals(errorInfo1));
     }
 
     @Test
@@ -36,14 +36,14 @@ public class ErrorInfoTest {
         ErrorInfo errorInfo1 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
         ErrorInfo errorInfo2 = createErrorInfo(URL_TEST1).addError(FIELD_TEST2, MESSAGE_TEST2);
 
-        assertFalse("No deben ser iguales", errorInfo1.equals(errorInfo2) || errorInfo2.equals(errorInfo1));
+        assertFalse(errorInfo1.equals(errorInfo2) || errorInfo2.equals(errorInfo1));
     }
 
     @Test
     public void testNotEqualsWithDifferentsObjects() {
         ErrorInfo errorInfo = createErrorInfo(URL_TEST1);
 
-        assertFalse("No deben ser iguales", errorInfo.equals(new Object()));
+        assertFalse(errorInfo.equals(new Object()));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class ErrorInfoTest {
         ErrorInfo errorInfo1 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
         ErrorInfo errorInfo2 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
 
-        assertEquals("Deben ser iguales", errorInfo1.hashCode(), errorInfo2.hashCode());
+        assertEquals(errorInfo1.hashCode(), errorInfo2.hashCode());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class ErrorInfoTest {
         ErrorInfo errorInfo1 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
         ErrorInfo errorInfo2 = createErrorInfo(URL_TEST1).addError(FIELD_TEST2, MESSAGE_TEST2);
 
-        assertNotEquals("No deben ser iguales", errorInfo1.hashCode(), errorInfo2.hashCode());
+        assertNotEquals(errorInfo1.hashCode(), errorInfo2.hashCode());
     }
 
     @Test

@@ -50,9 +50,9 @@ public class RestExceptionProcessorTest {
 
         ErrorInfo errorInfo = restExceptionProcessor.entityNotFound(request, exception);
 
-        assertNotNull("No puede ser nulo", errorInfo);
-        assertEquals("Deben ser urls iguales", request.getRequestURL().toString(), errorInfo.getUrl());
-        assertEquals("Deben ser mensajes iguales", ONE_ITEM, errorInfo.getErrors().size());
+        assertNotNull(errorInfo);
+        assertEquals(request.getRequestURL().toString(), errorInfo.getUrl());
+        assertEquals(ONE_ITEM, errorInfo.getErrors().size());
     }
 
     @Test
@@ -64,9 +64,9 @@ public class RestExceptionProcessorTest {
 
         ErrorInfo errorInfo = restExceptionProcessor.invalidPostData(request, exception);
 
-        assertNotNull("No puede ser nulo", errorInfo);
-        assertEquals("Deben ser urls iguales", request.getRequestURL().toString(), errorInfo.getUrl());
-        assertEquals("Deben ser mensajes iguales", TWO_ITEMS, errorInfo.getErrors().size());
+        assertNotNull( errorInfo);
+        assertEquals(request.getRequestURL().toString(), errorInfo.getUrl());
+        assertEquals(TWO_ITEMS, errorInfo.getErrors().size());
     }
 
     private FieldError createFieldError(String object, String field, String message) {

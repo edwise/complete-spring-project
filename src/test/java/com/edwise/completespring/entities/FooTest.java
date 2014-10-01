@@ -19,7 +19,7 @@ public class FooTest {
         Foo fooFrom = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
         Foo foo = createFoo(ID_TEST2, null, null);
 
-        assertEquals("No son iguales", foo.copyFrom(fooFrom), fooFrom);
+        assertEquals(foo.copyFrom(fooFrom), fooFrom);
     }
 
     @Test
@@ -27,7 +27,7 @@ public class FooTest {
         Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
         Foo foo2 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
 
-        assertTrue("Deben ser iguales", foo1.equals(foo2) && foo2.equals(foo1));
+        assertTrue(foo1.equals(foo2) && foo2.equals(foo1));
     }
 
     @Test
@@ -35,14 +35,14 @@ public class FooTest {
         Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, null);
         Foo foo2 = createFoo(ID_TEST1, TEXT_ATTR_TEST2, null);
 
-        assertFalse("No deben ser iguales", foo1.equals(foo2) || foo2.equals(foo1));
+        assertFalse(foo1.equals(foo2) || foo2.equals(foo1));
     }
 
     @Test
     public void testNotEqualsWithDifferentsObjects() {
         Foo foo = createFoo(ID_TEST1, null, null);
 
-        assertFalse("No deben ser iguales", foo.equals(new Object()));
+        assertFalse(foo.equals(new Object()));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class FooTest {
         Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
         Foo foo2 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
 
-        assertEquals("Deben ser iguales", foo1.hashCode(), foo2.hashCode());
+        assertEquals(foo1.hashCode(), foo2.hashCode());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class FooTest {
         Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
         Foo foo2 = createFoo(ID_TEST2, TEXT_ATTR_TEST2, DATE_TEST1);
 
-        assertNotEquals("No deben ser iguales", foo1.hashCode(), foo2.hashCode());
+        assertNotEquals(foo1.hashCode(), foo2.hashCode());
     }
 
     @Test
