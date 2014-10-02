@@ -2,29 +2,40 @@ package com.edwise.completespring.controllers;
 
 import com.edwise.completespring.assemblers.BookResource;
 import com.edwise.completespring.assemblers.BookResourceAssembler;
-import com.edwise.completespring.entities.*;
+import com.edwise.completespring.entities.Author;
+import com.edwise.completespring.entities.AuthorTest;
+import com.edwise.completespring.entities.Book;
+import com.edwise.completespring.entities.BookBuilder;
+import com.edwise.completespring.entities.Publisher;
+import com.edwise.completespring.entities.PublisherTest;
 import com.edwise.completespring.exceptions.InvalidRequestException;
 import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.services.BookService;
 import org.joda.time.LocalDate;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class BookControllerTest {
     private static final long BOOK_ID_TEST1 = 1l;
@@ -44,36 +55,32 @@ public class BookControllerTest {
     private static final String AUTHOR_SURNAME_TEST1 = "Tolkien";
     private static final String AUTHOR_SURNAME_TEST2 = "Shakespeare";
     private static final int ONE_TIME = 1;
-    private static final String RIGHT_URL_WITH_BOOK_ID = "http://localhost/api/book/1";
-
-    private MockHttpServletRequest request;
 
     @Mock
-    BookService bookService;
+    private BookService bookService;
 
     @Mock
-    BindingResult errors;
+    private BindingResult errors;
+
+    @Mock
+    private BookResourceAssembler bookResourceAssembler;
 
     @InjectMocks
     private BookController controller = new BookController();
 
     @Before
     public void setUp() {
-        this.request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(this.request));
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
         MockitoAnnotations.initMocks(this);
-        // TODO revisar si sacar a atributo ese resource assembler
-        ReflectionTestUtils.setField(controller, "bookResourceAssembler", new BookResourceAssembler());
-    }
-
-    @After
-    public void tearDown() {
-        RequestContextHolder.resetRequestAttributes();
     }
 
     @Test(expected = InvalidRequestException.class)
     public void testUpdateInvalidRequest() {
-        Book bookReq = new Book().setTitle(BOOK_TITLE_TEST1).setReleaseDate(BOOK_RELEASEDATE_TEST1);
+        Book bookReq = new BookBuilder()
+                .title(BOOK_TITLE_TEST1)
+                .isbn(BOOK_ISBN_TEST1)
+                .releaseDate(BOOK_RELEASEDATE_TEST1)
+                .build();
         Book bookResp = new Book().copyFrom(bookReq).setId(BOOK_ID_TEST1);
         when(errors.hasErrors()).thenReturn(true);
         when(bookService.save(bookReq)).thenReturn(bookResp);
@@ -84,10 +91,14 @@ public class BookControllerTest {
 
     @Test
     public void testCreate() {
-        Book bookReq = new Book(BOOK_ID_TEST1, BOOK_TITLE_TEST1, Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1)),
-                BOOK_ISBN_TEST1,
-                BOOK_RELEASEDATE_TEST1,
-                new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false));
+        Book bookReq = new BookBuilder()
+                .id(BOOK_ID_TEST1)
+                .title(BOOK_TITLE_TEST1)
+                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1)))
+                .isbn(BOOK_ISBN_TEST1)
+                .releaseDate(BOOK_RELEASEDATE_TEST1)
+                .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
+                .build();
         Book bookResp = new Book().copyFrom(bookReq).setId(BOOK_ID_TEST1);
         when(errors.hasErrors()).thenReturn(false);
         when(bookService.create(bookReq)).thenReturn(bookResp);
@@ -96,7 +107,6 @@ public class BookControllerTest {
 
         verify(errors, times(1)).hasErrors();
         verify(bookService, times(ONE_TIME)).create(bookReq);
-        assertFalse(errors.hasErrors());
     }
 
     @Test(expected = InvalidRequestException.class)
@@ -112,10 +122,14 @@ public class BookControllerTest {
     @Test
     public void testUpdate() {
         Long id = BOOK_ID_TEST1;
-        Book bookReq = new Book(BOOK_ID_TEST1, BOOK_TITLE_TEST1, Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1)),
-                BOOK_ISBN_TEST1,
-                new LocalDate(),
-                new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false));
+        Book bookReq = new BookBuilder()
+                .id(BOOK_ID_TEST1)
+                .title(BOOK_TITLE_TEST1)
+                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1)))
+                .isbn(BOOK_ISBN_TEST1)
+                .releaseDate(BOOK_RELEASEDATE_TEST1)
+                .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
+                .build();
         Book fooDB = new Book().setId(BOOK_ID_TEST1);
         when(bookService.findOne(id)).thenReturn(fooDB);
         when(bookService.save(fooDB.copyFrom(bookReq))).thenReturn(fooDB.copyFrom(bookReq));
@@ -129,20 +143,23 @@ public class BookControllerTest {
 
     @Test
     public void testGet() {
-        Long id = BOOK_ID_TEST1;
-        String sampleTitle = BOOK_TITLE_TEST1;
-        String sampleIsbn = BOOK_ISBN_TEST1;
-        List<Author> sampleAuthors = Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1));
-        LocalDate sampleDate = new LocalDate();
-        Publisher samplePublisher = new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline
-                (false);
-        Book bookReq = new Book(id, sampleTitle, sampleAuthors, sampleIsbn, sampleDate, samplePublisher);
-        when(bookService.findOne(id)).thenReturn(bookReq);
+        Book bookReq = new BookBuilder()
+                .id(BOOK_ID_TEST1)
+                .title(BOOK_TITLE_TEST1)
+                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1)))
+                .isbn(BOOK_ISBN_TEST1)
+                .releaseDate(BOOK_RELEASEDATE_TEST1)
+                .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
+                .build();
+        when(bookService.findOne(BOOK_ID_TEST1)).thenReturn(bookReq);
+        when(bookResourceAssembler.toResource(any(Book.class))).thenReturn(new BookResource().setBook(bookReq));
 
-        ResponseEntity<BookResource> result = controller.getBook(id);
+        ResponseEntity<BookResource> result = controller.getBook(BOOK_ID_TEST1);
 
-        verify(bookService, times(ONE_TIME)).findOne(id);
-        assertEquals(RIGHT_URL_WITH_BOOK_ID, result.getBody().getLink("self").getHref());
+        verify(bookService, times(ONE_TIME)).findOne(BOOK_ID_TEST1);
+        verify(bookResourceAssembler, times(ONE_TIME)).toResource(bookReq);
+        assertNotNull(result.getBody());
+        assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
     @Test(expected = NotFoundException.class)
@@ -154,10 +171,14 @@ public class BookControllerTest {
 
     @Test(expected = NotFoundException.class)
     public void testUpdateNotFound() {
-        Book bookReq = new Book(BOOK_ID_TEST1, BOOK_TITLE_TEST1, Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1)),
-                BOOK_ISBN_TEST1,
-                new LocalDate(),
-                new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false));
+        Book bookReq = new BookBuilder()
+                .id(BOOK_ID_TEST1)
+                .title(BOOK_TITLE_TEST1)
+                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1)))
+                .isbn(BOOK_ISBN_TEST1)
+                .releaseDate(BOOK_RELEASEDATE_TEST1)
+                .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
+                .build();
         when(bookService.findOne(BOOK_ID_TEST1)).thenThrow(new NotFoundException("Book not exist"));
 
         controller.updateBook(BOOK_ID_TEST1, bookReq, errors);
@@ -176,10 +197,14 @@ public class BookControllerTest {
     public void testFindAll() {
         List<Book> books = createTestBookList();
         when(bookService.findAll()).thenReturn(books);
+        when(bookResourceAssembler.toResources(anyListOf(Book.class))).thenReturn(new ArrayList<BookResource>());
 
         ResponseEntity<List<BookResource>> result = controller.getAll();
 
+        verify(bookService, times(ONE_TIME)).findAll();
+        verify(bookResourceAssembler, times(ONE_TIME)).toResources(books);
         assertNotNull(result.getBody());
+        assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
     private List<Book> createTestBookList() {

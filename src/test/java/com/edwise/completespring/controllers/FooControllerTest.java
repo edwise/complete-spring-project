@@ -6,49 +6,47 @@ import com.edwise.completespring.entities.Foo;
 import com.edwise.completespring.entities.FooTest;
 import com.edwise.completespring.exceptions.InvalidRequestException;
 import org.joda.time.LocalDate;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class FooControllerTest {
     private static final long FOO_ID_TEST1 = 1l;
     private static final String FOO_TEXT_ATTR_TEST1 = "AttText1";
     private static final LocalDate DATE_TEST1 = new LocalDate(2013, 1, 26);
-    public static final String RIGHT_URL_FOO_1 = "http://localhost/api/foo/1";
-
-    private MockHttpServletRequest request;
-
-    private FooController controller;
 
     @Mock
     BindingResult errors;
 
+    @Mock
+    FooResourceAssembler fooResourceAssembler;
+
+    @InjectMocks
+    private FooController controller = new FooController();
+
     @Before
     public void setUp() {
-        this.request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(this.request));
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
         MockitoAnnotations.initMocks(this);
-        this.controller = new FooController();
-        // TODO revisar si sacar a atributo ese resource assembler
-        ReflectionTestUtils.setField(controller, "fooResourceAssembler", new FooResourceAssembler());
-    }
-
-    @After
-    public void tearDown() {
-        RequestContextHolder.resetRequestAttributes();
     }
 
     @Test(expected = InvalidRequestException.class)
@@ -93,9 +91,12 @@ public class FooControllerTest {
 
     @Test
     public void testGet() {
+        when(fooResourceAssembler.toResource(any(Foo.class)))
+                .thenReturn(new FooResource().setFoo(FooTest.createFoo(FOO_ID_TEST1, null, null)));
+
         ResponseEntity<FooResource> result = controller.getFoo(FOO_ID_TEST1);
 
-        assertEquals(RIGHT_URL_FOO_1, result.getBody().getLink("self").getHref());
+        assertNotNull(result.getBody());
     }
 
     @Test
@@ -107,6 +108,8 @@ public class FooControllerTest {
 
     @Test
     public void testFindAll() {
+        when(fooResourceAssembler.toResources(anyListOf(Foo.class))).thenReturn(new ArrayList<FooResource>());
+
         ResponseEntity<List<FooResource>> result = controller.getAll();
 
         assertNotNull(result.getBody());
