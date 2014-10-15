@@ -7,8 +7,10 @@ import com.edwise.completespring.entities.SequenceId;
 import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
 import com.edwise.completespring.services.impl.BookServiceImpl;
+import lombok.extern.log4j.Log4j;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -21,6 +23,7 @@ import java.util.Arrays;
  */
 @ComponentScan
 @EnableAutoConfiguration
+@Log4j
 public class Application implements CommandLineRunner {
     private static final long INITIAL_SEQUENCE = 4;
     private static final long BOOK_ID_1 = 1L;
@@ -28,6 +31,8 @@ public class Application implements CommandLineRunner {
     private static final long BOOK_ID_3 = 3L;
     private static final long BOOK_ID_4 = 4L;
 
+    @Value("${db.resetAndLoadOnStartup:true}")
+    private boolean resetAndLoadOnStartup;
 
     @Autowired
     private BookRepository bookRepository;
@@ -42,7 +47,13 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        fillDBData();
+        log.info("Init Application...");
+
+        if (resetAndLoadOnStartup) {
+            fillDBData();
+        }
+
+        log.info("Aplication initiated!");
     }
 
     private void fillDBData() {
@@ -63,6 +74,8 @@ public class Application implements CommandLineRunner {
                 "12-9999-92", new LocalDate(), new Publisher().setName("Editorial 7").setCountry("ES").setOnline(true)));
         bookRepository.save(new Book(BOOK_ID_4, "Libro prueba mongo 4", Arrays.asList(new Author().setName("Perry").setSurname("Mason")),
                 "22-34565-12", new LocalDate(), new Publisher().setName("Editorial 33").setCountry("US").setOnline(true)));
+
+        log.info("DB initiated with data.");
     }
 
 }

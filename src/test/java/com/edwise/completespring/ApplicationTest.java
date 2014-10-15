@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
@@ -31,6 +32,7 @@ public class ApplicationTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        ReflectionTestUtils.setField(this.application, "resetAndLoadOnStartup", true);
     }
 
     @Test
