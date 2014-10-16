@@ -18,6 +18,8 @@ Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / fu
  - Spring Exception Handling en los controllers
  
  - Validaciones en los entities, y envío de errores
+ 
+ - Test de integración completos (mockeando el service)
 
 
 
@@ -37,11 +39,19 @@ Comandos
     ```
   
   
- - Generar war (así como generar informes de jacoco):
+ - Generar war, ejecutando test unitarios (así como generar informes de jacoco):
  
     ```
     mvn clean package
     ```
+
+
+ - Generar war, ejecutando solo test de integración:
+ 
+    ```
+    mvn clean verify -P integration-test
+    ```
+
 
 
 Urls de acceso:
@@ -66,4 +76,8 @@ Fuentes:
  - http://www.mkyong.com/mongodb/spring-data-mongodb-auto-sequence-id-example/
  
  - https://github.com/martypitt/swagger-springmvc
+ 
+ - http://www.petrikainulainen.net/programming/spring-framework/integration-testing-of-spring-mvc-applications-write-clean-assertions-with-jsonpath/
+ 
+ - http://www.petrikainulainen.net/programming/maven/integration-testing-with-maven/
  
