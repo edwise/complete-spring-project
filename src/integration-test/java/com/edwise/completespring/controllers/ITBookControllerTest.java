@@ -114,8 +114,13 @@ public class ITBookControllerTest {
     @Test
     public void getBook_BookFound_ShouldReturnCorrectBook() throws Exception {
         // TODO use builder book
-        Book bookFound = new Book(BOOK_ID_TEST1, BOOK_TITLE_TEST1, Arrays.asList(new Author().setName("Edu").setSurname("Antón")),
-                BOOK_ISBN_TEST1, new LocalDate(), new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
+        Book bookFound = new Book()
+                .setId(BOOK_ID_TEST1)
+                .setTitle(BOOK_TITLE_TEST1)
+                .setAuthors(Arrays.asList(new Author().setName("Edu").setSurname("Antón")))
+                .setIsbn(BOOK_ISBN_TEST1)
+                .setReleaseDate(new LocalDate())
+                .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
         when(bookService.findOne(anyLong())).thenReturn(bookFound);
 
         mockMvc.perform(get("/api/book/{id}", BOOK_ID_TEST1))
@@ -156,10 +161,19 @@ public class ITBookControllerTest {
     @Test
     public void postBook_BookCorrect_ShouldReturnCreatedStatus() throws Exception {
         // TODO use builder book
-        Book bookToCreate = new Book(null, "Libro prueba mongo", Arrays.asList(new Author().setName("Edu").setSurname("Antón")),
-                "11-333-12", new LocalDate(), new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
-        Book bookCreated = new Book(BOOK_ID_TEST1, "Libro prueba mongo", Arrays.asList(new Author().setName("Edu").setSurname("Antón")),
-                "11-333-12", new LocalDate(), new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
+        Book bookToCreate = new Book()
+                .setTitle(BOOK_TITLE_TEST1)
+                .setAuthors(Arrays.asList(new Author().setName("Edu").setSurname("Antón")))
+                .setIsbn(BOOK_ISBN_TEST1)
+                .setReleaseDate(new LocalDate())
+                .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
+        Book bookCreated = new Book()
+                .setId(BOOK_ID_TEST1)
+                .setTitle(BOOK_TITLE_TEST1)
+                .setAuthors(Arrays.asList(new Author().setName("Edu").setSurname("Antón")))
+                .setIsbn(BOOK_ISBN_TEST1)
+                .setReleaseDate(new LocalDate())
+                .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
         when(bookService.create(bookToCreate)).thenReturn(bookCreated);
 
         mockMvc.perform(post("/api/book/")
@@ -173,8 +187,10 @@ public class ITBookControllerTest {
 
     @Test
     public void postBook_BookIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
-        Book bookToCreate = new Book(null, null, Arrays.asList(new Author().setName("Edu").setSurname("Antón")),
-                null, null, new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)); // title, isbn and date as null
+        // TODO use builder book
+        Book bookToCreate = new Book()
+                .setAuthors(Arrays.asList(new Author().setName("Edu").setSurname("Antón")))
+                .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)); // title, isbn and date as null
 
         mockMvc.perform(post("/api/book/")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -193,13 +209,26 @@ public class ITBookControllerTest {
     @Test
     public void putBook_BookExist_ShouldReturnCreatedStatus() throws Exception {
         // TODO use builder book
-        Book bookToUpdate = new Book(null, "Libro prueba mongo", Arrays.asList(new Author().setName("EduNew").setSurname("Antón")),
-                "11-333-13", new LocalDate(), new Publisher().setName("Editorial 1").setCountry("ES").setOnline(true));
-        Book bookOld = new Book(BOOK_ID_TEST1, "Libro prueba mongo", Arrays.asList(new Author().setName("Edu").setSurname("Antón")),
-                "11-333-12", new LocalDate(), new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
-        Book bookCopiedIn = new Book(BOOK_ID_TEST1, "Libro prueba mongo", Arrays.asList(new Author().setName("EduNew").setSurname
-                ("Antón")),
-                "11-333-13", new LocalDate(), new Publisher().setName("Editorial 1").setCountry("ES").setOnline(true));
+        Book bookToUpdate = new Book()
+                .setTitle(BOOK_TITLE_TEST1)
+                .setAuthors(Arrays.asList(new Author().setName("EduNew").setSurname("Antón")))
+                .setIsbn(BOOK_ISBN_TEST2)
+                .setReleaseDate(new LocalDate())
+                .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(true));
+        Book bookOld = new Book()
+                .setId(BOOK_ID_TEST1)
+                .setTitle(BOOK_TITLE_TEST1)
+                .setAuthors(Arrays.asList(new Author().setName("Edu").setSurname("Antón")))
+                .setIsbn(BOOK_ISBN_TEST1)
+                .setReleaseDate(new LocalDate())
+                .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false));
+        Book bookCopiedIn = new Book()
+                .setId(BOOK_ID_TEST1)
+                .setTitle(BOOK_TITLE_TEST1)
+                .setAuthors(Arrays.asList(new Author().setName("EduNew").setSurname("Antón")))
+                .setIsbn(BOOK_ISBN_TEST2)
+                .setReleaseDate(new LocalDate())
+                .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(true));
         when(bookService.findOne(anyLong())).thenReturn(bookOld);
         when(bookService.save(any(Book.class))).thenReturn(bookCopiedIn);
 
@@ -215,8 +244,12 @@ public class ITBookControllerTest {
 
     @Test
     public void putBook_BookNotExists_ShouldReturnNotFoundStatusAndError() throws Exception {
-        Book bookToUpdate = new Book(null, "Libro prueba mongo", Arrays.asList(new Author().setName("EduNew").setSurname("Antón")),
-                "11-333-13", new LocalDate(), new Publisher().setName("Editorial 1").setCountry("ES").setOnline(true));
+        Book bookToUpdate = new Book()
+                .setTitle(BOOK_TITLE_TEST1)
+                .setAuthors(Arrays.asList(new Author().setName("EduNew").setSurname("Antón")))
+                .setIsbn(BOOK_ISBN_TEST2)
+                .setReleaseDate(new LocalDate())
+                .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(true));
         when(bookService.findOne(anyLong())).thenThrow(new NotFoundException(BOOK_NOT_FOUND_EXCEPTION_MSG));
 
         mockMvc.perform(put("/api/book/{id}", BOOK_ID_TEST1)
@@ -234,8 +267,9 @@ public class ITBookControllerTest {
 
     @Test
     public void putBook_BookIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
-        Book bookToUpdate = new Book(null, null, Arrays.asList(new Author().setName("EduNew").setSurname("Antón")),
-                null, null, new Publisher().setName("Editorial 1").setCountry("ES").setOnline(true)); // title, isbn and date as null
+        Book bookToUpdate = new Book()
+                .setAuthors(Arrays.asList(new Author().setName("EduNew").setSurname("Antón")))
+                .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(true)); // title, isbn and date as null
 
         mockMvc.perform(put("/api/book/{id}", BOOK_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -63,17 +63,39 @@ public class Application implements CommandLineRunner {
                                         .setSeq(INITIAL_SEQUENCE)
         );
 
-        // save a couple of books
         bookRepository.deleteAll();
-        bookRepository.save(new Book(BOOK_ID_1, "Libro prueba mongo", Arrays.asList(new Author().setName("Edu").setSurname("Antón")),
-                "11-333-12", new LocalDate(), new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)));
-        bookRepository.save(new Book(BOOK_ID_2, "Libro prueba mongo 2", Arrays.asList(new Author().setName("Otro").setSurname("Más"),
-                new Author().setName("S.").setSurname("King")), "12-1234-12", new LocalDate(), new Publisher().setName("Editorial 4")
-                    .setCountry("UK").setOnline(true)));
-        bookRepository.save(new Book(BOOK_ID_3, "Libro prueba mongo 3", Arrays.asList(new Author().setName("Nadie").setSurname("Nobody")),
-                "12-9999-92", new LocalDate(), new Publisher().setName("Editorial 7").setCountry("ES").setOnline(true)));
-        bookRepository.save(new Book(BOOK_ID_4, "Libro prueba mongo 4", Arrays.asList(new Author().setName("Perry").setSurname("Mason")),
-                "22-34565-12", new LocalDate(), new Publisher().setName("Editorial 33").setCountry("US").setOnline(true)));
+
+        bookRepository.save(new Book()
+                .setId(BOOK_ID_1)
+                .setTitle("Libro prueba mongo")
+                .setAuthors(Arrays.asList(new Author().setName("Edu").setSurname("Antón")))
+                .setIsbn("11-333-12")
+                .setReleaseDate(new LocalDate())
+                .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)));
+
+        bookRepository.save(new Book()
+                .setId(BOOK_ID_2)
+                .setTitle("Libro prueba mongo 2")
+                .setAuthors(Arrays.asList(new Author().setName("Otro").setSurname("Más"), new Author().setName("S.").setSurname("King")))
+                .setIsbn("12-1234-12")
+                .setReleaseDate(new LocalDate())
+                .setPublisher(new Publisher().setName("Editorial 4").setCountry("UK").setOnline(true)));
+
+        bookRepository.save(new Book()
+                .setId(BOOK_ID_3)
+                .setTitle("Libro prueba mongo 3")
+                .setAuthors(Arrays.asList(new Author().setName("Nadie").setSurname("Nobody")))
+                .setIsbn( "12-9999-92")
+                .setReleaseDate(new LocalDate())
+                .setPublisher(new Publisher().setName("Editorial 7").setCountry("ES").setOnline(true)));
+
+        bookRepository.save(new Book()
+                .setId(BOOK_ID_4)
+                .setTitle("Libro prueba mongo 4")
+                .setAuthors(Arrays.asList(new Author().setName("Perry").setSurname("Mason")))
+                .setIsbn("22-34565-12")
+                .setReleaseDate(new LocalDate())
+                .setPublisher(new Publisher().setName("Editorial 33").setCountry("US").setOnline(true)));
 
         log.info("DB initiated with data.");
     }
