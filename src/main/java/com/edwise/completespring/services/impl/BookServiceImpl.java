@@ -13,8 +13,8 @@ import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
-
     public static final String BOOK_COLLECTION = "books";
+    private static final String BOOK_NOT_FOUND_MSG = "Book not found";
 
     @Autowired
     private BookRepository bookRepository;
@@ -36,7 +36,7 @@ public class BookServiceImpl implements BookService {
     public Book findOne(Long id) {
         Book result = bookRepository.findOne(id);
         if (result == null) {
-            throw new NotFoundException("No existe la entidad");
+            throw new NotFoundException(BOOK_NOT_FOUND_MSG);
         }
         return result;
     }

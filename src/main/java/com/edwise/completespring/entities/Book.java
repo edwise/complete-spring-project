@@ -56,18 +56,6 @@ public class Book {
     @NotNull
     private Publisher publisher;
 
-    public Book() {
-    }
-
-    public Book(Long id, String title, List<Author> authors, String isbn, LocalDate releaseDate, Publisher publisher) {
-        this.id = id;
-        this.title = title;
-        this.authors = authors;
-        this.isbn = isbn;
-        this.releaseDate = releaseDate;
-        this.publisher = publisher;
-    }
-
     public Book copyFrom(Book other) {
         this.title = other.title;
         if (other.authors != null) {

@@ -4,7 +4,7 @@
 
     <groupId>com.edwise.completespring</groupId>
     <artifactId>completeSpringProject</artifactId>
-    <version>0.8.8</version>
+    <version>0.9.1</version>
     <packaging>war</packaging>
 
     <name>completeSpringProject</name>
@@ -14,21 +14,41 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.7</java.version>
 
+        <spring.version>4.1.1.RELEASE</spring.version>
         <swagger.springmvc.version>0.8.8</swagger.springmvc.version>
         <lombok.version>1.14.8</lombok.version>
         <jacoco.mavenplugin.version>0.7.2.201409121644</jacoco.mavenplugin.version>
-        <joda.time.version>2.4</joda.time.version>
-        <jackson.datatype.joda.version>2.4.2</jackson.datatype.joda.version>
+        <joda.time.version>2.5</joda.time.version>
+        <jackson.datatype.joda.version>2.4.3</jackson.datatype.joda.version>
         <apache.commons.lang3.version>3.3.2</apache.commons.lang3.version>
         <hibernate.validator.version>5.1.2.Final</hibernate.validator.version>
         <junit.version>4.11</junit.version>
-        <mockito.version>1.9.5</mockito.version>
+        <mockito.version>1.10.8</mockito.version>
+        <jsonpath.version>1.1.0</jsonpath.version>
+
+        <build.profile.id>dev</build.profile.id>
+        <skip.integration.tests>true</skip.integration.tests>
+        <skip.unit.tests>false</skip.unit.tests>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+        </profile>
+        <profile>
+            <id>integration-test</id>
+            <properties>
+                <build.profile.id>integration-test</build.profile.id>
+                <skip.integration.tests>false</skip.integration.tests>
+                <skip.unit.tests>true</skip.unit.tests>
+            </properties>
+        </profile>
+    </profiles>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.1.7.RELEASE</version>
+        <version>1.1.8.RELEASE</version>
     </parent>
 
     <dependencies>
@@ -50,8 +70,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -103,16 +123,9 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path-assert</artifactId>
+            <version>${jsonpath.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -120,6 +133,7 @@
 
     <build>
         <finalName>completeSpringProject</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -173,7 +187,57 @@
                 </executions>
             </plugin>
 
-            <!-- PLUGIN PARA DEPURAR EN INTELLIJ. Tambien con el siguiente comando:
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <skipTests>${skip.unit.tests}</skipTests>
+                    <excludes>
+                        <exclude>**/IT*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <id>add-integration-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/integration-test/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.17</version>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <skipTests>${skip.integration.tests}</skipTests>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- PLUGIN TO DEBUG IN INTELLIJ. And with the next command:
                 mvn spring-boot:run -Drun.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
 
             <plugin>
@@ -187,7 +251,6 @@
                 </configuration>
             </plugin>
             -->
-
         </plugins>
     </build>
 </project>
