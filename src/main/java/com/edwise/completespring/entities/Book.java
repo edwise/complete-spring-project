@@ -59,6 +59,7 @@ public class Book {
     public Book() {
     }
 
+    // TODO quitar este constructor...
     public Book(Long id, String title, List<Author> authors, String isbn, LocalDate releaseDate, Publisher publisher) {
         this.id = id;
         this.title = title;
