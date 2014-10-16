@@ -2,7 +2,7 @@ package com.edwise.completespring.services;
 
 import com.edwise.completespring.entities.AuthorTest;
 import com.edwise.completespring.entities.Book;
-import com.edwise.completespring.entities.BookBuilder;
+import com.edwise.completespring.testutil.BookBuilder;
 import com.edwise.completespring.entities.PublisherTest;
 import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.repositories.BookRepository;

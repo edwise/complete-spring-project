@@ -3,8 +3,8 @@ package com.edwise.completespring.controllers;
 import com.edwise.completespring.Application;
 import com.edwise.completespring.config.TestContext;
 import com.edwise.completespring.entities.Foo;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.edwise.completespring.entities.FooTest;
+import com.edwise.completespring.testutil.IntegrationTestUtil;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +18,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.io.IOException;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
@@ -67,7 +65,6 @@ public class ITFooControllerTest {
                 .andExpect(jsonPath("$[0].links", hasSize(1)))
                 .andExpect(jsonPath("$[0].links[0].rel", is(notNullValue())))
                 .andExpect(jsonPath("$[0].links[0].href", containsString("/api/foo/1")))
-                .andExpect(jsonPath("$[1]").exists())
                 .andExpect(jsonPath("$[1].foo").exists())
                 .andExpect(jsonPath("$[1].foo.id", is(2)))
                 .andExpect(jsonPath("$[1].foo.sampleTextAttribute", is(ATT_TEXT_1)))
@@ -96,22 +93,22 @@ public class ITFooControllerTest {
 
     @Test
     public void postFoo_FooCorrect_ShouldReturnCreatedStatus() throws Exception {
-        Foo fooToCreate = createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
+        Foo fooToCreate = FooTest.createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
 
         mockMvc.perform(post("/api/foo/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(convertObjectToJsonBytes(fooToCreate)))
+                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate)))
                 .andExpect(status().isCreated())
         ;
     }
 
     @Test
     public void postFoo_FooIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
-        Foo fooToCreate = createFoo(null, null, null); // text and date as null
+        Foo fooToCreate = FooTest.createFoo(null, null, null); // text and date as null
 
         mockMvc.perform(post("/api/foo/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(convertObjectToJsonBytes(fooToCreate)))
+                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -123,22 +120,22 @@ public class ITFooControllerTest {
 
     @Test
     public void putFoo_FooExist_ShouldReturnCreatedStatus() throws Exception {
-        Foo fooWithChangedFields = createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
+        Foo fooWithChangedFields = FooTest.createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
 
         mockMvc.perform(put("/api/foo/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(convertObjectToJsonBytes(fooWithChangedFields)))
+                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields)))
                 .andExpect(status().isNoContent())
         ;
     }
 
     @Test
     public void putFoo_FooIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
-        Foo fooToCreate = createFoo(null, null, null); // text and date as null
+        Foo fooToCreate = FooTest.createFoo(null, null, null); // text and date as null
 
         mockMvc.perform(put("/api/foo/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(convertObjectToJsonBytes(fooToCreate)))
+                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -153,19 +150,5 @@ public class ITFooControllerTest {
         mockMvc.perform(delete("/api/foo/{id}", FOO_ID_TEST1))
                 .andExpect(status().isNoContent())
         ;
-    }
-
-    private Foo createFoo(Long id, String textAttribute, LocalDate localDateAttribute) {
-        return new Foo()
-                .setId(id)
-                .setSampleTextAttribute(textAttribute)
-                .setSampleLocalDateAttribute(localDateAttribute);
-    }
-
-    // TODO sacar esto a una clase util??
-    private byte[] convertObjectToJsonBytes(Object object) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        return mapper.writeValueAsBytes(object);
     }
 }

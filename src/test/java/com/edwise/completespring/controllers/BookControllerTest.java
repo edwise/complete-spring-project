@@ -5,7 +5,7 @@ import com.edwise.completespring.assemblers.BookResourceAssembler;
 import com.edwise.completespring.entities.Author;
 import com.edwise.completespring.entities.AuthorTest;
 import com.edwise.completespring.entities.Book;
-import com.edwise.completespring.entities.BookBuilder;
+import com.edwise.completespring.testutil.BookBuilder;
 import com.edwise.completespring.entities.Publisher;
 import com.edwise.completespring.entities.PublisherTest;
 import com.edwise.completespring.exceptions.InvalidRequestException;
@@ -94,7 +94,7 @@ public class BookControllerTest {
         Book bookReq = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1)))
+                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -125,7 +125,7 @@ public class BookControllerTest {
         Book bookReq = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1)))
+                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -146,7 +146,7 @@ public class BookControllerTest {
         Book bookReq = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1)))
+                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -174,7 +174,7 @@ public class BookControllerTest {
         Book bookReq = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1)))
+                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
