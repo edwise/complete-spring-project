@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +39,7 @@ public class FooController {
     @Autowired
     private FooResourceAssembler fooResourceAssembler;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get Foos", notes = "Returns all foos")
     @ApiResponses({
             @ApiResponse(code = RESPONSE_CODE_OK, response = FooResource.class, message = "Exits one foo at least")
@@ -54,7 +55,7 @@ public class FooController {
         return new ResponseEntity<>(resourceList, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get one Foo", response = FooResource.class, notes = "Returns one foo")
     @ApiResponses({
             @ApiResponse(code = RESPONSE_CODE_OK, message = "Exists this foo")
@@ -70,7 +71,7 @@ public class FooController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Create Foo", notes = "Create a foo")
     @ApiResponses({
             @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful create of a foo")
@@ -83,7 +84,7 @@ public class FooController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping(method = RequestMethod.PUT, value = "{id}")
+    @RequestMapping(method = RequestMethod.PUT, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Update Foo", notes = "Update a foo")
     @ApiResponses({
             @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful update of foo")
@@ -98,7 +99,7 @@ public class FooController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping(method = RequestMethod.DELETE, value = "{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Delete Foo", notes = "Delete a foo")
     @ApiResponses({
             @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful delete of a foo")
