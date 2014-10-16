@@ -22,6 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -65,7 +66,7 @@ public class ITFooControllerTest {
                 .andExpect(jsonPath("$[0].foo.sampleLocalDateAttribute", is(notNullValue())))
                 .andExpect(jsonPath("$[0].links", hasSize(1)))
                 .andExpect(jsonPath("$[0].links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$[0].links[0].href", is(notNullValue())))
+                .andExpect(jsonPath("$[0].links[0].href", containsString("/api/foo/1")))
                 .andExpect(jsonPath("$[1]").exists())
                 .andExpect(jsonPath("$[1].foo").exists())
                 .andExpect(jsonPath("$[1].foo.id", is(2)))
@@ -73,13 +74,13 @@ public class ITFooControllerTest {
                 .andExpect(jsonPath("$[1].foo.sampleLocalDateAttribute", is(notNullValue())))
                 .andExpect(jsonPath("$[1].links", hasSize(1)))
                 .andExpect(jsonPath("$[1].links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$[1].links[0].href", is(notNullValue())))
+                .andExpect(jsonPath("$[1].links[0].href", containsString("/api/foo/2")))
         ;
     }
 
     @Test
     public void getFoo_FooFound_ShouldReturnCorrectFoo() throws Exception {
-        mockMvc.perform(get("/api/foo/{id}", (long) FOO_ID_TEST1))
+        mockMvc.perform(get("/api/foo/{id}", FOO_ID_TEST1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -89,7 +90,7 @@ public class ITFooControllerTest {
                 .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(notNullValue())))
                 .andExpect(jsonPath("$.links", hasSize(1)))
                 .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$.links[0].href", is(notNullValue())))
+                .andExpect(jsonPath("$.links[0].href", containsString("/api/foo/" + FOO_ID_TEST1)))
         ;
     }
 
@@ -124,7 +125,7 @@ public class ITFooControllerTest {
     public void putFoo_FooExist_ShouldReturnCreatedStatus() throws Exception {
         Foo fooWithChangedFields = createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
 
-        mockMvc.perform(put("/api/foo/{id}", (long) FOO_ID_TEST1)
+        mockMvc.perform(put("/api/foo/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(convertObjectToJsonBytes(fooWithChangedFields)))
                 .andExpect(status().isNoContent())
@@ -135,7 +136,7 @@ public class ITFooControllerTest {
     public void putFoo_FooIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
         Foo fooToCreate = createFoo(null, null, null); // text and date as null
 
-        mockMvc.perform(put("/api/foo/{id}", (long) FOO_ID_TEST1)
+        mockMvc.perform(put("/api/foo/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(convertObjectToJsonBytes(fooToCreate)))
                 .andExpect(status().isBadRequest())
@@ -149,7 +150,7 @@ public class ITFooControllerTest {
 
     @Test
     public void deleteFoo_FooExist_ShouldReturnNoContentStatus() throws Exception {
-        mockMvc.perform(delete("/api/foo/{id}", (long) FOO_ID_TEST1))
+        mockMvc.perform(delete("/api/foo/{id}", FOO_ID_TEST1))
                 .andExpect(status().isNoContent())
         ;
     }
@@ -161,6 +162,7 @@ public class ITFooControllerTest {
                 .setSampleLocalDateAttribute(localDateAttribute);
     }
 
+    // TODO sacar esto a una clase util??
     private byte[] convertObjectToJsonBytes(Object object) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
