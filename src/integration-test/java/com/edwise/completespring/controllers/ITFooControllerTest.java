@@ -54,7 +54,7 @@ public class ITFooControllerTest {
 
     @Test
     public void getAll_FoosFound_ShouldReturnFoundFoos() throws Exception {
-        mockMvc.perform(get("/api/foo/"))
+        mockMvc.perform(get("/api/foos/"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -64,20 +64,20 @@ public class ITFooControllerTest {
                 .andExpect(jsonPath("$[0].foo.sampleLocalDateAttribute", is(notNullValue())))
                 .andExpect(jsonPath("$[0].links", hasSize(1)))
                 .andExpect(jsonPath("$[0].links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$[0].links[0].href", containsString("/api/foo/1")))
+                .andExpect(jsonPath("$[0].links[0].href", containsString("/api/foos/1")))
                 .andExpect(jsonPath("$[1].foo").exists())
                 .andExpect(jsonPath("$[1].foo.id", is(2)))
                 .andExpect(jsonPath("$[1].foo.sampleTextAttribute", is(ATT_TEXT_1)))
                 .andExpect(jsonPath("$[1].foo.sampleLocalDateAttribute", is(notNullValue())))
                 .andExpect(jsonPath("$[1].links", hasSize(1)))
                 .andExpect(jsonPath("$[1].links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$[1].links[0].href", containsString("/api/foo/2")))
+                .andExpect(jsonPath("$[1].links[0].href", containsString("/api/foos/2")))
         ;
     }
 
     @Test
     public void getFoo_FooFound_ShouldReturnCorrectFoo() throws Exception {
-        mockMvc.perform(get("/api/foo/{id}", FOO_ID_TEST1))
+        mockMvc.perform(get("/api/foos/{id}", FOO_ID_TEST1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -87,7 +87,7 @@ public class ITFooControllerTest {
                 .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(notNullValue())))
                 .andExpect(jsonPath("$.links", hasSize(1)))
                 .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$.links[0].href", containsString("/api/foo/" + FOO_ID_TEST1)))
+                .andExpect(jsonPath("$.links[0].href", containsString("/api/foos/" + FOO_ID_TEST1)))
         ;
     }
 
@@ -95,7 +95,7 @@ public class ITFooControllerTest {
     public void postFoo_FooCorrect_ShouldReturnCreatedStatus() throws Exception {
         Foo fooToCreate = FooTest.createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
 
-        mockMvc.perform(post("/api/foo/")
+        mockMvc.perform(post("/api/foos/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate)))
                 .andExpect(status().isCreated())
@@ -106,7 +106,7 @@ public class ITFooControllerTest {
     public void postFoo_FooIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
         Foo fooToCreate = FooTest.createFoo(null, null, null); // text and date as null
 
-        mockMvc.perform(post("/api/foo/")
+        mockMvc.perform(post("/api/foos/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate)))
                 .andExpect(status().isBadRequest())
@@ -122,7 +122,7 @@ public class ITFooControllerTest {
     public void putFoo_FooExist_ShouldReturnCreatedStatus() throws Exception {
         Foo fooWithChangedFields = FooTest.createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
 
-        mockMvc.perform(put("/api/foo/{id}", FOO_ID_TEST1)
+        mockMvc.perform(put("/api/foos/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields)))
                 .andExpect(status().isNoContent())
@@ -133,7 +133,7 @@ public class ITFooControllerTest {
     public void putFoo_FooIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
         Foo fooToCreate = FooTest.createFoo(null, null, null); // text and date as null
 
-        mockMvc.perform(put("/api/foo/{id}", FOO_ID_TEST1)
+        mockMvc.perform(put("/api/foos/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate)))
                 .andExpect(status().isBadRequest())
@@ -147,7 +147,7 @@ public class ITFooControllerTest {
 
     @Test
     public void deleteFoo_FooExist_ShouldReturnNoContentStatus() throws Exception {
-        mockMvc.perform(delete("/api/foo/{id}", FOO_ID_TEST1))
+        mockMvc.perform(delete("/api/foos/{id}", FOO_ID_TEST1))
                 .andExpect(status().isNoContent())
         ;
     }

@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/foo/")
+@RequestMapping(value = "/api/foos/")
 @Api(value = "foos", description = "Foo API")
 @Log4j
 public class FooController {

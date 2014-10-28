@@ -91,7 +91,7 @@ public class ITBookControllerTest {
     public void getAll_BooksFound_ShouldReturnFoundBooks() throws Exception {
         when(bookService.findAll()).thenReturn(createTestBookList());
 
-        mockMvc.perform(get("/api/book/"))
+        mockMvc.perform(get("/api/books/"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -104,7 +104,7 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$[0]book.publisher", is(notNullValue())))
                 .andExpect(jsonPath("$[0].links", hasSize(1)))
                 .andExpect(jsonPath("$[0].links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$[0].links[0].href", containsString("/api/book/" + BOOK_ID_TEST1)))
+                .andExpect(jsonPath("$[0].links[0].href", containsString("/api/books/" + BOOK_ID_TEST1)))
                 .andExpect(jsonPath("$[1].book").exists())
                 .andExpect(jsonPath("$[1].book.id", is(BOOK_ID_TEST2.intValue())))
                 .andExpect(jsonPath("$[1]book.title", is(BOOK_TITLE_TEST2)))
@@ -114,7 +114,7 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$[1]book.publisher", is(notNullValue())))
                 .andExpect(jsonPath("$[1].links", hasSize(1)))
                 .andExpect(jsonPath("$[1].links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$[1].links[0].href", containsString("/api/book/" + BOOK_ID_TEST2)))
+                .andExpect(jsonPath("$[1].links[0].href", containsString("/api/books/" + BOOK_ID_TEST2)))
         ;
         verify(bookService, times(1)).findAll();
         verifyNoMoreInteractions(bookService);
@@ -124,7 +124,7 @@ public class ITBookControllerTest {
     public void getAll_BooksNotFound_ShouldReturnEmptyList() throws Exception {
         when(bookService.findAll()).thenReturn(new ArrayList<Book>(0));
 
-        mockMvc.perform(get("/api/book/"))
+        mockMvc.perform(get("/api/books/"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(0)))
@@ -145,7 +145,7 @@ public class ITBookControllerTest {
                 .build();
         when(bookService.findOne(anyLong())).thenReturn(bookFound);
 
-        mockMvc.perform(get("/api/book/{id}", BOOK_ID_TEST1))
+        mockMvc.perform(get("/api/books/{id}", BOOK_ID_TEST1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -158,7 +158,7 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$.book.publisher", is(notNullValue())))
                 .andExpect(jsonPath("$.links", hasSize(1)))
                 .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$.links[0].href", containsString("/api/book/" + BOOK_ID_TEST1)))
+                .andExpect(jsonPath("$.links[0].href", containsString("/api/books/" + BOOK_ID_TEST1)))
         ;
         verify(bookService, times(1)).findOne(BOOK_ID_TEST1);
         verifyNoMoreInteractions(bookService);
@@ -168,7 +168,7 @@ public class ITBookControllerTest {
     public void getBook_BookNotFound_ShouldReturnNotFoundStatusAndError() throws Exception {
         when(bookService.findOne(anyLong())).thenThrow(new NotFoundException(BOOK_NOT_FOUND_EXCEPTION_MSG));
 
-        mockMvc.perform(get("/api/book/{id}", BOOK_ID_TEST1))
+        mockMvc.perform(get("/api/books/{id}", BOOK_ID_TEST1))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -199,7 +199,7 @@ public class ITBookControllerTest {
                 .build();
         when(bookService.create(bookToCreate)).thenReturn(bookCreated);
 
-        mockMvc.perform(post("/api/book/")
+        mockMvc.perform(post("/api/books/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToCreate)))
                 .andExpect(status().isCreated())
@@ -215,7 +215,7 @@ public class ITBookControllerTest {
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
                 .build();
 
-        mockMvc.perform(post("/api/book/")
+        mockMvc.perform(post("/api/books/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToCreate)))
                 .andExpect(status().isBadRequest())
@@ -257,7 +257,7 @@ public class ITBookControllerTest {
         when(bookService.findOne(anyLong())).thenReturn(bookOld);
         when(bookService.save(any(Book.class))).thenReturn(bookCopiedIn);
 
-        mockMvc.perform(put("/api/book/{id}", BOOK_ID_TEST1)
+        mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate)))
                 .andExpect(status().isNoContent())
@@ -278,7 +278,7 @@ public class ITBookControllerTest {
                 .build();
         when(bookService.findOne(anyLong())).thenThrow(new NotFoundException(BOOK_NOT_FOUND_EXCEPTION_MSG));
 
-        mockMvc.perform(put("/api/book/{id}", BOOK_ID_TEST1)
+        mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate)))
                 .andExpect(status().isNotFound())
@@ -298,7 +298,7 @@ public class ITBookControllerTest {
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
                 .build();
 
-        mockMvc.perform(put("/api/book/{id}", BOOK_ID_TEST1)
+        mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate)))
                 .andExpect(status().isBadRequest())
@@ -315,7 +315,7 @@ public class ITBookControllerTest {
 
     @Test
     public void deleteBook_BookExist_ShouldReturnNoContentStatus() throws Exception {
-        mockMvc.perform(delete("/api/book/{id}", BOOK_ID_TEST1))
+        mockMvc.perform(delete("/api/books/{id}", BOOK_ID_TEST1))
                 .andExpect(status().isNoContent())
         ;
         verify(bookService, times(1)).delete(BOOK_ID_TEST1);
