@@ -60,7 +60,7 @@ Urls de acceso:
 
  - Swagger UI    -> http://localhost:8080/swagger/index.html
 
- - REST Books    -> http://localhost:8080/api/book
+ - REST Books    -> http://localhost:8080/api/books
 
  - Jacoco        -> DIRECTORIO_PROYECTO/target/sites/jacoco/index.html
 

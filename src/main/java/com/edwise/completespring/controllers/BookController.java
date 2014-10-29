@@ -27,7 +27,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/book/")
+@RequestMapping("/api/books/")
 @Api(value = "books", description = "Books API")
 @Log4j
 public class BookController {
