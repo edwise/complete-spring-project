@@ -13,8 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringApplicationConfiguration(classes = {Application.class})
 @WebAppConfiguration
 @IntegrationTest({"server.port=0", "management.port=0", "db.resetAndLoadOnStartup=false"})
-public class CommonSwaggerAPITest {
+public class ITFooSwaggerAPITest {
 
     private MockMvc mockMvc;
 
@@ -39,22 +37,16 @@ public class CommonSwaggerAPITest {
     }
 
     @Test
-    public void getApiDocsSwagger_shouldReturnGeneralInfoOfAPI() throws Exception {
-        mockMvc.perform(get("/api-docs/"))
+    public void getApiFoosDocsSwagger_shouldReturnFoosInfoOfAPI() throws Exception {
+        mockMvc.perform(get("/api-docs/default/foos/"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$.apis", hasSize(greaterThan(0))))
-                .andExpect(jsonPath("$.apis[*].path", containsInAnyOrder("/default/books", "/default/foos")))
-                .andExpect(jsonPath("$.apis[*].description", containsInAnyOrder("Books API", "Foo API")))
-                .andExpect(jsonPath("$.apis", hasSize(greaterThan(0))))
-                .andExpect(jsonPath("$.info").exists())
-                .andExpect(jsonPath("$.info.title", is("Books API")))
-                .andExpect(jsonPath("$.info.description", is("Your book database!")))
-                .andExpect(jsonPath("$.info.termsOfServiceUrl", is("http://en.wikipedia.org/wiki/Terms_of_service")))
-                .andExpect(jsonPath("$.info.contact", is("edwise.null@gmail.com")))
-                .andExpect(jsonPath("$.info.license", is("Apache 2.0")))
-                .andExpect(jsonPath("$.info.licenseUrl", is("http://www.apache.org/licenses/LICENSE-2.0.html")))
+                .andExpect(jsonPath("$.resourcePath", is("/api/foos")))
+                .andExpect(jsonPath("$.apis", hasSize(5)))
+                .andExpect(jsonPath("$.models").exists())
+                .andExpect(jsonPath("$.models.FooResource").exists())
+                .andExpect(jsonPath("$.models.Foo").exists())
 
         ;
     }
