@@ -14,9 +14,11 @@ import com.edwise.completespring.services.BookService;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -37,6 +39,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class BookControllerTest {
     private static final long BOOK_ID_TEST1 = 1l;
     private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";
@@ -71,7 +74,6 @@ public class BookControllerTest {
     @Before
     public void setUp() {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
-        MockitoAnnotations.initMocks(this);
     }
 
     @Test(expected = InvalidRequestException.class)
