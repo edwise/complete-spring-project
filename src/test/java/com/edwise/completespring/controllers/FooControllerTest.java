@@ -8,9 +8,11 @@ import com.edwise.completespring.exceptions.InvalidRequestException;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.validation.BindingResult;
@@ -29,6 +31,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FooControllerTest {
     private static final long FOO_ID_TEST1 = 1l;
     private static final String FOO_TEXT_ATTR_TEST1 = "AttText1";
@@ -46,7 +49,6 @@ public class FooControllerTest {
     @Before
     public void setUp() {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
-        MockitoAnnotations.initMocks(this);
     }
 
     @Test(expected = InvalidRequestException.class)

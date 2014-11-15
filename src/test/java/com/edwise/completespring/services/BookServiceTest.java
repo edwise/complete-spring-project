@@ -11,9 +11,11 @@ import com.edwise.completespring.services.impl.BookServiceImpl;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +27,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class BookServiceTest {
     private static final long BOOK_ID_TEST1 = 3l;
     private static final long BOOK_ID_TEST2 = 400l;
@@ -53,12 +56,7 @@ public class BookServiceTest {
     SequenceIdRepository sequenceIdRepository;
 
     @InjectMocks
-    private BookService service = new BookServiceImpl();;
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+    private BookService service = new BookServiceImpl();
 
     @Test
     public void testFindAll() {

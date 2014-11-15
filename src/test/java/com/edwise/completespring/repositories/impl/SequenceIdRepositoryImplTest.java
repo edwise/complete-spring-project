@@ -5,9 +5,11 @@ import com.edwise.completespring.exceptions.SequenceException;
 import com.edwise.completespring.services.impl.BookServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
@@ -20,6 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SequenceIdRepositoryImplTest {
 
     private static final long TEST_SEQUENCE_ID = 7l;
@@ -30,11 +33,6 @@ public class SequenceIdRepositoryImplTest {
 
     @InjectMocks
     private SequenceIdRepositoryImpl repository = new SequenceIdRepositoryImpl();
-
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void testGetNextSequenceId() {

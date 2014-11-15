@@ -5,8 +5,10 @@ import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.exceptions.helpers.ErrorInfo;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -19,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class RestExceptionProcessorTest {
     private static final int ONE_ITEM = 1;
     private static final int TWO_ITEMS = 2;
@@ -40,7 +43,6 @@ public class RestExceptionProcessorTest {
     public void setUp() {
         this.request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(this.request));
-        MockitoAnnotations.initMocks(this);
         this.restExceptionProcessor = new RestExceptionProcessor();
     }
 
