@@ -7,8 +7,6 @@ import com.edwise.completespring.entities.SequenceId;
 import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
 import com.edwise.completespring.services.impl.BookServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
 import lombok.extern.log4j.Log4j;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 
