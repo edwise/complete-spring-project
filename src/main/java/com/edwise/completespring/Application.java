@@ -40,7 +40,6 @@ public class Application implements CommandLineRunner {
     @Autowired
     private SequenceIdRepository sequenceRepository;
 
-
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }

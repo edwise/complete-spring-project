@@ -4,7 +4,7 @@
 
     <groupId>com.edwise.completespring</groupId>
     <artifactId>completeSpringProject</artifactId>
-    <version>0.9.6</version>
+    <version>0.9.8</version>
     <packaging>war</packaging>
 
     <name>completeSpringProject</name>
@@ -144,6 +144,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
+                <!-- Configuration TO DEBUG IN INTELLIJ. And with the next command:
+                mvn spring-boot:run -Drun.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
+
+                <configuration>
+                    <jvmArguments>
+                        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
+                    </jvmArguments>
+                </configuration>
+
+                -->
             </plugin>
 
             <plugin>
@@ -243,20 +254,6 @@
                 </executions>
             </plugin>
 
-            <!-- PLUGIN TO DEBUG IN INTELLIJ. And with the next command:
-                mvn spring-boot:run -Drun.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>1.2.0.BUILD-SNAPSHOT</version>
-                <configuration>
-                    <jvmArguments>
-                        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
-                    </jvmArguments>
-                </configuration>
-            </plugin>
-            -->
         </plugins>
     </build>
 </project>
