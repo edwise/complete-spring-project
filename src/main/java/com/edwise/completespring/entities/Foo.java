@@ -24,7 +24,7 @@ public class Foo {
     @NotNull
     private String sampleTextAttribute;
 
-    @ApiModelProperty(value = "Sample Local Date Attribute", required = true)
+    @ApiModelProperty(value = "Sample Local Date Attribute", required = true, dataType = "LocalDate")
     @NotNull
     private LocalDate sampleLocalDateAttribute;
 

@@ -25,7 +25,6 @@ import java.util.Arrays;
 /**
  * Spring Boot Application class
  */
-@Configuration
 @ComponentScan
 @EnableAutoConfiguration
 @Log4j
@@ -44,16 +43,6 @@ public class Application implements CommandLineRunner {
 
     @Autowired
     private SequenceIdRepository sequenceRepository;
-
-    @Bean
-    public ObjectMapper configureJacksonObjectMapperWithJodaModule() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JodaModule());
-        objectMapper.configure(com.fasterxml.jackson.databind.SerializationFeature.
-                WRITE_DATES_AS_TIMESTAMPS , false);
-
-        return objectMapper;
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

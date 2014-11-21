@@ -40,8 +40,7 @@ public class Book {
     @NotEmpty
     private String isbn;
 
-    @ApiModelProperty(value = "The release date of the book", required = true, allowableValues = "YYYY-MM-DD",
-            dataType = "org.joda.time.LocalDate")
+    @ApiModelProperty(value = "The release date of the book", required = true, dataType = "LocalDate")
     @NotNull
     private LocalDate releaseDate;
 
