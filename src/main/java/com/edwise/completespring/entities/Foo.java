@@ -1,9 +1,5 @@
 package com.edwise.completespring.entities;
 
-import com.edwise.completespring.util.CustomLocalDateSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,8 +25,6 @@ public class Foo {
     private String sampleTextAttribute;
 
     @ApiModelProperty(value = "Sample Local Date Attribute", required = true)
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = CustomLocalDateSerializer.class)
     @NotNull
     private LocalDate sampleLocalDateAttribute;
 

@@ -1,9 +1,5 @@
 package com.edwise.completespring.entities;
 
-import com.edwise.completespring.util.CustomLocalDateSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -46,8 +42,6 @@ public class Book {
 
     @ApiModelProperty(value = "The release date of the book", required = true, allowableValues = "YYYY-MM-DD",
             dataType = "org.joda.time.LocalDate")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = CustomLocalDateSerializer.class)
     @NotNull
     private LocalDate releaseDate;
 

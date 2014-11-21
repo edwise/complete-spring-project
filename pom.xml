@@ -4,7 +4,7 @@
 
     <groupId>com.edwise.completespring</groupId>
     <artifactId>completeSpringProject</artifactId>
-    <version>0.9.6</version>
+    <version>0.9.7</version>
     <packaging>war</packaging>
 
     <name>completeSpringProject</name>
@@ -245,7 +245,7 @@
 
             <!-- PLUGIN TO DEBUG IN INTELLIJ. And with the next command:
                 mvn spring-boot:run -Drun.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
-
+                TODO meter esto en donde el plugin, que estamos repitiendolo...
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
