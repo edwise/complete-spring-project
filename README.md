@@ -64,10 +64,17 @@ Urls de acceso:
 
  - Jacoco        -> DIRECTORIO_PROYECTO/target/sites/jacoco/index.html
 
- - Spring Boot actuator endpoints -> http://localhost:8080/env
-                                     http://localhost:8080/beans
-                                     http://localhost:8080/mappings
-                                     ...
+ - Spring Boot actuator endpoints:
+
+     http://localhost:8080/admin/health
+
+     http://localhost:8080/admin/env
+
+     http://localhost:8080/admin/beans
+
+     http://localhost:8080/admin/mappings
+
+     http://localhost:8080/admin/info
 
 Fuentes:
 
