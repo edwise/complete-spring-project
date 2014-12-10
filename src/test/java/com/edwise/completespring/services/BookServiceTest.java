@@ -2,19 +2,17 @@ package com.edwise.completespring.services;
 
 import com.edwise.completespring.entities.AuthorTest;
 import com.edwise.completespring.entities.Book;
-import com.edwise.completespring.testutil.BookBuilder;
 import com.edwise.completespring.entities.PublisherTest;
 import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
 import com.edwise.completespring.services.impl.BookServiceImpl;
+import com.edwise.completespring.testutil.BookBuilder;
 import org.joda.time.LocalDate;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
