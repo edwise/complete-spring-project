@@ -53,7 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class, TestContext.class})
 @WebAppConfiguration
-@IntegrationTest({"server.port=0", "management.port=0", "db.resetAndLoadOnStartup=false"})
+@IntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
 public class ITBookControllerTest {
     private static final Long BOOK_ID_TEST1 = 111l;
     private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";
