@@ -87,6 +87,8 @@ public class ITBookControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
 
+    // TODO check date format!!
+
     @Test
     public void getAll_BooksFound_ShouldReturnFoundBooks() throws Exception {
         when(bookService.findAll()).thenReturn(createTestBookList());
