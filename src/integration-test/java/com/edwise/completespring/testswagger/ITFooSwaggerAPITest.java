@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class})
 @WebAppConfiguration
-@IntegrationTest({"server.port=0", "management.port=0", "db.resetAndLoadOnStartup=false"})
+@IntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
 public class ITFooSwaggerAPITest {
 
     private MockMvc mockMvc;

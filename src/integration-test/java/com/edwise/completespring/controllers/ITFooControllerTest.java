@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class, TestContext.class})
 @WebAppConfiguration
-@IntegrationTest({"server.port=0", "management.port=0", "db.resetAndLoadOnStartup=false"})
+@IntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
 public class ITFooControllerTest {
     private static final long FOO_ID_TEST1 = 1l;
     public static final String ATT_TEXT_1 = "AttText1";
