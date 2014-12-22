@@ -93,7 +93,6 @@ public class BookControllerTest {
     @Test
     public void testCreate() {
         Book bookReq = new BookBuilder()
-                .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
@@ -103,9 +102,12 @@ public class BookControllerTest {
         Book bookResp = new Book().copyFrom(bookReq).setId(BOOK_ID_TEST1);
         when(errors.hasErrors()).thenReturn(false);
         when(bookService.create(bookReq)).thenReturn(bookResp);
+        when(bookResourceAssembler.toResource(any(Book.class))).thenReturn(new BookResource().setBook(bookResp));
 
-        controller.createBook(bookReq, errors);
+        ResponseEntity<BookResource> result = controller.createBook(bookReq, errors);
 
+        assertNotNull(result.getBody());
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
         verify(errors, times(1)).hasErrors();
         verify(bookService, times(ONE_TIME)).create(bookReq);
     }
@@ -116,29 +118,32 @@ public class BookControllerTest {
         when(errors.hasErrors()).thenReturn(true);
 
         controller.createBook(bookReq, errors);
-
-        verify(errors, times(ONE_TIME)).hasErrors();
     }
 
     @Test
     public void testUpdate() {
-        Long id = BOOK_ID_TEST1;
         Book bookReq = new BookBuilder()
-                .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
                 .build();
-        Book fooDB = new Book().setId(BOOK_ID_TEST1);
-        when(bookService.findOne(id)).thenReturn(fooDB);
-        when(bookService.save(fooDB.copyFrom(bookReq))).thenReturn(fooDB.copyFrom(bookReq));
+        Book bookDB = new BookBuilder()
+                .id(BOOK_ID_TEST1)
+                .title(BOOK_TITLE_TEST2)
+                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .isbn(BOOK_ISBN_TEST1)
+                .releaseDate(BOOK_RELEASEDATE_TEST1)
+                .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
+                .build();
+        when(bookService.findOne(BOOK_ID_TEST1)).thenReturn(bookDB);
+        when(bookService.save(bookDB.copyFrom(bookReq))).thenReturn(bookDB.copyFrom(bookReq));
 
-        controller.updateBook(id, bookReq, errors);
+        controller.updateBook(BOOK_ID_TEST1, bookReq, errors);
 
-        verify(bookService, times(ONE_TIME)).findOne(id);
-        verify(bookService, times(ONE_TIME)).save(fooDB.copyFrom(bookReq));
+        verify(bookService, times(ONE_TIME)).findOne(BOOK_ID_TEST1);
+        verify(bookService, times(ONE_TIME)).save(bookDB.copyFrom(bookReq));
     }
 
 
@@ -173,7 +178,6 @@ public class BookControllerTest {
     @Test(expected = NotFoundException.class)
     public void testUpdateNotFound() {
         Book bookReq = new BookBuilder()
-                .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)

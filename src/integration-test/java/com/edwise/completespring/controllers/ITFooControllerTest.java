@@ -99,6 +99,14 @@ public class ITFooControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate)))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.foo").exists())
+                .andExpect(jsonPath("$.foo.id", is(1)))
+                .andExpect(jsonPath("$.foo.sampleTextAttribute", is(ATT_TEXT_1)))
+                .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(notNullValue())))
+                .andExpect(jsonPath("$.links", hasSize(1)))
+                .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
+                .andExpect(jsonPath("$.links[0].href", containsString("/api/foos/" + FOO_ID_TEST1)))
         ;
     }
 
