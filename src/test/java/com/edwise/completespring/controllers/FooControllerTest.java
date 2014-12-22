@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.validation.BindingResult;
@@ -21,9 +22,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.times;
@@ -61,13 +61,16 @@ public class FooControllerTest {
 
     @Test
     public void testCreate() {
-        Foo FooReq = FooTest.createFoo(FOO_ID_TEST1, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
+        Foo FooReq = FooTest.createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
         when(errors.hasErrors()).thenReturn(false);
+        when(fooResourceAssembler.toResource(any(Foo.class)))
+                .thenReturn(new FooResource().setFoo(FooTest.createFoo(FOO_ID_TEST1, FOO_TEXT_ATTR_TEST1, DATE_TEST1)));
 
-        controller.createFoo(FooReq, errors);
+        ResponseEntity<FooResource> result = controller.createFoo(FooReq, errors);
 
+        assertNotNull(result.getBody());
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
         verify(errors, times(1)).hasErrors();
-        assertFalse(errors.hasErrors());
     }
 
     @Test(expected = InvalidRequestException.class)
@@ -76,8 +79,6 @@ public class FooControllerTest {
         when(errors.hasErrors()).thenReturn(true);
 
         controller.createFoo(FooReq, errors);
-
-        verify(errors, times(1)).hasErrors();
     }
 
     @Test
@@ -85,8 +86,6 @@ public class FooControllerTest {
         Foo FooReq = FooTest.createFoo(FOO_ID_TEST1, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
 
         controller.updateFoo(FOO_ID_TEST1, FooReq, errors);
-
-        assertTrue(true);
     }
 
 
@@ -103,8 +102,6 @@ public class FooControllerTest {
     @Test
     public void testDelete() {
         controller.deleteFoo(FOO_ID_TEST1);
-
-        assertTrue(true);
     }
 
     @Test

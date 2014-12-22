@@ -183,7 +183,7 @@ public class ITBookControllerTest {
     }
 
     @Test
-    public void postBook_BookCorrect_ShouldReturnCreatedStatus() throws Exception {
+    public void postBook_BookCorrect_ShouldReturnCreatedStatusAndCorrectBook() throws Exception {
         Book bookToCreate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
@@ -205,6 +205,17 @@ public class ITBookControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToCreate)))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.book").exists())
+                .andExpect(jsonPath("$.book.id", is(BOOK_ID_TEST1.intValue())))
+                .andExpect(jsonPath("$.book.title", is(BOOK_TITLE_TEST1)))
+                .andExpect(jsonPath("$.book.authors", is(notNullValue())))
+                .andExpect(jsonPath("$.book.isbn", is(BOOK_ISBN_TEST1)))
+                .andExpect(jsonPath("$.book.releaseDate", is(notNullValue())))
+                .andExpect(jsonPath("$.book.publisher", is(notNullValue())))
+                .andExpect(jsonPath("$.links", hasSize(1)))
+                .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
+                .andExpect(jsonPath("$.links[0].href", containsString("/api/books/" + BOOK_ID_TEST1)))
         ;
         verify(bookService, times(1)).create(bookToCreate);
         verifyNoMoreInteractions(bookService);

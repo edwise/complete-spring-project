@@ -32,6 +32,7 @@ import java.util.List;
 @Log4j
 public class BookController {
     private static final int RESPONSE_CODE_OK = 200;
+    private static final int RESPONSE_CODE_CREATED = 201;
     private static final int RESPONSE_CODE_NO_RESPONSE = 204;
 
     @Autowired
@@ -66,19 +67,19 @@ public class BookController {
         return new ResponseEntity<>(bookResourceAssembler.toResource(book), HttpStatus.OK);
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Create Book", notes = "Create a book")
     @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful create of a book")
+            @ApiResponse(code = RESPONSE_CODE_CREATED, message = "Successful create of a book")
     })
-    public void createBook(@Valid @RequestBody Book book, BindingResult errors) {
+    public ResponseEntity<BookResource> createBook(@Valid @RequestBody Book book, BindingResult errors) {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }
         Book bookCreated = bookService.create(book);
 
         log.info("Book created: " + bookCreated.toString());
+        return new ResponseEntity<>(bookResourceAssembler.toResource(bookCreated), HttpStatus.CREATED);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

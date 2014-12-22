@@ -33,6 +33,7 @@ import java.util.List;
 @Log4j
 public class FooController {
     private static final int RESPONSE_CODE_OK = 200;
+    private static final int RESPONSE_CODE_CREATED = 201;
     private static final int RESPONSE_CODE_NO_RESPONSE = 204;
     private static final String TEST_ATTRIBUTE_1 = "AttText1";
 
@@ -74,13 +75,15 @@ public class FooController {
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Create Foo", notes = "Create a foo")
     @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful create of a foo")
+            @ApiResponse(code = RESPONSE_CODE_CREATED, message = "Successful create of a foo")
     })
-    public void createFoo(@Valid @RequestBody Foo foo, BindingResult errors) {
+    public ResponseEntity<FooResource> createFoo(@Valid @RequestBody Foo foo, BindingResult errors) {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }
+        FooResource resource = fooResourceAssembler.toResource(foo.setId(1L));
         log.info("Foo created: " + foo.toString());
+        return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
