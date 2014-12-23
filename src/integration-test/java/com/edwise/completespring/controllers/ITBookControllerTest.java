@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.edwise.completespring.testutil.IsValidFormatDateYMDMatcher.validFormatDateYMD;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
@@ -87,8 +88,6 @@ public class ITBookControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
 
-    // TODO check date format!!
-
     @Test
     public void getAll_BooksFound_ShouldReturnFoundBooks() throws Exception {
         when(bookService.findAll()).thenReturn(createTestBookList());
@@ -113,6 +112,7 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$[1]book.authors", is(notNullValue())))
                 .andExpect(jsonPath("$[1]book.isbn", is(BOOK_ISBN_TEST2)))
                 .andExpect(jsonPath("$[1]book.releaseDate", is(notNullValue())))
+                .andExpect(jsonPath("$[1]book.releaseDate", is(validFormatDateYMD())))
                 .andExpect(jsonPath("$[1]book.publisher", is(notNullValue())))
                 .andExpect(jsonPath("$[1].links", hasSize(1)))
                 .andExpect(jsonPath("$[1].links[0].rel", is(notNullValue())))
@@ -157,6 +157,7 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$.book.authors", is(notNullValue())))
                 .andExpect(jsonPath("$.book.isbn", is(BOOK_ISBN_TEST1)))
                 .andExpect(jsonPath("$.book.releaseDate", is(notNullValue())))
+                .andExpect(jsonPath("$.book.releaseDate", is(validFormatDateYMD())))
                 .andExpect(jsonPath("$.book.publisher", is(notNullValue())))
                 .andExpect(jsonPath("$.links", hasSize(1)))
                 .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
@@ -212,6 +213,7 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$.book.authors", is(notNullValue())))
                 .andExpect(jsonPath("$.book.isbn", is(BOOK_ISBN_TEST1)))
                 .andExpect(jsonPath("$.book.releaseDate", is(notNullValue())))
+                .andExpect(jsonPath("$.book.releaseDate", is(validFormatDateYMD())))
                 .andExpect(jsonPath("$.book.publisher", is(notNullValue())))
                 .andExpect(jsonPath("$.links", hasSize(1)))
                 .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
