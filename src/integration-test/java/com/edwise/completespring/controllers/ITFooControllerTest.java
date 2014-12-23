@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.edwise.completespring.testutil.IsValidFormatDateYMDMatcher.validFormatDateYMD;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
@@ -85,6 +86,7 @@ public class ITFooControllerTest {
                 .andExpect(jsonPath("$.foo.id", is(1)))
                 .andExpect(jsonPath("$.foo.sampleTextAttribute", is(ATT_TEXT_1)))
                 .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(notNullValue())))
+                .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(validFormatDateYMD())))
                 .andExpect(jsonPath("$.links", hasSize(1)))
                 .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
                 .andExpect(jsonPath("$.links[0].href", containsString("/api/foos/" + FOO_ID_TEST1)))
@@ -104,6 +106,7 @@ public class ITFooControllerTest {
                 .andExpect(jsonPath("$.foo.id", is(1)))
                 .andExpect(jsonPath("$.foo.sampleTextAttribute", is(ATT_TEXT_1)))
                 .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(notNullValue())))
+                .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(validFormatDateYMD())))
                 .andExpect(jsonPath("$.links", hasSize(1)))
                 .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
                 .andExpect(jsonPath("$.links[0].href", containsString("/api/foos/" + FOO_ID_TEST1)))
