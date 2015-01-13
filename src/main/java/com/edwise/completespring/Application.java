@@ -7,7 +7,7 @@ import com.edwise.completespring.entities.SequenceId;
 import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
 import com.edwise.completespring.services.impl.BookServiceImpl;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +23,7 @@ import java.util.Arrays;
  */
 @ComponentScan
 @EnableAutoConfiguration
-@Log4j
+@Slf4j
 public class Application implements CommandLineRunner {
     private static final long INITIAL_SEQUENCE = 4;
     private static final long BOOK_ID_1 = 1L;
