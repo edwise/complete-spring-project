@@ -16,5 +16,6 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
+        // TODO filtrar por role, con el authority...
     }
 }

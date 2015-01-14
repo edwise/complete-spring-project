@@ -9,6 +9,8 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+// TODO update with enum...
+
 public class UserAccountTest {
     private static final long ID_TEST1 = 123l;
     private static final long ID_TEST2 = 456l;

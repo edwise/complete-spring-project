@@ -23,6 +23,8 @@ Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / fu
 
  - Logs, con slfj4/logback configurados para escribir a fichero
 
+ - TODO Spring security
+
 
 
 Requisitos:

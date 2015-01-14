@@ -34,6 +34,7 @@ public class SpringGlobalAuthenticationConfig extends GlobalAuthenticationConfig
                 if (userAccount != null) {
                     return new User(userAccount.getUsername(), userAccount.getPassword(), true, true, true, true,
                             AuthorityUtils.createAuthorityList("USER"));
+                    // TODO usar el enum para crear el Authority
                 } else {
                     throw new UsernameNotFoundException("could not find the user '"
                             + username + "'");
