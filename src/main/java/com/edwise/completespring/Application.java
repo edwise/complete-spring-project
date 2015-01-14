@@ -4,8 +4,10 @@ import com.edwise.completespring.entities.Author;
 import com.edwise.completespring.entities.Book;
 import com.edwise.completespring.entities.Publisher;
 import com.edwise.completespring.entities.SequenceId;
+import com.edwise.completespring.entities.UserAccount;
 import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
+import com.edwise.completespring.repositories.UserAccountRepository;
 import com.edwise.completespring.services.impl.BookServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.LocalDate;
@@ -25,17 +27,23 @@ import java.util.Arrays;
 @EnableAutoConfiguration
 @Slf4j
 public class Application implements CommandLineRunner {
-    private static final long INITIAL_SEQUENCE = 4;
+    private static final long BOOKS_INITIAL_SEQUENCE = 4;
+    private static final long USERACCOUNTS_INITIAL_SEQUENCE = 2;
     private static final long BOOK_ID_1 = 1L;
     private static final long BOOK_ID_2 = 2L;
     private static final long BOOK_ID_3 = 3L;
     private static final long BOOK_ID_4 = 4L;
+
+    public static final String USERACCOUNTS_COLLECTION = "users";
 
     @Value("${db.resetAndLoadOnStartup:true}")
     private boolean resetAndLoadOnStartup;
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private UserAccountRepository userAccountRepository;
 
     @Autowired
     private SequenceIdRepository sequenceRepository;
@@ -56,10 +64,34 @@ public class Application implements CommandLineRunner {
     }
 
     private void fillDBData() {
-        // create the sequence
+        fillDBBooksData();
+        fillDBUsersData();
+        log.info("DB initiated with data.");
+    }
+
+    private void fillDBUsersData() {
         sequenceRepository.save(new SequenceId()
-                                        .setId(BookServiceImpl.BOOK_COLLECTION)
-                                        .setSeq(INITIAL_SEQUENCE)
+                        .setId(USERACCOUNTS_COLLECTION)
+                        .setSeq(USERACCOUNTS_INITIAL_SEQUENCE)
+        );
+
+        userAccountRepository.deleteAll();
+
+        userAccountRepository.save(new UserAccount()
+                .setId(1L)
+                .setUsername("restBookUser")
+                .setPassword("password1"));
+
+        userAccountRepository.save(new UserAccount()
+                .setId(2L)
+                .setUsername("adminUser")
+                .setPassword("password2"));
+    }
+
+    private void fillDBBooksData() {
+        sequenceRepository.save(new SequenceId()
+                        .setId(BookServiceImpl.BOOK_COLLECTION)
+                        .setSeq(BOOKS_INITIAL_SEQUENCE)
         );
 
         bookRepository.deleteAll();
@@ -84,7 +116,7 @@ public class Application implements CommandLineRunner {
                 .setId(BOOK_ID_3)
                 .setTitle("Libro prueba mongo 3")
                 .setAuthors(Arrays.asList(new Author().setName("Nadie").setSurname("Nobody")))
-                .setIsbn( "12-9999-92")
+                .setIsbn("12-9999-92")
                 .setReleaseDate(new LocalDate())
                 .setPublisher(new Publisher().setName("Editorial 7").setCountry("ES").setOnline(true)));
 
@@ -95,8 +127,6 @@ public class Application implements CommandLineRunner {
                 .setIsbn("22-34565-12")
                 .setReleaseDate(new LocalDate())
                 .setPublisher(new Publisher().setName("Editorial 33").setCountry("US").setOnline(true)));
-
-        log.info("DB initiated with data.");
     }
 
 }
