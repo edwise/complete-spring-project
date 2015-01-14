@@ -21,6 +21,8 @@ Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / fu
  
  - Test de integración completos (mockeando el service)
 
+ - Logs, con slfj4/logback configurados para escribir a fichero
+
 
 
 Requisitos:
@@ -64,6 +66,8 @@ Urls de acceso:
 
  - Jacoco        -> DIRECTORIO_PROYECTO/target/sites/jacoco/index.html
 
+ - Logs          -> DIRECTORIO_PROYECTO/logs/csp*.log
+
  - Spring Boot actuator endpoints:
 
      http://localhost:8080/admin/health
@@ -75,6 +79,8 @@ Urls de acceso:
      http://localhost:8080/admin/mappings
 
      http://localhost:8080/admin/info
+
+     ...
 
 Fuentes:
 
