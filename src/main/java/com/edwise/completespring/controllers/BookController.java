@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+// TODO revisar seguridad en swagger... o 'cerrar' swagger ui a usuarios logados
+
 @RestController
 @RequestMapping("/api/books/")
 @Api(value = "books", description = "Books API")

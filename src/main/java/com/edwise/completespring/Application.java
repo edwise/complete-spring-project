@@ -5,6 +5,7 @@ import com.edwise.completespring.entities.Book;
 import com.edwise.completespring.entities.Publisher;
 import com.edwise.completespring.entities.SequenceId;
 import com.edwise.completespring.entities.UserAccount;
+import com.edwise.completespring.entities.UserAccountType;
 import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
 import com.edwise.completespring.repositories.UserAccountRepository;
@@ -28,7 +29,7 @@ import java.util.Arrays;
 @Slf4j
 public class Application implements CommandLineRunner {
     private static final long BOOKS_INITIAL_SEQUENCE = 4;
-    private static final long USERACCOUNTS_INITIAL_SEQUENCE = 2;
+    private static final long USERACCOUNTS_INITIAL_SEQUENCE = 3;
     private static final long BOOK_ID_1 = 1L;
     private static final long BOOK_ID_2 = 2L;
     private static final long BOOK_ID_3 = 3L;
@@ -79,13 +80,15 @@ public class Application implements CommandLineRunner {
 
         userAccountRepository.save(new UserAccount()
                 .setId(1L)
-                .setUsername("restBookUser")
-                .setPassword("password1"));
+                .setUsername("user1")
+                .setPassword("password1")
+                .setUserType(UserAccountType.REST_USER));
 
         userAccountRepository.save(new UserAccount()
-                .setId(2L)
-                .setUsername("adminUser")
-                .setPassword("password2"));
+                .setId(3L)
+                .setUsername("admin")
+                .setPassword("password1234")
+                .setUserType(UserAccountType.ADMIN_USER));
     }
 
     private void fillDBBooksData() {

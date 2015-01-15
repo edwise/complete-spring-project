@@ -2,6 +2,7 @@ package com.edwise.completespring.config;
 
 import com.edwise.completespring.entities.UserAccount;
 import com.edwise.completespring.repositories.UserAccountRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Configuration
+@Slf4j
 public class SpringGlobalAuthenticationConfig extends GlobalAuthenticationConfigurerAdapter {
 
     @Autowired
@@ -32,12 +34,13 @@ public class SpringGlobalAuthenticationConfig extends GlobalAuthenticationConfig
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
                 UserAccount userAccount = userAccountRepository.findByUsername(username);
                 if (userAccount != null) {
-                    return new User(userAccount.getUsername(), userAccount.getPassword(), true, true, true, true,
-                            AuthorityUtils.createAuthorityList("USER"));
-                    // TODO usar el enum para crear el Authority
+                    return new User(userAccount.getUsername(),
+                            userAccount.getPassword(),
+                            true, true, true, true,
+                            AuthorityUtils.createAuthorityList(userAccount.getUserType().role()));
                 } else {
-                    throw new UsernameNotFoundException("could not find the user '"
-                            + username + "'");
+                    log.warn("Not existing user: {}", username);
+                    throw new UsernameNotFoundException("Could not find the user '" + username + "'");
                 }
             }
 
