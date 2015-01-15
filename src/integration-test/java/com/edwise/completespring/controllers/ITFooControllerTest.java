@@ -45,6 +45,8 @@ public class ITFooControllerTest {
 
     private MockMvc mockMvc;
 
+    // TODO revisar como hacer estos test con spring security incorporado... (como en ITBookControllerTest...
+
     @Autowired
     protected WebApplicationContext webApplicationContext;
 

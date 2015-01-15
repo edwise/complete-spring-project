@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -76,10 +77,14 @@ public class ITBookControllerTest {
 
     private MockMvc mockMvc;
 
-    // TODO revisar como hacer estos test con spring security incorporado...
+    // TODO Añadir user y pass en las llamadas
+    // TODO Añadir tests de prueba de usuarios...
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 
     @Autowired
     protected WebApplicationContext webApplicationContext;
@@ -87,14 +92,16 @@ public class ITBookControllerTest {
     @Before
     public void setUp() {
         Mockito.reset(bookService);
-        mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).addFilters(springSecurityFilterChain).build();
     }
 
     @Test
     public void getAll_BooksFound_ShouldReturnFoundBooks() throws Exception {
         when(bookService.findAll()).thenReturn(createTestBookList());
 
-        mockMvc.perform(get("/api/books/"))
+        mockMvc.perform(get("/api/books/")
+                    .param("username", "user1")
+                    .param("password", "password1"))  // TODO esto no va :S
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
