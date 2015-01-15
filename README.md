@@ -23,7 +23,7 @@ Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / fu
 
  - Logs, con slfj4/logback configurados para escribir a fichero
 
- - TODO Spring security
+ - Spring Security activo, con autenticación básica
 
 
 
@@ -56,7 +56,9 @@ Comandos
     mvn clean verify -P integration-test
     ```
 
-
+Usuarios de acceso:
+    Usuario para acceso a servicios rest (/api/**)    -> user1 : password1
+    Usuario para acceso a administración (/admin/**)  -> admin : password1234s
 
 Urls de acceso:
 
