@@ -34,6 +34,8 @@ public class Application implements CommandLineRunner {
     private static final long BOOK_ID_2 = 2L;
     private static final long BOOK_ID_3 = 3L;
     private static final long BOOK_ID_4 = 4L;
+    private static final long USER_ID_1 = 1L;
+    private static final long USER_ID_2 = 2L;
 
     public static final String USERACCOUNTS_COLLECTION = "users";
 
@@ -79,13 +81,13 @@ public class Application implements CommandLineRunner {
         userAccountRepository.deleteAll();
 
         userAccountRepository.save(new UserAccount()
-                .setId(1L)
+                .setId(USER_ID_1)
                 .setUsername("user1")
                 .setPassword("password1")
                 .setUserType(UserAccountType.REST_USER));
 
         userAccountRepository.save(new UserAccount()
-                .setId(3L)
+                .setId(USER_ID_2)
                 .setUsername("admin")
                 .setPassword("password1234")
                 .setUserType(UserAccountType.ADMIN_USER));
