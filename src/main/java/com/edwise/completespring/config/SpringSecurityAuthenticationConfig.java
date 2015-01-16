@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Configuration
 @Slf4j
-public class SpringGlobalAuthenticationConfig extends GlobalAuthenticationConfigurerAdapter {
+public class SpringSecurityAuthenticationConfig extends GlobalAuthenticationConfigurerAdapter {
 
     @Autowired
     private UserAccountRepository userAccountRepository;

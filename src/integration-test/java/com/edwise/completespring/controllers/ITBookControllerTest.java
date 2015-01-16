@@ -1,21 +1,28 @@
 package com.edwise.completespring.controllers;
 
 import com.edwise.completespring.Application;
+import com.edwise.completespring.config.SpringSecurityAuthenticationConfig;
 import com.edwise.completespring.config.TestContext;
 import com.edwise.completespring.entities.Author;
 import com.edwise.completespring.entities.AuthorTest;
 import com.edwise.completespring.entities.Book;
 import com.edwise.completespring.entities.Publisher;
 import com.edwise.completespring.entities.PublisherTest;
+import com.edwise.completespring.entities.UserAccount;
+import com.edwise.completespring.entities.UserAccountType;
 import com.edwise.completespring.exceptions.NotFoundException;
+import com.edwise.completespring.repositories.UserAccountRepository;
 import com.edwise.completespring.services.BookService;
 import com.edwise.completespring.testutil.BookBuilder;
 import com.edwise.completespring.testutil.IntegrationTestUtil;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -23,6 +30,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -80,6 +88,9 @@ public class ITBookControllerTest {
     // TODO Añadir user y pass en las llamadas
     // TODO Añadir tests de prueba de usuarios...
 
+    @Mock
+    private UserAccountRepository userAccountRepository;
+
     @Autowired
     private BookService bookService;
 
@@ -87,21 +98,36 @@ public class ITBookControllerTest {
     private FilterChainProxy springSecurityFilterChain;
 
     @Autowired
+    private SpringSecurityAuthenticationConfig springSecurityAuthenticationConfig;
+
+    @Autowired
     protected WebApplicationContext webApplicationContext;
 
     @Before
     public void setUp() {
+        MockitoAnnotations.initMocks(this);
         Mockito.reset(bookService);
-        mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).addFilters(springSecurityFilterChain).build();
+        ReflectionTestUtils.setField(this.springSecurityAuthenticationConfig, "userAccountRepository", userAccountRepository);
+        mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).addFilter(springSecurityFilterChain).build();
     }
 
     @Test
     public void getAll_BooksFound_ShouldReturnFoundBooks() throws Exception {
         when(bookService.findAll()).thenReturn(createTestBookList());
+        when(userAccountRepository.findByUsername("user1"))  // TODO refactor. Esto ya funciona!
+                .thenReturn(new UserAccount()
+                        .setId(1L)
+                        .setUsername("user1")
+                        .setPassword("password1")
+                        .setUserType(UserAccountType.REST_USER));
 
-        mockMvc.perform(get("/api/books/")
-                    .param("username", "user1")
-                    .param("password", "password1"))  // TODO esto no va :S
+        String name = "user1";
+        String password = "password1";
+        String authString = name + ":" + password;
+        byte[] authEncBytes = Base64.encodeBase64(authString.getBytes());
+        String authStringEnc = new String(authEncBytes);
+
+        mockMvc.perform(get("/api/books/").header("Authorization", "Basic " + authStringEnc))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
