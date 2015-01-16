@@ -57,8 +57,11 @@ Comandos
     ```
 
 Usuarios de acceso:
-    Usuario para acceso a servicios rest (/api/**)    -> user1 : password1
-    Usuario para acceso a administración (/admin/**)  -> admin : password1234s
+
+ - Usuario para acceso a servicios rest (/api/*)    -> user1 : password1
+
+ - Usuario para acceso a administración (/admin/*)  -> admin : password1234
+
 
 Urls de acceso:
 
