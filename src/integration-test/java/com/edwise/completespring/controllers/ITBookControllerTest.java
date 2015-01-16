@@ -81,10 +81,10 @@ public class ITBookControllerTest {
     private static final String BOOK_NOT_FOUND_EXCEPTION_MSG = "Book not found";
     private static final String CORRECT_REST_USER_USERNAME = "user1";
     private static final String CORRECT_REST_USER_PASSWORD = "password1";
-    private static final String INCORRECT_USER_USERNAME = "inCorrectUser";
-    private static final String INCORRECT_USER_PASSWORD = "password2";
+    private static final String NOT_EXISTING_USER_USERNAME = "notExistUser";
+    private static final String NOT_EXISTING_USER_PASSWORD = "password2";
     private static String CORRECT_REST_USER_AUTHORIZATION_ENCODED;
-    private static String INCORRECT_USER_AUTHORIZATION_ENCODED;
+    private static String NOT_EXISTING_USER_AUTHORIZATION_ENCODED;
 
     private MockMvc mockMvc;
 
@@ -109,9 +109,9 @@ public class ITBookControllerTest {
         byte[] authEncodecBytes = Base64.encodeBase64(authString.getBytes());
         CORRECT_REST_USER_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
 
-        authString = INCORRECT_USER_USERNAME + ":" + INCORRECT_USER_PASSWORD;
+        authString = NOT_EXISTING_USER_USERNAME + ":" + NOT_EXISTING_USER_PASSWORD;
         authEncodecBytes = Base64.encodeBase64(authString.getBytes());
-        INCORRECT_USER_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
+        NOT_EXISTING_USER_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
     }
 
     @Before
@@ -174,8 +174,8 @@ public class ITBookControllerTest {
     }
 
     @Test
-    public void getAll_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
-        mockMvc.perform(get("/api/books/").header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+    public void getAll_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
+        mockMvc.perform(get("/api/books/").header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isUnauthorized())
         ;
         verifyZeroInteractions(bookService);
@@ -232,9 +232,9 @@ public class ITBookControllerTest {
     }
 
     @Test
-    public void getBook_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
+    public void getBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
         mockMvc.perform(get("/api/books/{id}", BOOK_ID_TEST1)
-                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isUnauthorized())
         ;
         verifyZeroInteractions(bookService);
@@ -304,7 +304,7 @@ public class ITBookControllerTest {
     }
 
     @Test
-    public void postBook_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
+    public void postBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
         Book bookToCreate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
@@ -316,7 +316,7 @@ public class ITBookControllerTest {
         mockMvc.perform(post("/api/books/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToCreate))
-                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isUnauthorized())
         ;
         verifyZeroInteractions(bookService);
@@ -410,7 +410,7 @@ public class ITBookControllerTest {
     }
 
     @Test
-    public void putBook_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
+    public void putBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
         Book bookToUpdate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
@@ -422,7 +422,7 @@ public class ITBookControllerTest {
         mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate))
-                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isUnauthorized())
         ;
         verifyZeroInteractions(bookService);
@@ -439,9 +439,9 @@ public class ITBookControllerTest {
     }
 
     @Test
-    public void deleteBook_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
+    public void deleteBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
         mockMvc.perform(delete("/api/books/{id}", BOOK_ID_TEST1)
-                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isUnauthorized())
         ;
         verifyZeroInteractions(bookService);
