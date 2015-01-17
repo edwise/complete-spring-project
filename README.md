@@ -21,6 +21,10 @@ Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / fu
  
  - Test de integración completos (mockeando el service)
 
+ - Logs, con slfj4/logback configurados para escribir a fichero
+
+ - Spring Security activo, con autenticación básica
+
 
 
 Requisitos:
@@ -52,6 +56,11 @@ Comandos
     mvn clean verify -P integration-test
     ```
 
+Usuarios de acceso:
+
+ - Usuario para acceso a servicios rest (/api/*)    -> user1 : password1
+
+ - Usuario para acceso a administración (/admin/*)  -> admin : password1234
 
 
 Urls de acceso:
@@ -64,6 +73,8 @@ Urls de acceso:
 
  - Jacoco        -> DIRECTORIO_PROYECTO/target/sites/jacoco/index.html
 
+ - Logs          -> DIRECTORIO_PROYECTO/logs/csp*.log
+
  - Spring Boot actuator endpoints:
 
      http://localhost:8080/admin/health
@@ -75,6 +86,8 @@ Urls de acceso:
      http://localhost:8080/admin/mappings
 
      http://localhost:8080/admin/info
+
+     ...
 
 Fuentes:
 

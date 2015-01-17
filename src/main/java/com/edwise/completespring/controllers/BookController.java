@@ -5,23 +5,14 @@ import com.edwise.completespring.assemblers.BookResourceAssembler;
 import com.edwise.completespring.entities.Book;
 import com.edwise.completespring.exceptions.InvalidRequestException;
 import com.edwise.completespring.services.BookService;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
-import lombok.extern.log4j.Log4j;
+import com.wordnik.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -29,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/books/")
 @Api(value = "books", description = "Books API")
-@Log4j
+@Slf4j
 public class BookController {
     private static final int RESPONSE_CODE_OK = 200;
     private static final int RESPONSE_CODE_CREATED = 201;
@@ -50,7 +41,7 @@ public class BookController {
         List<Book> books = bookService.findAll();
         List<BookResource> resourceList = bookResourceAssembler.toResources(books);
 
-        log.info("Books found: " + books);
+        log.info("Books found: {}", books);
         return new ResponseEntity<>(resourceList, HttpStatus.OK);
     }
 
@@ -63,7 +54,7 @@ public class BookController {
                                                 @PathVariable long id) {
         Book book = bookService.findOne(id);
 
-        log.info("Book found: " + book);
+        log.info("Book found: {}", book);
         return new ResponseEntity<>(bookResourceAssembler.toResource(book), HttpStatus.OK);
     }
 
@@ -78,7 +69,7 @@ public class BookController {
         }
         Book bookCreated = bookService.create(book);
 
-        log.info("Book created: " + bookCreated.toString());
+        log.info("Book created: {}", bookCreated.toString());
         return new ResponseEntity<>(bookResourceAssembler.toResource(bookCreated), HttpStatus.CREATED);
     }
 
@@ -97,7 +88,7 @@ public class BookController {
         Book dbBook = bookService.findOne(id);
         dbBook = bookService.save(dbBook.copyFrom(book));
 
-        log.info("Book updated: " + dbBook.toString());
+        log.info("Book updated: {}", dbBook.toString());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -110,6 +101,6 @@ public class BookController {
                            @PathVariable long id) {
         bookService.delete(id);
 
-        log.info("Book deleted: " + id);
+        log.info("Book deleted: {}", id);
     }
 }
