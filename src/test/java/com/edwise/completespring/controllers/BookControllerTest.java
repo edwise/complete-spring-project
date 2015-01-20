@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -29,8 +30,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.doNothing;
@@ -102,13 +106,15 @@ public class BookControllerTest {
         Book bookResp = new Book().copyFrom(bookReq).setId(BOOK_ID_TEST1);
         when(errors.hasErrors()).thenReturn(false);
         when(bookService.create(bookReq)).thenReturn(bookResp);
-        when(bookResourceAssembler.toResource(any(Book.class))).thenReturn(new BookResource().setBook(bookResp));
+        when(bookResourceAssembler.toResource(any(Book.class))).thenReturn(createBookResourceWithLink(bookResp));
 
         ResponseEntity<BookResource> result = controller.createBook(bookReq, errors);
 
-        assertNotNull(result.getBody());
+        assertNull(result.getBody());
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        verify(errors, times(1)).hasErrors();
+        assertThat(result.getHeaders().getLocation().toString(), containsString("/api/books/" + BOOK_ID_TEST1));
+        verify(bookResourceAssembler, times(ONE_TIME)).toResource(bookResp);
+        verify(errors, times(ONE_TIME)).hasErrors();
         verify(bookService, times(ONE_TIME)).create(bookReq);
     }
 
@@ -146,7 +152,6 @@ public class BookControllerTest {
         verify(bookService, times(ONE_TIME)).save(bookDB.copyFrom(bookReq));
     }
 
-
     @Test
     public void testGet() {
         Book bookReq = new BookBuilder()
@@ -167,6 +172,7 @@ public class BookControllerTest {
         assertNotNull(result.getBody());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
+
 
     @Test(expected = NotFoundException.class)
     public void testGetNotFound() {
@@ -210,6 +216,12 @@ public class BookControllerTest {
         verify(bookResourceAssembler, times(ONE_TIME)).toResources(books);
         assertNotNull(result.getBody());
         assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
+    private BookResource createBookResourceWithLink(Book book) {
+        BookResource bookResource = new BookResource().setBook(book);
+        bookResource.add(new Link("http://localhost:8080/api/books/" + BOOK_ID_TEST1));
+        return bookResource;
     }
 
     private List<Book> createTestBookList() {

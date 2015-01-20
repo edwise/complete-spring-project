@@ -54,6 +54,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -264,18 +265,7 @@ public class ITBookControllerTest {
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToCreate))
                 .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$.book").exists())
-                .andExpect(jsonPath("$.book.id", is(BOOK_ID_TEST1.intValue())))
-                .andExpect(jsonPath("$.book.title", is(BOOK_TITLE_TEST1)))
-                .andExpect(jsonPath("$.book.authors", is(notNullValue())))
-                .andExpect(jsonPath("$.book.isbn", is(BOOK_ISBN_TEST1)))
-                .andExpect(jsonPath("$.book.releaseDate", is(notNullValue())))
-                .andExpect(jsonPath("$.book.releaseDate", is(validFormatDateYMD())))
-                .andExpect(jsonPath("$.book.publisher", is(notNullValue())))
-                .andExpect(jsonPath("$.links", hasSize(1)))
-                .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$.links[0].href", containsString("/api/books/" + BOOK_ID_TEST1)))
+                .andExpect(header().string("Location", containsString("/api/books/" + BOOK_ID_TEST1)))
         ;
         verify(bookService, times(1)).create(bookToCreate);
         verifyNoMoreInteractions(bookService);

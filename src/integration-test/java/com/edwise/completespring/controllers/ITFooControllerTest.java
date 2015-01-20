@@ -152,15 +152,7 @@ public class ITFooControllerTest {
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate))
                 .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$.foo").exists())
-                .andExpect(jsonPath("$.foo.id", is(1)))
-                .andExpect(jsonPath("$.foo.sampleTextAttribute", is(ATT_TEXT_1)))
-                .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(notNullValue())))
-                .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(validFormatDateYMD())))
-                .andExpect(jsonPath("$.links", hasSize(1)))
-                .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$.links[0].href", containsString("/api/foos/" + FOO_ID_TEST1)))
+                .andExpect(header().string("Location", containsString("/api/foos/" + FOO_ID_TEST1)))
         ;
     }
 

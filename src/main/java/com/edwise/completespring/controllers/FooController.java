@@ -12,6 +12,8 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -81,9 +84,8 @@ public class FooController {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }
-        FooResource resource = fooResourceAssembler.toResource(foo.setId(1L));
         log.info("Foo created: {}", foo.toString());
-        return new ResponseEntity<>(resource, HttpStatus.CREATED);
+        return new ResponseEntity<>(null, createHttpHeadersWithLocation(foo.setId(1L)), HttpStatus.CREATED);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -111,5 +113,12 @@ public class FooController {
                           @PathVariable long id) {
 
         log.info("Foo deleted: {}", id);
+    }
+
+    private HttpHeaders createHttpHeadersWithLocation(Foo foo) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        Link selfBookLink = fooResourceAssembler.toResource(foo).getLink("self");
+        httpHeaders.setLocation(URI.create(selfBookLink != null ? selfBookLink.getHref() : ""));
+        return httpHeaders;
     }
 }

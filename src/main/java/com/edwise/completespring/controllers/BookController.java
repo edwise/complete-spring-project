@@ -5,16 +5,28 @@ import com.edwise.completespring.assemblers.BookResourceAssembler;
 import com.edwise.completespring.entities.Book;
 import com.edwise.completespring.exceptions.InvalidRequestException;
 import com.edwise.completespring.services.BookService;
-import com.wordnik.swagger.annotations.*;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -70,7 +82,7 @@ public class BookController {
         Book bookCreated = bookService.create(book);
 
         log.info("Book created: {}", bookCreated.toString());
-        return new ResponseEntity<>(bookResourceAssembler.toResource(bookCreated), HttpStatus.CREATED);
+        return new ResponseEntity<>(null, createHttpHeadersWithLocation(bookCreated), HttpStatus.CREATED);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -102,5 +114,12 @@ public class BookController {
         bookService.delete(id);
 
         log.info("Book deleted: {}", id);
+    }
+
+    private HttpHeaders createHttpHeadersWithLocation(Book book) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        Link selfBookLink = bookResourceAssembler.toResource(book).getLink("self");
+        httpHeaders.setLocation(URI.create(selfBookLink != null ? selfBookLink.getHref() : ""));
+        return httpHeaders;
     }
 }
