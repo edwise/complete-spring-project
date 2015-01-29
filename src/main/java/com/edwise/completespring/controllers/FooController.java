@@ -9,9 +9,11 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +26,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/foos/")
 @Api(value = "foos", description = "Foo API")
-@Log4j
+@Slf4j
 public class FooController {
     private static final int RESPONSE_CODE_OK = 200;
     private static final int RESPONSE_CODE_CREATED = 201;
@@ -52,7 +55,7 @@ public class FooController {
         );
         List<FooResource> resourceList = fooResourceAssembler.toResources(foos);
 
-        log.info("Foos found: " + foos);
+        log.info("Foos found: {}", foos);
         return new ResponseEntity<>(resourceList, HttpStatus.OK);
     }
 
@@ -67,7 +70,7 @@ public class FooController {
                 new Foo().setId(1L).setSampleTextAttribute(TEST_ATTRIBUTE_1).setSampleLocalDateAttribute(new LocalDate())
         );
 
-        log.info("Foo found: " + resource.getFoo());
+        log.info("Foo found: {}", resource.getFoo());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
@@ -81,9 +84,8 @@ public class FooController {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }
-        FooResource resource = fooResourceAssembler.toResource(foo.setId(1L));
-        log.info("Foo created: " + foo.toString());
-        return new ResponseEntity<>(resource, HttpStatus.CREATED);
+        log.info("Foo created: {}", foo.toString());
+        return new ResponseEntity<>(null, createHttpHeadersWithLocation(foo.setId(1L)), HttpStatus.CREATED);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -98,7 +100,7 @@ public class FooController {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }
-        log.info("Foo updated: " + foo.toString());
+        log.info("Foo updated: {}", foo.toString());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -110,6 +112,13 @@ public class FooController {
     public void deleteFoo(@ApiParam(defaultValue = "1", value = "The id of the foo to delete")
                           @PathVariable long id) {
 
-        log.info("Foo deleted: " + id);
+        log.info("Foo deleted: {}", id);
+    }
+
+    private HttpHeaders createHttpHeadersWithLocation(Foo foo) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        Link selfBookLink = fooResourceAssembler.toResource(foo).getLink("self");
+        httpHeaders.setLocation(URI.create(selfBookLink != null ? selfBookLink.getHref() : ""));
+        return httpHeaders;
     }
 }

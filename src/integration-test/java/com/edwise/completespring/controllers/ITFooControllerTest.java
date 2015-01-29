@@ -1,37 +1,39 @@
 package com.edwise.completespring.controllers;
 
 import com.edwise.completespring.Application;
+import com.edwise.completespring.config.SpringSecurityAuthenticationConfig;
 import com.edwise.completespring.config.TestContext;
 import com.edwise.completespring.entities.Foo;
 import com.edwise.completespring.entities.FooTest;
+import com.edwise.completespring.entities.UserAccount;
+import com.edwise.completespring.entities.UserAccountType;
+import com.edwise.completespring.repositories.UserAccountRepository;
 import com.edwise.completespring.testutil.IntegrationTestUtil;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static com.edwise.completespring.testutil.IsValidFormatDateYMDMatcher.validFormatDateYMD;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class, TestContext.class})
@@ -42,20 +44,52 @@ public class ITFooControllerTest {
     public static final String ATT_TEXT_1 = "AttText1";
     private static final String FOO_TEXT_ATTR_TEST1 = ATT_TEXT_1;
     private static final LocalDate DATE_TEST1 = new LocalDate(2013, 1, 26);
+    private static final String CORRECT_REST_USER_USERNAME = "user1";
+    private static final String CORRECT_REST_USER_PASSWORD = "password1";
+    private static final String INCORRECT_USER_USERNAME = "inCorrectUser";
+    private static final String INCORRECT_USER_PASSWORD = "password2";
+    private static String CORRECT_REST_USER_AUTHORIZATION_ENCODED;
+    private static String INCORRECT_USER_AUTHORIZATION_ENCODED;
+
+    @Mock
+    private UserAccountRepository userAccountRepository;
+
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
+
+    @Autowired
+    private SpringSecurityAuthenticationConfig springSecurityAuthenticationConfig;
 
     private MockMvc mockMvc;
 
     @Autowired
     protected WebApplicationContext webApplicationContext;
 
+    @BeforeClass
+    public static void setUpCommonStuff() {
+        String authString = CORRECT_REST_USER_USERNAME + ":" + CORRECT_REST_USER_PASSWORD;
+        byte[] authEncodecBytes = Base64.encodeBase64(authString.getBytes());
+        CORRECT_REST_USER_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
+
+        authString = INCORRECT_USER_USERNAME + ":" + INCORRECT_USER_PASSWORD;
+        authEncodecBytes = Base64.encodeBase64(authString.getBytes());
+        INCORRECT_USER_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
+    }
+
     @Before
     public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        MockitoAnnotations.initMocks(this);
+        ReflectionTestUtils.setField(this.springSecurityAuthenticationConfig, "userAccountRepository", userAccountRepository);
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(this.webApplicationContext)
+                .addFilter(springSecurityFilterChain)
+                .build();
+        when(userAccountRepository.findByUsername(CORRECT_REST_USER_USERNAME)).thenReturn(createUserAccount());
     }
 
     @Test
-    public void getAll_FoosFound_ShouldReturnFoundFoos() throws Exception {
-        mockMvc.perform(get("/api/foos/"))
+    public void getAll_CorrectUserAndFoosFound_ShouldReturnFoundFoos() throws Exception {
+        mockMvc.perform(get("/api/foos/").header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -77,8 +111,16 @@ public class ITFooControllerTest {
     }
 
     @Test
-    public void getFoo_FooFound_ShouldReturnCorrectFoo() throws Exception {
-        mockMvc.perform(get("/api/foos/{id}", FOO_ID_TEST1))
+    public void getAll_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
+        mockMvc.perform(get("/api/foos/").header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .andExpect(status().isUnauthorized())
+        ;
+    }
+
+    @Test
+    public void getFoo_CorrectUserAndFooFound_ShouldReturnCorrectFoo() throws Exception {
+        mockMvc.perform(get("/api/foos/{id}", FOO_ID_TEST1)
+                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -94,32 +136,34 @@ public class ITFooControllerTest {
     }
 
     @Test
-    public void postFoo_FooCorrect_ShouldReturnCreatedStatus() throws Exception {
+    public void getFoo_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
+        mockMvc.perform(get("/api/foos/{id}", FOO_ID_TEST1)
+                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .andExpect(status().isUnauthorized())
+        ;
+    }
+
+    @Test
+    public void postFoo_CorrectUserAndFooCorrect_ShouldReturnCreatedStatus() throws Exception {
         Foo fooToCreate = FooTest.createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
 
         mockMvc.perform(post("/api/foos/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate)))
+                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate))
+                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$.foo").exists())
-                .andExpect(jsonPath("$.foo.id", is(1)))
-                .andExpect(jsonPath("$.foo.sampleTextAttribute", is(ATT_TEXT_1)))
-                .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(notNullValue())))
-                .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(validFormatDateYMD())))
-                .andExpect(jsonPath("$.links", hasSize(1)))
-                .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$.links[0].href", containsString("/api/foos/" + FOO_ID_TEST1)))
+                .andExpect(header().string("Location", containsString("/api/foos/" + FOO_ID_TEST1)))
         ;
     }
 
     @Test
-    public void postFoo_FooIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
+    public void postFoo_CorrectUserAndFooIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
         Foo fooToCreate = FooTest.createFoo(null, null, null); // text and date as null
 
         mockMvc.perform(post("/api/foos/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate)))
+                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate))
+                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -130,23 +174,37 @@ public class ITFooControllerTest {
     }
 
     @Test
-    public void putFoo_FooExist_ShouldReturnCreatedStatus() throws Exception {
+    public void postFoo_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
+        Foo fooToCreate = FooTest.createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
+
+        mockMvc.perform(post("/api/foos/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate))
+                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .andExpect(status().isUnauthorized())
+        ;
+    }
+
+    @Test
+    public void putFoo_CorrectUserAndFooExist_ShouldReturnCreatedStatus() throws Exception {
         Foo fooWithChangedFields = FooTest.createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
 
         mockMvc.perform(put("/api/foos/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields)))
+                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields))
+                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isNoContent())
         ;
     }
 
     @Test
-    public void putFoo_FooIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
-        Foo fooToCreate = FooTest.createFoo(null, null, null); // text and date as null
+    public void putFoo_CorrectUserAndFooIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
+        Foo fooWithChangedFields = FooTest.createFoo(null, null, null); // text and date as null
 
         mockMvc.perform(put("/api/foos/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate)))
+                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields))
+                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -157,9 +215,38 @@ public class ITFooControllerTest {
     }
 
     @Test
-    public void deleteFoo_FooExist_ShouldReturnNoContentStatus() throws Exception {
-        mockMvc.perform(delete("/api/foos/{id}", FOO_ID_TEST1))
+    public void putFoo_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
+        Foo fooWithChangedFields = FooTest.createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
+
+        mockMvc.perform(put("/api/foos/{id}", FOO_ID_TEST1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields))
+                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .andExpect(status().isUnauthorized())
+        ;
+    }
+
+    @Test
+    public void deleteFoo_CorrectUserAndFooExist_ShouldReturnNoContentStatus() throws Exception {
+        mockMvc.perform(delete("/api/foos/{id}", FOO_ID_TEST1)
+                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isNoContent())
         ;
+    }
+
+    @Test
+    public void deleteFoo_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
+        mockMvc.perform(delete("/api/foos/{id}", FOO_ID_TEST1)
+                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .andExpect(status().isUnauthorized())
+        ;
+    }
+
+    private UserAccount createUserAccount() {
+        return new UserAccount()
+                .setId(1L)
+                .setUsername(CORRECT_REST_USER_USERNAME)
+                .setPassword(CORRECT_REST_USER_PASSWORD)
+                .setUserType(UserAccountType.REST_USER);
     }
 }

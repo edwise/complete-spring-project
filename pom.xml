@@ -4,11 +4,11 @@
 
     <groupId>com.edwise.completespring</groupId>
     <artifactId>completeSpringProject</artifactId>
-    <version>0.9.13</version>
+    <version>0.9.16</version>
     <packaging>war</packaging>
 
     <name>completeSpringProject</name>
-    <url>http://maven.apache.org</url>
+    <url>https://github.com/edwise/complete-spring-project</url>
 
     <profiles>
         <profile>
@@ -54,6 +54,7 @@
 
     <dependencies>
 
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -68,6 +69,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <dependency>
@@ -148,14 +154,14 @@
 
                 <!-- Configuration TO DEBUG IN INTELLIJ. And with the next command:
                 mvn spring-boot:run -Drun.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
-
-                <configuration>
-                    <jvmArguments>
-                        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
-                    </jvmArguments>
-                </configuration>
-
                 -->
+
+                <!--<configuration>-->
+                    <!--<jvmArguments>-->
+                        <!---Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005-->
+                    <!--</jvmArguments>-->
+                <!--</configuration>-->
+
             </plugin>
 
             <plugin>

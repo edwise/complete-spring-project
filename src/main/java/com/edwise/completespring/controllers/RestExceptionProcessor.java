@@ -3,6 +3,7 @@ package com.edwise.completespring.controllers;
 import com.edwise.completespring.exceptions.InvalidRequestException;
 import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.exceptions.helpers.ErrorInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
+@Slf4j
 public class RestExceptionProcessor {
     private static final String FIELD_ID = "id";
 
@@ -23,6 +25,7 @@ public class RestExceptionProcessor {
     public ErrorInfo entityNotFound(HttpServletRequest req, NotFoundException ex) {
         String errorURL = req.getRequestURL().toString();
 
+        log.warn("Entity not found: {}", errorURL);
         return new ErrorInfo()
                 .setUrl(errorURL)
                 .addError(FIELD_ID, ex.getMessage());
@@ -34,6 +37,8 @@ public class RestExceptionProcessor {
     @ResponseBody
     public ErrorInfo invalidPostData(HttpServletRequest req, InvalidRequestException ex) {
         String errorURL = req.getRequestURL().toString();
+
+        log.warn("Invalid request: {}", ex.getErrors());
         return generateErrorInfoFromBindingResult(ex.getErrors()).setUrl(errorURL);
     }
 

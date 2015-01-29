@@ -2,8 +2,10 @@ package com.edwise.completespring;
 
 import com.edwise.completespring.entities.Book;
 import com.edwise.completespring.entities.SequenceId;
+import com.edwise.completespring.entities.UserAccount;
 import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
+import com.edwise.completespring.repositories.UserAccountRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,16 +22,20 @@ import static org.mockito.Mockito.verify;
 public class ApplicationTest {
 
     private static final int ONE_TIME = 1;
+    private static final int TWO_TIMES = 2;
     private static final int FOUR_TIMES = 4;
 
     @Mock
-    BookRepository bookRepository;
+    private BookRepository bookRepository;
 
     @Mock
-    SequenceIdRepository sequenceRepository;
+    private UserAccountRepository userAccountRepository;
+
+    @Mock
+    private SequenceIdRepository sequenceRepository;
 
     @InjectMocks
-    private Application application  = new Application();
+    private Application application = new Application();
 
     @Before
     public void setUp() {
@@ -40,8 +46,10 @@ public class ApplicationTest {
     public void testRun() throws Exception {
         application.run("");
 
-        verify(sequenceRepository, times(ONE_TIME)).save(any(SequenceId.class));
+        verify(sequenceRepository, times(TWO_TIMES)).save(any(SequenceId.class));
         verify(bookRepository, times(ONE_TIME)).deleteAll();
-        verify(bookRepository, times(FOUR_TIMES)).save(any(Book.class)); // Número de libros insertados de ejemplo al arrancar
+        verify(bookRepository, times(FOUR_TIMES)).save(any(Book.class));
+        verify(userAccountRepository, times(ONE_TIME)).deleteAll();
+        verify(userAccountRepository, times(TWO_TIMES)).save(any(UserAccount.class));
     }
 }

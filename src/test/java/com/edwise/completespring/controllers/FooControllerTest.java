@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -22,8 +23,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.times;
@@ -61,15 +65,17 @@ public class FooControllerTest {
 
     @Test
     public void testCreate() {
-        Foo FooReq = FooTest.createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
+        Foo fooReq = FooTest.createFoo(null, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
+        Foo fooCreated = FooTest.createFoo(FOO_ID_TEST1, FOO_TEXT_ATTR_TEST1, DATE_TEST1);
         when(errors.hasErrors()).thenReturn(false);
-        when(fooResourceAssembler.toResource(any(Foo.class)))
-                .thenReturn(new FooResource().setFoo(FooTest.createFoo(FOO_ID_TEST1, FOO_TEXT_ATTR_TEST1, DATE_TEST1)));
+        when(fooResourceAssembler.toResource(any(Foo.class))).thenReturn(createFooResourceWithLink(fooCreated));
 
-        ResponseEntity<FooResource> result = controller.createFoo(FooReq, errors);
+        ResponseEntity<FooResource> result = controller.createFoo(fooReq, errors);
 
-        assertNotNull(result.getBody());
+        assertNull(result.getBody());
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
+        assertThat(result.getHeaders().getLocation().toString(), containsString("/api/foos/" + FOO_ID_TEST1));
+        verify(fooResourceAssembler, times(1)).toResource(fooCreated);
         verify(errors, times(1)).hasErrors();
     }
 
@@ -88,7 +94,6 @@ public class FooControllerTest {
         controller.updateFoo(FOO_ID_TEST1, FooReq, errors);
     }
 
-
     @Test
     public void testGet() {
         when(fooResourceAssembler.toResource(any(Foo.class)))
@@ -98,6 +103,7 @@ public class FooControllerTest {
 
         assertNotNull(result.getBody());
     }
+
 
     @Test
     public void testDelete() {
@@ -111,5 +117,11 @@ public class FooControllerTest {
         ResponseEntity<List<FooResource>> result = controller.getAll();
 
         assertNotNull(result.getBody());
+    }
+
+    private FooResource createFooResourceWithLink(Foo foo) {
+        FooResource fooResource = new FooResource().setFoo(foo);
+        fooResource.add(new Link("http://localhost:8080/api/foos/" + FOO_ID_TEST1));
+        return fooResource;
     }
 }
