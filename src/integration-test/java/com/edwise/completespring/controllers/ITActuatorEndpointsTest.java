@@ -14,12 +14,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -34,8 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class, TestContext.class})
-@WebAppConfiguration
-@IntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
+@WebIntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
 public class ITActuatorEndpointsTest {
     private static final String CORRECT_ADMIN_USER_USERNAME = "admin";
     private static final String CORRECT_ADMIN_USER_PASSWORD = "password1234";
@@ -47,7 +45,7 @@ public class ITActuatorEndpointsTest {
     private static String INCORRECT_ADMIN_AUTHORIZATION_ENCODED;
     private static String NOT_EXISTING_USER_AUTHORIZATION_ENCODED;
 
-    private MediaType contentType = new MediaType(
+    private final MediaType contentType = new MediaType(
             MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
             Charset.forName("utf8"));
