@@ -9,7 +9,7 @@ import java.util.List;
 
 public class BookBuilder {
 
-    private Book book;
+    private final Book book;
 
     public BookBuilder() {
         book = new Book();

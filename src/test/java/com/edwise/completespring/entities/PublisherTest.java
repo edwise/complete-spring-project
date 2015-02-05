@@ -3,8 +3,11 @@ package com.edwise.completespring.entities;
 import org.junit.Test;
 
 import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class PublisherTest {
     private static final String NAME_TEST1 = "Alfaguara";
