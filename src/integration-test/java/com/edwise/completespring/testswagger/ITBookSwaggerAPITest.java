@@ -5,15 +5,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -22,8 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class})
-@WebAppConfiguration
-@IntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
+@WebIntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
 public class ITBookSwaggerAPITest {
 
     private MockMvc mockMvc;
@@ -46,8 +44,9 @@ public class ITBookSwaggerAPITest {
                 .andExpect(jsonPath("$.apis", hasSize(5)))
                 .andExpect(jsonPath("$.models").exists())
                 .andExpect(jsonPath("$.models.BookResource").exists())
-                .andExpect(jsonPath("$.models.Book").exists())
-
+                .andExpect(jsonPath("$.models.Book entity").exists())
+                .andExpect(jsonPath("$.models.Publisher entity").exists())
+                .andExpect(jsonPath("$.models.Author entity").exists())
         ;
     }
 }
