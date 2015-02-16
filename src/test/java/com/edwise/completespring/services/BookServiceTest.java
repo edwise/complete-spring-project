@@ -8,13 +8,13 @@ import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
 import com.edwise.completespring.services.impl.BookServiceImpl;
 import com.edwise.completespring.testutil.BookBuilder;
-import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,8 +42,8 @@ public class BookServiceTest {
     private static final String AUTHOR_NAME_TEST2 = "William";
     private static final String AUTHOR_SURNAME_TEST1 = "King";
     private static final String AUTHOR_SURNAME_TEST2 = "Shakespeare";
-    private static final LocalDate BOOK_RELEASEDATE_TEST1 = new LocalDate(2013, 1, 26);
-    private static final LocalDate BOOK_RELEASEDATE_TEST2 = new LocalDate(2011, 11, 12);
+    private static final LocalDate BOOK_RELEASEDATE_TEST1 = LocalDate.of(2013, 1, 26);
+    private static final LocalDate BOOK_RELEASEDATE_TEST2 = LocalDate.of(2011, 11, 12);
     private static final int ONE_TIME = 1;
     private static final int TWO_ITEMS = 2;
 

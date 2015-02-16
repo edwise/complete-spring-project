@@ -11,7 +11,6 @@ import com.edwise.completespring.repositories.SequenceIdRepository;
 import com.edwise.completespring.repositories.UserAccountRepository;
 import com.edwise.completespring.services.impl.BookServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -19,6 +18,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 /**
@@ -106,7 +106,7 @@ public class Application implements CommandLineRunner {
                 .setTitle("Libro prueba mongo")
                 .setAuthors(Arrays.asList(new Author().setName("Edu").setSurname("Antón")))
                 .setIsbn("11-333-12")
-                .setReleaseDate(new LocalDate())
+                .setReleaseDate(LocalDate.now())
                 .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)));
 
         bookRepository.save(new Book()
@@ -114,7 +114,7 @@ public class Application implements CommandLineRunner {
                 .setTitle("Libro prueba mongo 2")
                 .setAuthors(Arrays.asList(new Author().setName("Otro").setSurname("Más"), new Author().setName("S.").setSurname("King")))
                 .setIsbn("12-1234-12")
-                .setReleaseDate(new LocalDate())
+                .setReleaseDate(LocalDate.now())
                 .setPublisher(new Publisher().setName("Editorial 4").setCountry("UK").setOnline(true)));
 
         bookRepository.save(new Book()
@@ -122,7 +122,7 @@ public class Application implements CommandLineRunner {
                 .setTitle("Libro prueba mongo 3")
                 .setAuthors(Arrays.asList(new Author().setName("Nadie").setSurname("Nobody")))
                 .setIsbn("12-9999-92")
-                .setReleaseDate(new LocalDate())
+                .setReleaseDate(LocalDate.now())
                 .setPublisher(new Publisher().setName("Editorial 7").setCountry("ES").setOnline(true)));
 
         bookRepository.save(new Book()
@@ -130,7 +130,7 @@ public class Application implements CommandLineRunner {
                 .setTitle("Libro prueba mongo 4")
                 .setAuthors(Arrays.asList(new Author().setName("Perry").setSurname("Mason")))
                 .setIsbn("22-34565-12")
-                .setReleaseDate(new LocalDate())
+                .setReleaseDate(LocalDate.now())
                 .setPublisher(new Publisher().setName("Editorial 33").setCountry("US").setOnline(true)));
     }
 

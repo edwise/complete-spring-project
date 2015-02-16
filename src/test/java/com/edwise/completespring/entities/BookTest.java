@@ -1,9 +1,9 @@
 package com.edwise.completespring.entities;
 
 import com.edwise.completespring.testutil.BookBuilder;
-import org.joda.time.LocalDate;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -21,7 +21,7 @@ public class BookTest {
     private static final String PUBLISHER_NAME_TEST1 = "Editorial Planeta";
     private static final String PUBLISHER_NAME_TEST2 = "Gigamesh";
     private static final String PUBLISHER_COUNTRY_TEST1 = "ES";
-    private static final LocalDate DATE_TEST1 = new LocalDate(2013, 1, 26);
+    private static final LocalDate DATE_TEST1 = LocalDate.of(2013, 1, 26);
 
     @Test
     public void testCopyFrom() {

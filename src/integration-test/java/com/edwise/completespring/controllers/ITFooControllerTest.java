@@ -10,7 +10,6 @@ import com.edwise.completespring.entities.UserAccountType;
 import com.edwise.completespring.repositories.UserAccountRepository;
 import com.edwise.completespring.testutil.IntegrationTestUtil;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,6 +26,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.time.LocalDate;
 
 import static com.edwise.completespring.testutil.IsValidFormatDateYMDMatcher.validFormatDateYMD;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -51,7 +52,7 @@ public class ITFooControllerTest {
     private static final long FOO_ID_TEST1 = 1l;
     public static final String ATT_TEXT_1 = "AttText1";
     private static final String FOO_TEXT_ATTR_TEST1 = ATT_TEXT_1;
-    private static final LocalDate DATE_TEST1 = new LocalDate(2013, 1, 26);
+    private static final LocalDate DATE_TEST1 = LocalDate.of(2013, 1, 26);
     private static final String CORRECT_REST_USER_USERNAME = "user1";
     private static final String CORRECT_REST_USER_PASSWORD = "password1";
     private static final String INCORRECT_USER_USERNAME = "inCorrectUser";

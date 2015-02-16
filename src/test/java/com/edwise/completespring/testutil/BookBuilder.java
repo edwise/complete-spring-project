@@ -3,8 +3,8 @@ package com.edwise.completespring.testutil;
 import com.edwise.completespring.entities.Author;
 import com.edwise.completespring.entities.Book;
 import com.edwise.completespring.entities.Publisher;
-import org.joda.time.LocalDate;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class BookBuilder {

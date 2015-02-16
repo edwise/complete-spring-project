@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.joda.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @ApiModel(value = "Foo entity", description = "Complete info of a entity foo")
 @Data
