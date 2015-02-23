@@ -31,8 +31,8 @@
 
         <swagger.springmvc.version>0.9.5</swagger.springmvc.version>
         <swagger.ui.version>2.0.24</swagger.ui.version>
-        <lombok.version>1.16.0</lombok.version>
-        <jacoco.mavenplugin.version>0.7.2.201409121644</jacoco.mavenplugin.version>
+        <lombok.version>1.16.2</lombok.version>
+        <jacoco.mavenplugin.version>0.7.3.201502191951</jacoco.mavenplugin.version>
         <jackson.datatype.jsr310.version>2.5.1</jackson.datatype.jsr310.version>
         <apache.commons.lang3.version>3.3.2</apache.commons.lang3.version>
         <hibernate.validator.version>5.1.3.Final</hibernate.validator.version>
