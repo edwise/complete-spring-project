@@ -11,6 +11,8 @@ Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / fu
 
  - Capa de base de datos con Spring DATA mongoDB
 
+ - Montado con Java 8, con converters de la JSR310 para mongoDB
+
  - Jacoco para la cobertura de tests (plugin para maven)
 
  - Lombok para evitar algo de código 'boilerplate'
