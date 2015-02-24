@@ -1,4 +1,4 @@
-Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / funcionalidades:
+Proyecto montado con Spring Boot y Java 8, con los siguientes frameworks / libraries / funcionalidades:
 
  - Spring Boot: posibilidad de arrancar directamente con el plugin de maven o generar un war para despliegue en 
  tomcat o similar. Con 'actuator' activado.
@@ -11,11 +11,11 @@ Proyecto montado con Spring Boot, con los siguientes frameworks / libraries / fu
 
  - Capa de base de datos con Spring DATA mongoDB
 
- - Montado con Java 8, con converters de la JSR310 para mongoDB
+ - Con converters de la JSR310 (Java 8 API Date) para la configuración de mongoDB
 
  - Jacoco para la cobertura de tests (plugin para maven)
 
- - Lombok para evitar algo de código 'boilerplate'
+ - Lombok para evitar código 'boilerplate'
 
  - Spring Exception Handling en los controllers
  
@@ -97,7 +97,7 @@ Fuentes:
 
  - http://www.mkyong.com/mongodb/spring-data-mongodb-auto-sequence-id-example/
  
- - https://github.com/martypitt/swagger-springmvc
+ - https://github.com/martypitt/swagger-springmvc/
  
  - http://www.petrikainulainen.net/programming/spring-framework/integration-testing-of-spring-mvc-applications-write-clean-assertions-with-jsonpath/
  
