@@ -208,7 +208,7 @@ public class BookControllerTest {
     public void testFindAll() {
         List<Book> books = createTestBookList();
         when(bookService.findAll()).thenReturn(books);
-        when(bookResourceAssembler.toResources(anyListOf(Book.class))).thenReturn(new ArrayList<BookResource>());
+        when(bookResourceAssembler.toResources(anyListOf(Book.class))).thenReturn(new ArrayList<>());
 
         ResponseEntity<List<BookResource>> result = controller.getAll();
 

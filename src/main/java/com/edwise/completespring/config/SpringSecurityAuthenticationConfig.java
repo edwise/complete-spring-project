@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -28,22 +27,17 @@ public class SpringSecurityAuthenticationConfig extends GlobalAuthenticationConf
 
     @Bean
     UserDetailsService userDetailsService() {
-        return new UserDetailsService() {
-
-            @Override
-            public UserDetails loadUserByUsername(String username) {
-                UserAccount userAccount = userAccountRepository.findByUsername(username);
-                if (userAccount != null) {
-                    return new User(userAccount.getUsername(),
-                            userAccount.getPassword(),
-                            true, true, true, true,
-                            AuthorityUtils.createAuthorityList(userAccount.getUserType().role()));
-                } else {
-                    log.warn("Not existing user: {}", username);
-                    throw new UsernameNotFoundException("Could not find the user '" + username + "'");
-                }
+        return username -> {
+            UserAccount userAccount = userAccountRepository.findByUsername(username);
+            if (userAccount != null) {
+                return new User(userAccount.getUsername(),
+                        userAccount.getPassword(),
+                        true, true, true, true,
+                        AuthorityUtils.createAuthorityList(userAccount.getUserType().role()));
+            } else {
+                log.warn("Not existing user: {}", username);
+                throw new UsernameNotFoundException("Could not find the user '" + username + "'");
             }
-
         };
     }
 }

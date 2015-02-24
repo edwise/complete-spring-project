@@ -67,7 +67,7 @@ public class FooController {
     public ResponseEntity<FooResource> getFoo(@ApiParam(defaultValue = "1", value = "The id of the foo to return")
                                               @PathVariable long id) {
         FooResource resource = fooResourceAssembler.toResource(
-                new Foo().setId(1L).setSampleTextAttribute(TEST_ATTRIBUTE_1).setSampleLocalDateAttribute(LocalDate.now())
+                new Foo().setId(id).setSampleTextAttribute(TEST_ATTRIBUTE_1).setSampleLocalDateAttribute(LocalDate.now())
         );
 
         log.info("Foo found: {}", resource.getFoo());
@@ -100,7 +100,7 @@ public class FooController {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
         }
-        log.info("Foo updated: {}", foo.toString());
+        log.info("Foo updated: {}", foo.setId(id).toString());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

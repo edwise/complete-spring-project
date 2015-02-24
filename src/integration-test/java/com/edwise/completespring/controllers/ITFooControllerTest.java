@@ -50,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebIntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
 public class ITFooControllerTest {
     private static final long FOO_ID_TEST1 = 1l;
-    public static final String ATT_TEXT_1 = "AttText1";
+    private static final String ATT_TEXT_1 = "AttText1";
     private static final String FOO_TEXT_ATTR_TEST1 = ATT_TEXT_1;
     private static final LocalDate DATE_TEST1 = LocalDate.of(2013, 1, 26);
     private static final String CORRECT_REST_USER_USERNAME = "user1";

@@ -37,7 +37,7 @@ public class Application implements CommandLineRunner {
     private static final long USER_ID_1 = 1L;
     private static final long USER_ID_2 = 2L;
 
-    public static final String USERACCOUNTS_COLLECTION = "users";
+    private static final String USERACCOUNTS_COLLECTION = "users";
 
     @Value("${db.resetAndLoadOnStartup:true}")
     private boolean resetAndLoadOnStartup;
