@@ -5,7 +5,6 @@ import com.edwise.completespring.assemblers.FooResourceAssembler;
 import com.edwise.completespring.entities.Foo;
 import com.edwise.completespring.entities.FooTest;
 import com.edwise.completespring.exceptions.InvalidRequestException;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 public class FooControllerTest {
     private static final long FOO_ID_TEST1 = 1l;
     private static final String FOO_TEXT_ATTR_TEST1 = "AttText1";
-    private static final LocalDate DATE_TEST1 = new LocalDate(2013, 1, 26);
+    private static final LocalDate DATE_TEST1 = LocalDate.of(2013, 1, 26);
 
     @Mock
     BindingResult errors;
@@ -112,7 +112,7 @@ public class FooControllerTest {
 
     @Test
     public void testFindAll() {
-        when(fooResourceAssembler.toResources(anyListOf(Foo.class))).thenReturn(new ArrayList<FooResource>());
+        when(fooResourceAssembler.toResources(anyListOf(Foo.class))).thenReturn(new ArrayList<>());
 
         ResponseEntity<List<FooResource>> result = controller.getAll();
 

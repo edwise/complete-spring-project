@@ -16,7 +16,6 @@ import com.edwise.completespring.services.BookService;
 import com.edwise.completespring.testutil.BookBuilder;
 import com.edwise.completespring.testutil.IntegrationTestUtil;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,6 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,8 +70,8 @@ public class ITBookControllerTest {
     private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";
     private static final String BOOK_TITLE_TEST2 = "Hamlet";
     private static final Long BOOK_ID_TEST2 = 1000l;
-    private static final LocalDate BOOK_RELEASEDATE_TEST1 = new LocalDate(2013, 1, 26);
-    private static final LocalDate BOOK_RELEASEDATE_TEST2 = new LocalDate(2011, 11, 16);
+    private static final LocalDate BOOK_RELEASEDATE_TEST1 = LocalDate.of(2013, 1, 26);
+    private static final LocalDate BOOK_RELEASEDATE_TEST2 = LocalDate.of(2011, 11, 16);
     private static final String BOOK_ISBN_TEST1 = "11-333-12";
     private static final String BOOK_ISBN_TEST2 = "11-666-77";
     private static final String PUBLISHER_NAME_TEST1 = "Planeta";
@@ -166,7 +166,7 @@ public class ITBookControllerTest {
 
     @Test
     public void getAll_CorrectUserAndBooksNotFound_ShouldReturnEmptyList() throws Exception {
-        when(bookService.findAll()).thenReturn(new ArrayList<Book>(0));
+        when(bookService.findAll()).thenReturn(new ArrayList<>(0));
 
         mockMvc.perform(get("/api/books/").header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isOk())

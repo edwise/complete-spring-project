@@ -1,8 +1,8 @@
 package com.edwise.completespring.services;
 
 import com.edwise.completespring.entities.Book;
-import org.joda.time.LocalDate;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface BookService extends Service<Book, Long> {

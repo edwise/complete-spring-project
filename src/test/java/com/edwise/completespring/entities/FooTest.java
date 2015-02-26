@@ -1,7 +1,8 @@
 package com.edwise.completespring.entities;
 
-import org.joda.time.LocalDate;
 import org.junit.Test;
+
+import java.time.LocalDate;
 
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
@@ -15,7 +16,7 @@ public class FooTest {
     private static final long ID_TEST2 = 456l;
     private static final String TEXT_ATTR_TEST1 = "AttText1";
     private static final String TEXT_ATTR_TEST2 = "AttText2";
-    private static final LocalDate DATE_TEST1 = new LocalDate(2013, 1, 26);
+    private static final LocalDate DATE_TEST1 = LocalDate.of(2013, 1, 26);
 
     @Test
     public void testCopyFrom() {

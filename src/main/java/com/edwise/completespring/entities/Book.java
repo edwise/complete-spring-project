@@ -7,14 +7,15 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.joda.time.LocalDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Document(collection = "books")
 @ApiModel(value = "Book entity", description = "Complete info of a entity book")
@@ -53,9 +54,7 @@ public class Book {
         this.title = other.title;
         if (other.authors != null) {
             this.authors = new ArrayList<>();
-            for (Author author : other.authors) {
-                this.authors.add(new Author().copyFrom(author));
-            }
+            this.authors.addAll(other.authors.stream().map(author -> new Author().copyFrom(author)).collect(Collectors.toList()));
         }
         this.isbn = other.isbn;
         this.releaseDate = other.releaseDate;

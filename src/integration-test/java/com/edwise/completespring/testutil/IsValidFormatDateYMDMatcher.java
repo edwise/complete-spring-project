@@ -11,7 +11,7 @@ public class IsValidFormatDateYMDMatcher extends TypeSafeMatcher<String> {
 
     private static final String DATE_VALIDATION_PATTERN_YMD = "[0-9]{4}-[0-9]{2}-[0-9]{2}";
 
-    private Pattern pattern;
+    private final Pattern pattern;
 
     public IsValidFormatDateYMDMatcher() {
         pattern = Pattern.compile(DATE_VALIDATION_PATTERN_YMD);
