@@ -144,6 +144,7 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$[0]book.authors", is(notNullValue())))
                 .andExpect(jsonPath("$[0]book.isbn", is(BOOK_ISBN_TEST1)))
                 .andExpect(jsonPath("$[0]book.releaseDate", is(notNullValue())))
+                .andExpect(jsonPath("$[0]book.releaseDate", is(validFormatDateYMD())))
                 .andExpect(jsonPath("$[0]book.publisher", is(notNullValue())))
                 .andExpect(jsonPath("$[0].links", hasSize(1)))
                 .andExpect(jsonPath("$[0].links[0].rel", is(notNullValue())))
