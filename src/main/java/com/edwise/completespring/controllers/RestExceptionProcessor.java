@@ -45,7 +45,7 @@ public class RestExceptionProcessor {
         ErrorInfo errorInfo = new ErrorInfo();
         errors.getFieldErrors()
                 .stream()
-                .forEach((fieldError) -> errorInfo.addError(fieldError.getField(), fieldError.getDefaultMessage()));
+                .forEach(fieldError -> errorInfo.addError(fieldError.getField(), fieldError.getDefaultMessage()));
 
         return errorInfo;
     }
