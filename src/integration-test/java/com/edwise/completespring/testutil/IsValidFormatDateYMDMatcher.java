@@ -33,7 +33,7 @@ public class IsValidFormatDateYMDMatcher extends TypeSafeMatcher<String> {
     }
 
     @Factory
-    public static <T> Matcher<String> validFormatDateYMD() {
+    public static Matcher<String> validFormatDateYMD() {
         return new IsValidFormatDateYMDMatcher();
     }
 
