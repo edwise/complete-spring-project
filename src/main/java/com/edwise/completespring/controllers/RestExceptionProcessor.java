@@ -6,7 +6,6 @@ import com.edwise.completespring.exceptions.helpers.ErrorInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,9 +43,9 @@ public class RestExceptionProcessor {
 
     private ErrorInfo generateErrorInfoFromBindingResult(BindingResult errors) {
         ErrorInfo errorInfo = new ErrorInfo();
-        for (FieldError fieldError : errors.getFieldErrors()) {
-            errorInfo.addError(fieldError.getField(), fieldError.getDefaultMessage());
-        }
+        errors.getFieldErrors()
+                .stream()
+                .forEach(fieldError -> errorInfo.addError(fieldError.getField(), fieldError.getDefaultMessage()));
 
         return errorInfo;
     }

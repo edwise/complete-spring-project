@@ -65,7 +65,7 @@ public class RestExceptionProcessorTest {
 
         ErrorInfo errorInfo = restExceptionProcessor.invalidPostData(request, exception);
 
-        assertNotNull( errorInfo);
+        assertNotNull(errorInfo);
         assertEquals(request.getRequestURL().toString(), errorInfo.getUrl());
         assertEquals(TWO_ITEMS, errorInfo.getErrors().size());
     }

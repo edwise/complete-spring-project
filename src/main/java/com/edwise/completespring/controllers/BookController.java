@@ -31,7 +31,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/books/")
-@Api(value = "books", description = "Books API")
+@Api(value = "books", description = "Books API", produces = "application/json")
 @Slf4j
 public class BookController {
     private static final int RESPONSE_CODE_OK = 200;
@@ -70,7 +70,8 @@ public class BookController {
         return new ResponseEntity<>(bookResourceAssembler.toResource(book), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Create Book", notes = "Create a book")
     @ApiResponses({
             @ApiResponse(code = RESPONSE_CODE_CREATED, message = "Successful create of a book")
@@ -82,11 +83,12 @@ public class BookController {
         Book bookCreated = bookService.create(book);
 
         log.info("Book created: {}", bookCreated.toString());
-        return new ResponseEntity<>(null, createHttpHeadersWithLocation(bookCreated), HttpStatus.CREATED);
+        return new ResponseEntity<>(createHttpHeadersWithLocation(bookCreated), HttpStatus.CREATED);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping(method = RequestMethod.PUT, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Update Book", notes = "Update a book")
     @ApiResponses({
             @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful update of book")

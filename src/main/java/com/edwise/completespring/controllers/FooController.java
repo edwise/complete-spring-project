@@ -32,7 +32,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/foos/")
-@Api(value = "foos", description = "Foo API")
+@Api(value = "foos", description = "Foo API", produces = "application/json")
 @Slf4j
 public class FooController {
     private static final int RESPONSE_CODE_OK = 200;
@@ -75,7 +75,8 @@ public class FooController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Create Foo", notes = "Create a foo")
     @ApiResponses({
             @ApiResponse(code = RESPONSE_CODE_CREATED, message = "Successful create of a foo")
@@ -85,11 +86,12 @@ public class FooController {
             throw new InvalidRequestException(errors);
         }
         log.info("Foo created: {}", foo.toString());
-        return new ResponseEntity<>(null, createHttpHeadersWithLocation(foo.setId(1L)), HttpStatus.CREATED);
+        return new ResponseEntity<>(createHttpHeadersWithLocation(foo.setId(1L)), HttpStatus.CREATED);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @RequestMapping(method = RequestMethod.PUT, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Update Foo", notes = "Update a foo")
     @ApiResponses({
             @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful update of foo")
