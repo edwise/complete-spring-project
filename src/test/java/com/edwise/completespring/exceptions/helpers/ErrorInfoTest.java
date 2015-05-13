@@ -5,6 +5,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,6 +34,7 @@ public class ErrorInfoTest {
     private static final String RELEASE_DATE_FIELD = "releaseDate";
     private static final String IT_CANT_BE_NULL_MSG = "No puede ser nulo";
     private static final String IT_CANT_BE_EMPTY_MSG = "No puede ser vacio";
+    public static final String BOOK_OBJECT_NAME = "Book";
 
     @Test
     public void testAddError() {
@@ -73,13 +75,10 @@ public class ErrorInfoTest {
     }
 
     private List<FieldError> createMockListFieldErrors() {
-        List<FieldError> fieldErrors = new ArrayList<>();
-
-        fieldErrors.add(new FieldError("Book", TITLE_FIELD, IT_CANT_BE_NULL_MSG));
-        fieldErrors.add(new FieldError("Book", ISBN_FIELD, IT_CANT_BE_EMPTY_MSG));
-        fieldErrors.add(new FieldError("Book", RELEASE_DATE_FIELD, IT_CANT_BE_NULL_MSG));
-
-        return fieldErrors;
+        return Arrays.asList(
+                new FieldError(BOOK_OBJECT_NAME, TITLE_FIELD, IT_CANT_BE_NULL_MSG),
+                new FieldError(BOOK_OBJECT_NAME, ISBN_FIELD, IT_CANT_BE_EMPTY_MSG),
+                new FieldError(BOOK_OBJECT_NAME, RELEASE_DATE_FIELD, IT_CANT_BE_NULL_MSG));
     }
 
     @Test
