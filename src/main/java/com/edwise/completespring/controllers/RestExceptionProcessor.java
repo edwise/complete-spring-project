@@ -5,7 +5,6 @@ import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.exceptions.helpers.ErrorInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,18 +34,11 @@ public class RestExceptionProcessor {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorInfo invalidPostData(HttpServletRequest req, InvalidRequestException ex) {
-        String errorURL = req.getRequestURL().toString();
+        ErrorInfo errors = ex.getErrors();
+        errors.setUrl(req.getRequestURL().toString());
 
-        log.warn("Invalid request: {}", ex.getErrors());
-        return generateErrorInfoFromBindingResult(ex.getErrors()).setUrl(errorURL);
+        log.warn("Invalid request: {}", errors);
+        return errors;
     }
 
-    private ErrorInfo generateErrorInfoFromBindingResult(BindingResult errors) {
-        ErrorInfo errorInfo = new ErrorInfo();
-        errors.getFieldErrors()
-                .stream()
-                .forEach(fieldError -> errorInfo.addError(fieldError.getField(), fieldError.getDefaultMessage()));
-
-        return errorInfo;
-    }
 }
