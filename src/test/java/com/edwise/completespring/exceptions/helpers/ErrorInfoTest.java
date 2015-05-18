@@ -134,7 +134,6 @@ public class ErrorInfoTest {
     }
 
     private ErrorInfo createErrorInfo(String url) {
-        return new ErrorInfo()
-                .setUrl(url);
+        return new ErrorInfo().setUrl(url);
     }
 }
