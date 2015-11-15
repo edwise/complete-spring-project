@@ -11,8 +11,10 @@ import com.edwise.completespring.entities.PublisherTest;
 import com.edwise.completespring.entities.UserAccount;
 import com.edwise.completespring.entities.UserAccountType;
 import com.edwise.completespring.exceptions.NotFoundException;
+import com.edwise.completespring.repositories.BookRepository;
+import com.edwise.completespring.repositories.SequenceIdRepository;
 import com.edwise.completespring.repositories.UserAccountRepository;
-import com.edwise.completespring.services.BookService;
+import com.edwise.completespring.services.impl.BookServiceImpl;
 import com.edwise.completespring.testutil.BookBuilder;
 import com.edwise.completespring.testutil.IntegrationTestUtil;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -47,8 +49,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -96,7 +96,10 @@ public class ITBookControllerTest {
     private UserAccountRepository userAccountRepository;
 
     @Autowired
-    private BookService bookService;
+    private BookRepository bookRepository;
+
+    @Autowired
+    private SequenceIdRepository sequenceIdRepository;
 
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
@@ -121,7 +124,8 @@ public class ITBookControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        Mockito.reset(bookService);
+        Mockito.reset(bookRepository);
+        Mockito.reset(sequenceIdRepository);
         ReflectionTestUtils.setField(this.springSecurityAuthenticationConfig, "userAccountRepository", userAccountRepository);
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(this.webApplicationContext)
@@ -132,7 +136,7 @@ public class ITBookControllerTest {
 
     @Test
     public void getAll_CorrectUserAndBooksFound_ShouldReturnFoundBooks() throws Exception {
-        when(bookService.findAll()).thenReturn(createTestBookList());
+        when(bookRepository.findAll()).thenReturn(createTestBookList());
 
         mockMvc.perform(get("/api/books/").header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isOk())
@@ -161,21 +165,21 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$[1].links[0].rel", is(notNullValue())))
                 .andExpect(jsonPath("$[1].links[0].href", containsString("/api/books/" + BOOK_ID_TEST2)))
         ;
-        verify(bookService, times(1)).findAll();
-        verifyNoMoreInteractions(bookService);
+        verify(bookRepository).findAll();
+        verifyNoMoreInteractions(bookRepository);
     }
 
     @Test
     public void getAll_CorrectUserAndBooksNotFound_ShouldReturnEmptyList() throws Exception {
-        when(bookService.findAll()).thenReturn(new ArrayList<>(0));
+        when(bookRepository.findAll()).thenReturn(new ArrayList<>(0));
 
         mockMvc.perform(get("/api/books/").header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(0)))
         ;
-        verify(bookService, times(1)).findAll();
-        verifyNoMoreInteractions(bookService);
+        verify(bookRepository).findAll();
+        verifyNoMoreInteractions(bookRepository);
     }
 
     @Test
@@ -183,7 +187,7 @@ public class ITBookControllerTest {
         mockMvc.perform(get("/api/books/").header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isUnauthorized())
         ;
-        verifyZeroInteractions(bookService);
+//        verifyZeroInteractions(bookRepository);
     }
 
     @Test
@@ -196,7 +200,7 @@ public class ITBookControllerTest {
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
                 .build();
-        when(bookService.findOne(anyLong())).thenReturn(bookFound);
+        when(bookRepository.findOne(anyLong())).thenReturn(bookFound);
 
         mockMvc.perform(get("/api/books/{id}", BOOK_ID_TEST1)
                 .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
@@ -215,13 +219,13 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
                 .andExpect(jsonPath("$.links[0].href", containsString("/api/books/" + BOOK_ID_TEST1)))
         ;
-        verify(bookService, times(1)).findOne(BOOK_ID_TEST1);
-        verifyNoMoreInteractions(bookService);
+        verify(bookRepository).findOne(BOOK_ID_TEST1);
+        verifyNoMoreInteractions(bookRepository);
     }
 
     @Test
     public void getBook_CorrectUserAndBookNotFound_ShouldReturnNotFoundStatusAndError() throws Exception {
-        when(bookService.findOne(anyLong())).thenThrow(new NotFoundException(BOOK_NOT_FOUND_EXCEPTION_MSG));
+        when(bookRepository.findOne(anyLong())).thenThrow(new NotFoundException(BOOK_NOT_FOUND_EXCEPTION_MSG));
 
         mockMvc.perform(get("/api/books/{id}", BOOK_ID_TEST1)
                 .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
@@ -232,8 +236,8 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$.errors[0].field", is("id")))
                 .andExpect(jsonPath("$.errors[0].message", is(BOOK_NOT_FOUND_EXCEPTION_MSG)))
         ;
-        verify(bookService, times(1)).findOne(BOOK_ID_TEST1);
-        verifyNoMoreInteractions(bookService);
+        verify(bookRepository).findOne(BOOK_ID_TEST1);
+        verifyNoMoreInteractions(bookRepository);
     }
 
     @Test
@@ -242,7 +246,7 @@ public class ITBookControllerTest {
                 .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isUnauthorized())
         ;
-        verifyZeroInteractions(bookService);
+        verifyZeroInteractions(bookRepository);
     }
 
     @Test
@@ -254,7 +258,7 @@ public class ITBookControllerTest {
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
                 .build();
-        Book bookCreated = new BookBuilder()
+        Book bookToCreateWithId = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
                 .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
@@ -262,7 +266,8 @@ public class ITBookControllerTest {
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
                 .build();
-        when(bookService.create(bookToCreate)).thenReturn(bookCreated);
+        when(sequenceIdRepository.getNextSequenceId(BookServiceImpl.BOOK_COLLECTION)).thenReturn(BOOK_ID_TEST1);
+        when(bookRepository.save(bookToCreateWithId)).thenReturn(bookToCreateWithId);
 
         mockMvc.perform(post("/api/books/")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -271,8 +276,8 @@ public class ITBookControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", containsString("/api/books/" + BOOK_ID_TEST1)))
         ;
-        verify(bookService, times(1)).create(bookToCreate);
-        verifyNoMoreInteractions(bookService);
+        verify(bookRepository).save(bookToCreateWithId);
+        verify(sequenceIdRepository).getNextSequenceId(BookServiceImpl.BOOK_COLLECTION);
     }
 
     @Test
@@ -293,8 +298,8 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$.errors[*].field", containsInAnyOrder("title", "isbn", "releaseDate")))
                 .andExpect(jsonPath("$.errors[*].message", is(notNullValue())))
         ;
-        verify(bookService, never()).create(any(Book.class));
-        verifyNoMoreInteractions(bookService);
+        verifyZeroInteractions(bookRepository);
+        verifyZeroInteractions(sequenceIdRepository);
     }
 
     @Test
@@ -313,7 +318,8 @@ public class ITBookControllerTest {
                 .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isUnauthorized())
         ;
-        verifyZeroInteractions(bookService);
+        verifyZeroInteractions(bookRepository);
+        verifyZeroInteractions(sequenceIdRepository);
     }
 
     @Test
@@ -341,8 +347,8 @@ public class ITBookControllerTest {
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
                 .build();
-        when(bookService.findOne(anyLong())).thenReturn(bookOld);
-        when(bookService.save(any(Book.class))).thenReturn(bookCopiedIn);
+        when(bookRepository.findOne(anyLong())).thenReturn(bookOld);
+        when(bookRepository.save(any(Book.class))).thenReturn(bookCopiedIn);
 
         mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -350,9 +356,9 @@ public class ITBookControllerTest {
                 .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isNoContent())
         ;
-        verify(bookService, times(1)).findOne(BOOK_ID_TEST1);
-        verify(bookService, times(1)).save(bookCopiedIn);
-        verifyNoMoreInteractions(bookService);
+        verify(bookRepository).findOne(BOOK_ID_TEST1);
+        verify(bookRepository).save(bookCopiedIn);
+        verifyNoMoreInteractions(bookRepository);
     }
 
     @Test
@@ -364,7 +370,7 @@ public class ITBookControllerTest {
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
                 .build();
-        when(bookService.findOne(anyLong())).thenThrow(new NotFoundException(BOOK_NOT_FOUND_EXCEPTION_MSG));
+        when(bookRepository.findOne(anyLong())).thenThrow(new NotFoundException(BOOK_NOT_FOUND_EXCEPTION_MSG));
 
         mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -376,8 +382,8 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$.errors[0].field", is("id")))
                 .andExpect(jsonPath("$.errors[0].message", is(BOOK_NOT_FOUND_EXCEPTION_MSG)))
         ;
-        verify(bookService, times(1)).findOne(BOOK_ID_TEST1);
-        verifyNoMoreInteractions(bookService);
+        verify(bookRepository).findOne(BOOK_ID_TEST1);
+        verifyNoMoreInteractions(bookRepository);
     }
 
     @Test
@@ -398,9 +404,7 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$.errors[*].field", containsInAnyOrder("title", "isbn", "releaseDate")))
                 .andExpect(jsonPath("$.errors[*].message", is(notNullValue())))
         ;
-        verify(bookService, never()).findOne(anyLong());
-        verify(bookService, never()).save(any(Book.class));
-        verifyNoMoreInteractions(bookService);
+        verifyZeroInteractions(bookRepository);
     }
 
     @Test
@@ -419,7 +423,7 @@ public class ITBookControllerTest {
                 .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isUnauthorized())
         ;
-        verifyZeroInteractions(bookService);
+        verifyZeroInteractions(bookRepository);
     }
 
     @Test
@@ -428,8 +432,8 @@ public class ITBookControllerTest {
                 .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isNoContent())
         ;
-        verify(bookService, times(1)).delete(BOOK_ID_TEST1);
-        verifyNoMoreInteractions(bookService);
+        verify(bookRepository).delete(BOOK_ID_TEST1);
+        verifyNoMoreInteractions(bookRepository);
     }
 
     @Test
@@ -438,7 +442,7 @@ public class ITBookControllerTest {
                 .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isUnauthorized())
         ;
-        verifyZeroInteractions(bookService);
+        verifyZeroInteractions(bookRepository);
     }
 
     private List<Book> createTestBookList() {

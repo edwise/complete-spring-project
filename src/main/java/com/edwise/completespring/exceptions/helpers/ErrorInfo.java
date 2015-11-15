@@ -1,26 +1,41 @@
 package com.edwise.completespring.exceptions.helpers;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.springframework.validation.BindingResult;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Accessors(chain = true)
 @EqualsAndHashCode(doNotUseGetters = true)
 @ToString(doNotUseGetters = true)
-public class ErrorInfo {
+public class ErrorInfo implements Serializable {
+
+    private static final long serialVersionUID = 673514291953827696L;
+
+    @Getter
+    @Setter
     private String url;
-    private List<ErrorItem> errors;
+
+    @Getter
+    private List<ErrorItem> errors = new ArrayList<>();
 
     public ErrorInfo addError(String field, String message) {
-        if (errors == null) {
-            errors = new ArrayList<>();
-        }
         errors.add(new ErrorItem().setField(field).setMessage(message));
         return this;
+    }
+
+    public static ErrorInfo generateErrorInfoFromBindingResult(BindingResult errors) {
+        ErrorInfo errorInfo = new ErrorInfo();
+        errors.getFieldErrors()
+                .stream()
+                .forEach(fieldError -> errorInfo.addError(fieldError.getField(), fieldError.getDefaultMessage()));
+
+        return errorInfo;
     }
 }

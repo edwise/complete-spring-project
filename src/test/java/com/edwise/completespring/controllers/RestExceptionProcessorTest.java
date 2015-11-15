@@ -15,7 +15,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Arrays;
+import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -36,7 +39,7 @@ public class RestExceptionProcessorTest {
     private MockHttpServletRequest request;
 
     @Mock
-    BindingResult errors;
+    private BindingResult errors;
 
     @Before
     public void setUp() {
@@ -58,20 +61,20 @@ public class RestExceptionProcessorTest {
 
     @Test
     public void testInvalidPostData() {
-        when(errors.getFieldErrors()).thenReturn(Arrays.asList(
-                createFieldError(FIELD_ERROR_OBJECT_TEST1, FIELD_ERROR_FIELD_TEST1, FIELD_ERROR_MESSAGE_TEST1),
-                createFieldError(FIELD_ERROR_OBJECT_TEST1, FIELD_ERROR_FIELD_TEST2, FIELD_ERROR_MESSAGE_TEST2)));
+        when(errors.getFieldErrors()).thenReturn(createMockListFieldErrors());
         InvalidRequestException exception = new InvalidRequestException(errors);
 
         ErrorInfo errorInfo = restExceptionProcessor.invalidPostData(request, exception);
 
         assertNotNull(errorInfo);
         assertEquals(request.getRequestURL().toString(), errorInfo.getUrl());
-        assertEquals(TWO_ITEMS, errorInfo.getErrors().size());
+        assertThat(errorInfo.getErrors(), hasSize(TWO_ITEMS));
     }
 
-    private FieldError createFieldError(String object, String field, String message) {
-        return new FieldError(object, field, message);
+    private List<FieldError> createMockListFieldErrors() {
+        return Arrays.asList(
+                new FieldError(FIELD_ERROR_OBJECT_TEST1, FIELD_ERROR_FIELD_TEST1, FIELD_ERROR_MESSAGE_TEST1),
+                new FieldError(FIELD_ERROR_OBJECT_TEST1, FIELD_ERROR_FIELD_TEST2, FIELD_ERROR_MESSAGE_TEST2));
     }
 
 }
