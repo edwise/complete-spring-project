@@ -44,9 +44,9 @@ public class ITBookSwaggerAPITest {
                 .andExpect(jsonPath("$.apis", hasSize(5)))
                 .andExpect(jsonPath("$.models").exists())
                 .andExpect(jsonPath("$.models.BookResource").exists())
-                .andExpect(jsonPath("$.models.Book entity").exists())
-                .andExpect(jsonPath("$.models.Publisher entity").exists())
-                .andExpect(jsonPath("$.models.Author entity").exists())
+                .andExpect(jsonPath("$.models.['Book entity']").exists())
+                .andExpect(jsonPath("$.models.['Publisher entity']").exists())
+                .andExpect(jsonPath("$.models.['Author entity']").exists())
         ;
     }
 }

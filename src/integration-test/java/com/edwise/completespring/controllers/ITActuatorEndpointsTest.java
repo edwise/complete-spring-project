@@ -24,8 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.nio.charset.Charset;
-
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -44,11 +42,6 @@ public class ITActuatorEndpointsTest {
     private static String CORRECT_ADMIN_USER_AUTHORIZATION_ENCODED;
     private static String INCORRECT_ADMIN_AUTHORIZATION_ENCODED;
     private static String NOT_EXISTING_USER_AUTHORIZATION_ENCODED;
-
-    private final MediaType contentType = new MediaType(
-            MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(),
-            Charset.forName("utf8"));
 
     @Mock
     private UserAccountRepository userAccountRepository;
@@ -97,7 +90,7 @@ public class ITActuatorEndpointsTest {
 
         mockMvc.perform(get("/admin/info/").header("Authorization", "Basic " + CORRECT_ADMIN_USER_AUTHORIZATION_ENCODED))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         ;
     }
 
