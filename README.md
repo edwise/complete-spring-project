@@ -27,6 +27,7 @@ Proyecto montado con Spring Boot y Java 8, con los siguientes frameworks / libra
 
  - Spring Security activo, con autenticación básica
 
+ - Añadidas las developer tools de Spring Boot 1.3
 
 
 Requisitos:
