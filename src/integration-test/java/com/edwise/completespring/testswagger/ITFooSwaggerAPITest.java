@@ -44,7 +44,7 @@ public class ITFooSwaggerAPITest {
                 .andExpect(jsonPath("$.apis", hasSize(5)))
                 .andExpect(jsonPath("$.models").exists())
                 .andExpect(jsonPath("$.models.FooResource").exists())
-                .andExpect(jsonPath("$.models.Foo entity").exists())
+                .andExpect(jsonPath("$.models.['Foo entity']").exists())
         ;
     }
 }

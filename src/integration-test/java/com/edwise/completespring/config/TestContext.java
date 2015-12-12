@@ -2,10 +2,11 @@ package com.edwise.completespring.config;
 
 import com.edwise.completespring.repositories.BookRepository;
 import com.edwise.completespring.repositories.SequenceIdRepository;
-import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+
+import static org.mockito.Mockito.mock;
 
 @Configuration
 public class TestContext {
@@ -13,12 +14,12 @@ public class TestContext {
     @Primary
     @Bean
     public BookRepository bookRepositoryTest() {
-        return Mockito.mock(BookRepository.class);
+        return mock(BookRepository.class);
     }
 
     @Primary
     @Bean
     public SequenceIdRepository sequenceIdRepositoryTest() {
-        return Mockito.mock(SequenceIdRepository.class);
+        return mock(SequenceIdRepository.class);
     }
 }
