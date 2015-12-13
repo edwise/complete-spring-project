@@ -215,9 +215,8 @@ public class ITBookControllerTest {
                 .andExpect(jsonPath("$.book.releaseDate", is(notNullValue())))
                 .andExpect(jsonPath("$.book.releaseDate", is(validFormatDateYMD())))
                 .andExpect(jsonPath("$.book.publisher", is(notNullValue())))
-                .andExpect(jsonPath("$.links", hasSize(1)))
-                .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$.links[0].href", containsString("/api/books/" + BOOK_ID_TEST1)))
+                .andExpect(jsonPath("$._links").exists())
+                .andExpect(jsonPath("$._links.self.href", containsString("/api/books/" + BOOK_ID_TEST1)))
         ;
         verify(bookRepository).findOne(BOOK_ID_TEST1);
         verifyNoMoreInteractions(bookRepository);
