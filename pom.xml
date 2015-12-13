@@ -4,7 +4,7 @@
 
     <groupId>com.edwise.completespring</groupId>
     <artifactId>completeSpringProject</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <packaging>war</packaging>
 
     <name>completeSpringProject</name>
@@ -30,8 +30,7 @@
         <sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.jacoco.itReportPath>${project.basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
 
-        <swagger.springmvc.version>1.0.2</swagger.springmvc.version>
-        <swagger.ui.version>2.0.24</swagger.ui.version>
+        <swagger.springfox.version>2.3.0</swagger.springfox.version>
         <lombok.version>1.16.6</lombok.version>
         <jacoco.mavenplugin.version>0.7.5.201505241946</jacoco.mavenplugin.version>
         <jackson.datatype.jsr310.version>2.5.3</jackson.datatype.jsr310.version>
@@ -97,15 +96,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.mangofactory</groupId>
-            <artifactId>swagger-springmvc</artifactId>
-            <version>${swagger.springmvc.version}</version>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.springfox.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>swagger-ui</artifactId>
-            <version>${swagger.ui.version}</version>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.springfox.version}</version>
         </dependency>
 
         <dependency>

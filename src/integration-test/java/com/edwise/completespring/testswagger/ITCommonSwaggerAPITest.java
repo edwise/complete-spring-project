@@ -1,6 +1,7 @@
 package com.edwise.completespring.testswagger;
 
 import com.edwise.completespring.Application;
+import com.edwise.completespring.config.SwaggerConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,22 +39,37 @@ public class ITCommonSwaggerAPITest {
 
     @Test
     public void getApiDocsSwagger_shouldReturnGeneralInfoOfAPI() throws Exception {
-        mockMvc.perform(get("/api-docs/"))
+        mockMvc.perform(get("/v2/api-docs").param("group", SwaggerConfig.BOOKS_API_GROUP))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$.apis", hasSize(greaterThan(0))))
-                .andExpect(jsonPath("$.apis[*].path", containsInAnyOrder("/default/books", "/default/foos")))
-                .andExpect(jsonPath("$.apis[*].description", containsInAnyOrder("Books API", "Foo API")))
-                .andExpect(jsonPath("$.apis", hasSize(greaterThan(0))))
                 .andExpect(jsonPath("$.info").exists())
                 .andExpect(jsonPath("$.info.title", is("Books API")))
                 .andExpect(jsonPath("$.info.description", is("Your book database!")))
-                .andExpect(jsonPath("$.info.termsOfServiceUrl", is("http://en.wikipedia.org/wiki/Terms_of_service")))
-                .andExpect(jsonPath("$.info.contact", is("edwise.null@gmail.com")))
-                .andExpect(jsonPath("$.info.license", is("Apache 2.0")))
-                .andExpect(jsonPath("$.info.licenseUrl", is("http://www.apache.org/licenses/LICENSE-2.0.html")))
+                .andExpect(jsonPath("$.info.termsOfService", is("http://en.wikipedia.org/wiki/Terms_of_service")))
+                .andExpect(jsonPath("$.info.contact.name", is("edwise.null@gmail.com")))
+                .andExpect(jsonPath("$.info.license.name", is("Apache License Version 2.0")))
+                .andExpect(jsonPath("$.info.license.url", is("http://www.apache.org/licenses/LICENSE-2.0.html")))
 
+        ;
+    }
+
+    @Test
+    public void getApiBooksDocsSwagger_shouldReturnBooksInfoOfAPI() throws Exception {
+        mockMvc.perform(get("/v2/api-docs").param("group", SwaggerConfig.BOOKS_API_GROUP))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.paths").exists())
+                .andExpect(jsonPath("$.paths./api/books/").exists())
+        ;
+    }
+
+    @Test
+    public void getApiFoosDocsSwagger_shouldReturnFoosInfoOfAPI() throws Exception {
+        mockMvc.perform(get("/v2/api-docs").param("group", SwaggerConfig.BOOKS_API_GROUP))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.paths").exists())
+                .andExpect(jsonPath("$.paths./api/foos/").exists())
         ;
     }
 }

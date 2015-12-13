@@ -138,9 +138,8 @@ public class ITFooControllerTest {
                 .andExpect(jsonPath("$.foo.sampleTextAttribute", is(ATT_TEXT_1)))
                 .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(notNullValue())))
                 .andExpect(jsonPath("$.foo.sampleLocalDateAttribute", is(validFormatDateYMD())))
-                .andExpect(jsonPath("$.links", hasSize(1)))
-                .andExpect(jsonPath("$.links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$.links[0].href", containsString("/api/foos/" + FOO_ID_TEST1)))
+                .andExpect(jsonPath("$._links").exists())
+                .andExpect(jsonPath("$._links.self.href", containsString("/api/foos/" + FOO_ID_TEST1)))
         ;
     }
 

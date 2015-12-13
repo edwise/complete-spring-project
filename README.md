@@ -1,13 +1,13 @@
 Proyecto montado con Spring Boot y Java 8, con los siguientes frameworks / libraries / funcionalidades:
 
- - Spring Boot: posibilidad de arrancar directamente con el plugin de maven o generar un war para despliegue en 
+ - Spring Boot: versión 1.3. posibilidad de arrancar directamente con el plugin de maven o generar un war para despliegue en 
  tomcat o similar. Con 'actuator' activado.
 
  - Servicio completo RESTful con Spring 4 (Books)
 
  - Uso de HATEOAS en el servicio
 
- - Documentado servicio con Swagger
+ - Documentado servicio con Swagger 2 (Springfox)
 
  - Capa de base de datos con Spring DATA mongoDB
 
@@ -68,11 +68,11 @@ Usuarios de acceso:
 
 Urls de acceso:
 
- - Swagger check -> http://localhost:8080/api-docs
+ - Swagger check -> http://localhost:8080/v2/api-docs?group=books-api
 
- - Swagger UI    -> http://localhost:8080/swagger/index.html
+ - Swagger UI    -> http://localhost:8080/swagger-ui.html
 
- - REST Books    -> http://localhost:8080/api/books
+ - REST Books    -> http://localhost:8080/api/books/
 
  - Jacoco        -> DIRECTORIO_PROYECTO/target/sites/jacoco/index.html
 
@@ -103,4 +103,6 @@ Fuentes:
  - http://www.petrikainulainen.net/programming/spring-framework/integration-testing-of-spring-mvc-applications-write-clean-assertions-with-jsonpath/
  
  - http://www.petrikainulainen.net/programming/maven/integration-testing-with-maven/
+ 
+ - http://heidloff.net/article/usage-of-swagger-2-0-in-spring-boot-applications-to-document-apis/
  
