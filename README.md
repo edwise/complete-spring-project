@@ -98,7 +98,7 @@ Fuentes:
 
  - http://www.mkyong.com/mongodb/spring-data-mongodb-auto-sequence-id-example/
  
- - https://github.com/martypitt/swagger-springmvc/
+ - http://springfox.io/
  
  - http://www.petrikainulainen.net/programming/spring-framework/integration-testing-of-spring-mvc-applications-write-clean-assertions-with-jsonpath/
  
