@@ -4,14 +4,18 @@ import com.edwise.completespring.testutil.BookBuilder;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.Collections;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.core.StringContains.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class BookTest {
 
-    private static final long BOOK_ID_TEST1 = 31l;
+    private static final long BOOK_ID_TEST1 = 31L;
     private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";
     private static final String BOOK_TITLE_TEST2 = "Bautismo de Fuego";
     private static final String AUTHOR_NAME_TEST1 = "J.R.R.";
@@ -28,7 +32,7 @@ public class BookTest {
         Book bookFrom = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(DATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
@@ -45,7 +49,7 @@ public class BookTest {
         Book book1 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(DATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
@@ -53,7 +57,7 @@ public class BookTest {
         Book book2 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(DATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
@@ -67,7 +71,7 @@ public class BookTest {
         Book book1 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(DATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
@@ -75,7 +79,7 @@ public class BookTest {
         Book book2 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST2)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(DATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST1, false))
@@ -95,7 +99,7 @@ public class BookTest {
         Book book1 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(DATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
@@ -103,7 +107,7 @@ public class BookTest {
         Book book2 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(DATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
@@ -117,7 +121,7 @@ public class BookTest {
         Book book1 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(DATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
@@ -125,7 +129,7 @@ public class BookTest {
         Book book2 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST2)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(DATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST1, false))

@@ -9,9 +9,7 @@ import com.edwise.completespring.entities.UserAccount;
 import com.edwise.completespring.entities.UserAccountType;
 import com.edwise.completespring.repositories.UserAccountRepository;
 import com.edwise.completespring.testutil.IntegrationTestUtil;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -20,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,6 +33,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,22 +48,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringApplicationConfiguration(classes = {Application.class, TestContext.class})
 @WebIntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
 public class ITFooControllerTest {
-    private static final long FOO_ID_TEST1 = 1l;
+    private static final long FOO_ID_TEST1 = 1L;
     private static final String ATT_TEXT_1 = "AttText1";
     private static final String FOO_TEXT_ATTR_TEST1 = ATT_TEXT_1;
     private static final LocalDate DATE_TEST1 = LocalDate.of(2013, 1, 26);
     private static final String CORRECT_REST_USER_USERNAME = "user1";
     private static final String CORRECT_REST_USER_PASSWORD = "password1";
-    private static final String INCORRECT_USER_USERNAME = "inCorrectUser";
-    private static final String INCORRECT_USER_PASSWORD = "password2";
-    private static String CORRECT_REST_USER_AUTHORIZATION_ENCODED;
-    private static String INCORRECT_USER_AUTHORIZATION_ENCODED;
+    private static final String NOT_EXISTING_USER_USERNAME = "inCorrectUser";
+    private static final String NOT_EXISTING_USER_PASSWORD = "password2";
 
     @Mock
     private UserAccountRepository userAccountRepository;
-
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
 
     @Autowired
     private SpringSecurityAuthenticationConfig springSecurityAuthenticationConfig;
@@ -74,31 +68,20 @@ public class ITFooControllerTest {
     @Autowired
     protected WebApplicationContext webApplicationContext;
 
-    @BeforeClass
-    public static void setUpCommonStuff() {
-        String authString = CORRECT_REST_USER_USERNAME + ":" + CORRECT_REST_USER_PASSWORD;
-        byte[] authEncodecBytes = Base64.encodeBase64(authString.getBytes());
-        CORRECT_REST_USER_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
-
-        authString = INCORRECT_USER_USERNAME + ":" + INCORRECT_USER_PASSWORD;
-        authEncodecBytes = Base64.encodeBase64(authString.getBytes());
-        INCORRECT_USER_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
-    }
-
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(this.springSecurityAuthenticationConfig, "userAccountRepository", userAccountRepository);
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(this.webApplicationContext)
-                .addFilter(springSecurityFilterChain)
+                .apply(springSecurity())
                 .build();
         when(userAccountRepository.findByUsername(CORRECT_REST_USER_USERNAME)).thenReturn(createUserAccount());
     }
 
     @Test
     public void getAll_CorrectUserAndFoosFound_ShouldReturnFoundFoos() throws Exception {
-        mockMvc.perform(get("/api/foos/").header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+        mockMvc.perform(get("/api/foos/").with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -121,7 +104,7 @@ public class ITFooControllerTest {
 
     @Test
     public void getAll_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
-        mockMvc.perform(get("/api/foos/").header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+        mockMvc.perform(get("/api/foos/").with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
     }
@@ -129,7 +112,7 @@ public class ITFooControllerTest {
     @Test
     public void getFoo_CorrectUserAndFooFound_ShouldReturnCorrectFoo() throws Exception {
         mockMvc.perform(get("/api/foos/{id}", FOO_ID_TEST1)
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -146,7 +129,7 @@ public class ITFooControllerTest {
     @Test
     public void getFoo_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
         mockMvc.perform(get("/api/foos/{id}", FOO_ID_TEST1)
-                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
     }
@@ -158,7 +141,7 @@ public class ITFooControllerTest {
         mockMvc.perform(post("/api/foos/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate))
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", containsString("/api/foos/" + FOO_ID_TEST1)))
         ;
@@ -171,7 +154,7 @@ public class ITFooControllerTest {
         mockMvc.perform(post("/api/foos/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate))
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -188,7 +171,7 @@ public class ITFooControllerTest {
         mockMvc.perform(post("/api/foos/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate))
-                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
     }
@@ -200,7 +183,7 @@ public class ITFooControllerTest {
         mockMvc.perform(put("/api/foos/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields))
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isNoContent())
         ;
     }
@@ -212,7 +195,7 @@ public class ITFooControllerTest {
         mockMvc.perform(put("/api/foos/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields))
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -229,7 +212,7 @@ public class ITFooControllerTest {
         mockMvc.perform(put("/api/foos/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields))
-                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
     }
@@ -237,7 +220,7 @@ public class ITFooControllerTest {
     @Test
     public void deleteFoo_CorrectUserAndFooExist_ShouldReturnNoContentStatus() throws Exception {
         mockMvc.perform(delete("/api/foos/{id}", FOO_ID_TEST1)
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isNoContent())
         ;
     }
@@ -245,7 +228,7 @@ public class ITFooControllerTest {
     @Test
     public void deleteFoo_InCorrectUser_ShouldReturnUnauthorizedCode() throws Exception {
         mockMvc.perform(delete("/api/foos/{id}", FOO_ID_TEST1)
-                .header("Authorization", "Basic " + INCORRECT_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
     }

@@ -12,8 +12,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class FooTest {
-    private static final long ID_TEST1 = 123l;
-    private static final long ID_TEST2 = 456l;
+    private static final long ID_TEST1 = 123L;
+    private static final long ID_TEST2 = 456L;
     private static final String TEXT_ATTR_TEST1 = "AttText1";
     private static final String TEXT_ATTR_TEST2 = "AttText2";
     private static final LocalDate DATE_TEST1 = LocalDate.of(2013, 1, 26);

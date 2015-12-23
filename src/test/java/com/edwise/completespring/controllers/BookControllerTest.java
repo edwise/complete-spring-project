@@ -28,6 +28,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -44,10 +45,10 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BookControllerTest {
-    private static final long BOOK_ID_TEST1 = 1l;
+    private static final long BOOK_ID_TEST1 = 1L;
     private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";
     private static final String BOOK_TITLE_TEST2 = "Hamlet";
-    private static final long BOOK_ID_TEST2 = 1000l;
+    private static final long BOOK_ID_TEST2 = 1000L;
     private static final LocalDate BOOK_RELEASEDATE_TEST1 = LocalDate.of(2013, 1, 26);
     private static final LocalDate BOOK_RELEASEDATE_TEST2 = LocalDate.of(2011, 11, 16);
     private static final String BOOK_ISBN_TEST1 = "11-333-12";
@@ -98,7 +99,7 @@ public class BookControllerTest {
     public void testCreate() {
         Book bookReq = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -130,7 +131,7 @@ public class BookControllerTest {
     public void testUpdate() {
         Book bookReq = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -138,7 +139,7 @@ public class BookControllerTest {
         Book bookDB = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST2)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -157,7 +158,7 @@ public class BookControllerTest {
         Book bookReq = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -185,7 +186,7 @@ public class BookControllerTest {
     public void testUpdateNotFound() {
         Book bookReq = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -228,7 +229,7 @@ public class BookControllerTest {
         Book book1 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, false))
@@ -236,7 +237,7 @@ public class BookControllerTest {
         Book book2 = new BookBuilder()
                 .id(BOOK_ID_TEST2)
                 .title(BOOK_TITLE_TEST2)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST2, AUTHOR_SURNAME_TEST2)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST2, AUTHOR_SURNAME_TEST2)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(BOOK_RELEASEDATE_TEST2)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST2, true))

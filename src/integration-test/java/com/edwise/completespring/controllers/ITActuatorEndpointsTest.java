@@ -6,9 +6,7 @@ import com.edwise.completespring.config.TestContext;
 import com.edwise.completespring.entities.UserAccount;
 import com.edwise.completespring.entities.UserAccountType;
 import com.edwise.completespring.repositories.UserAccountRepository;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -17,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,6 +22,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,15 +38,9 @@ public class ITActuatorEndpointsTest {
     private static final String INCORRECT_ADMIN_PASSWORD = "password1";
     private static final String NOT_EXISTING_USER_USERNAME = "notExists";
     private static final String NOT_EXISTING_USER_PASSWORD = "password3456";
-    private static String CORRECT_ADMIN_USER_AUTHORIZATION_ENCODED;
-    private static String INCORRECT_ADMIN_AUTHORIZATION_ENCODED;
-    private static String NOT_EXISTING_USER_AUTHORIZATION_ENCODED;
 
     @Mock
     private UserAccountRepository userAccountRepository;
-
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
 
     @Autowired
     private SpringSecurityAuthenticationConfig springSecurityAuthenticationConfig;
@@ -57,28 +50,13 @@ public class ITActuatorEndpointsTest {
     @Autowired
     protected WebApplicationContext webApplicationContext;
 
-    @BeforeClass
-    public static void setUpCommonStuff() {
-        String authString = CORRECT_ADMIN_USER_USERNAME + ":" + CORRECT_ADMIN_USER_PASSWORD;
-        byte[] authEncodecBytes = Base64.encodeBase64(authString.getBytes());
-        CORRECT_ADMIN_USER_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
-
-        authString = INCORRECT_ADMIN_USERNAME + ":" + INCORRECT_ADMIN_PASSWORD;
-        authEncodecBytes = Base64.encodeBase64(authString.getBytes());
-        INCORRECT_ADMIN_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
-
-        authString = NOT_EXISTING_USER_USERNAME + ":" + NOT_EXISTING_USER_PASSWORD;
-        authEncodecBytes = Base64.encodeBase64(authString.getBytes());
-        NOT_EXISTING_USER_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
-    }
-
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         ReflectionTestUtils.setField(this.springSecurityAuthenticationConfig, "userAccountRepository", userAccountRepository);
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(this.webApplicationContext)
-                .addFilter(springSecurityFilterChain)
+                .apply(springSecurity())
                 .build();
     }
 
@@ -88,7 +66,7 @@ public class ITActuatorEndpointsTest {
                 .thenReturn(createUserAccount(1L, CORRECT_ADMIN_USER_USERNAME, CORRECT_ADMIN_USER_PASSWORD,
                         UserAccountType.ADMIN_USER));
 
-        mockMvc.perform(get("/admin/info/").header("Authorization", "Basic " + CORRECT_ADMIN_USER_AUTHORIZATION_ENCODED))
+        mockMvc.perform(get("/admin/info/").with(httpBasic(CORRECT_ADMIN_USER_USERNAME, CORRECT_ADMIN_USER_PASSWORD)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         ;
@@ -100,7 +78,7 @@ public class ITActuatorEndpointsTest {
                 .thenReturn(createUserAccount(1L, INCORRECT_ADMIN_USERNAME, INCORRECT_ADMIN_PASSWORD,
                         UserAccountType.REST_USER));
 
-        mockMvc.perform(get("/admin/info/").header("Authorization", "Basic " + INCORRECT_ADMIN_AUTHORIZATION_ENCODED))
+        mockMvc.perform(get("/admin/info/").with(httpBasic(INCORRECT_ADMIN_USERNAME, INCORRECT_ADMIN_PASSWORD)))
                 .andExpect(status().isForbidden())
         ;
     }
@@ -110,7 +88,7 @@ public class ITActuatorEndpointsTest {
         when(userAccountRepository.findByUsername(NOT_EXISTING_USER_USERNAME))
                 .thenReturn(null);
 
-        mockMvc.perform(get("/admin/info/").header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
+        mockMvc.perform(get("/admin/info/").with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
     }

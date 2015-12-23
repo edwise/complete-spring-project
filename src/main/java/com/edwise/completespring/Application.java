@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Spring Boot Application class
@@ -91,7 +92,7 @@ public class Application {
                 new Book()
                         .setId(BOOK_ID_1)
                         .setTitle("Libro prueba mongo")
-                        .setAuthors(Arrays.asList(new Author().setName("Edu").setSurname("Antón")))
+                        .setAuthors(Collections.singletonList(new Author().setName("Edu").setSurname("Antón")))
                         .setIsbn("11-333-12")
                         .setReleaseDate(LocalDate.now())
                         .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)),
@@ -108,14 +109,14 @@ public class Application {
                 new Book()
                         .setId(BOOK_ID_3)
                         .setTitle("Libro prueba mongo 3")
-                        .setAuthors(Arrays.asList(new Author().setName("Nadie").setSurname("Nobody")))
+                        .setAuthors(Collections.singletonList(new Author().setName("Nadie").setSurname("Nobody")))
                         .setIsbn("12-9999-92")
                         .setReleaseDate(LocalDate.now())
                         .setPublisher(new Publisher().setName("Editorial 7").setCountry("ES").setOnline(true)),
                 new Book()
                         .setId(BOOK_ID_4)
                         .setTitle("Libro prueba mongo 4")
-                        .setAuthors(Arrays.asList(new Author().setName("Perry").setSurname("Mason")))
+                        .setAuthors(Collections.singletonList(new Author().setName("Perry").setSurname("Mason")))
                         .setIsbn("22-34565-12")
                         .setReleaseDate(LocalDate.now())
                         .setPublisher(new Publisher().setName("Editorial 33").setCountry("US").setOnline(true)))

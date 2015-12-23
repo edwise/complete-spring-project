@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FooControllerTest {
-    private static final long FOO_ID_TEST1 = 1l;
+    private static final long FOO_ID_TEST1 = 1L;
     private static final String FOO_TEXT_ATTR_TEST1 = "AttText1";
     private static final LocalDate DATE_TEST1 = LocalDate.of(2013, 1, 26);
 

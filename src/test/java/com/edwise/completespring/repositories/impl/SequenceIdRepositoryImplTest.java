@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class SequenceIdRepositoryImplTest {
 
-    private static final long TEST_SEQUENCE_ID = 7l;
+    private static final long TEST_SEQUENCE_ID = 7L;
     private static final int ONE_TIME = 1;
 
     @Mock
@@ -35,7 +35,7 @@ public class SequenceIdRepositoryImplTest {
     @Test
     public void testGetNextSequenceId() {
         when(mongoOperation.findAndModify(any(Query.class), any(Update.class), any(FindAndModifyOptions.class),
-                eq(SequenceId.class))).thenReturn(new SequenceId().setId(BookServiceImpl.BOOK_COLLECTION).setSeq(6l));
+                eq(SequenceId.class))).thenReturn(new SequenceId().setId(BookServiceImpl.BOOK_COLLECTION).setSeq(6L));
 
         long seqId = repository.getNextSequenceId(BookServiceImpl.BOOK_COLLECTION);
 

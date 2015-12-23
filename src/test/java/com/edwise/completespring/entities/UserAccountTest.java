@@ -10,8 +10,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class UserAccountTest {
-    private static final long ID_TEST1 = 123l;
-    private static final long ID_TEST2 = 456l;
+    private static final long ID_TEST1 = 123L;
+    private static final long ID_TEST2 = 456L;
     private static final String USERNAME_TEST1 = "aragorn1981";
     private static final String USERNAME_TEST2 = "neo_80";
     private static final String PASSWORD_TEST1 = "passwordTest1";
@@ -70,7 +70,7 @@ public class UserAccountTest {
         assertThat(userAccountString, containsString("password=null"));
     }
 
-    public static UserAccount createUserAccount(Long id, String username, String password, UserAccountType userAccountType) {
+    private static UserAccount createUserAccount(Long id, String username, String password, UserAccountType userAccountType) {
         return new UserAccount()
                 .setId(id)
                 .setUsername(username)

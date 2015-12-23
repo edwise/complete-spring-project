@@ -34,7 +34,7 @@ public class ErrorInfoTest {
     private static final String RELEASE_DATE_FIELD = "releaseDate";
     private static final String IT_CANT_BE_NULL_MSG = "No puede ser nulo";
     private static final String IT_CANT_BE_EMPTY_MSG = "No puede ser vacio";
-    public static final String BOOK_OBJECT_NAME = "Book";
+    private static final String BOOK_OBJECT_NAME = "Book";
 
     @Test
     public void testAddError() {

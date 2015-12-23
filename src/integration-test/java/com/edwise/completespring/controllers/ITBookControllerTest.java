@@ -17,9 +17,7 @@ import com.edwise.completespring.repositories.UserAccountRepository;
 import com.edwise.completespring.services.impl.BookServiceImpl;
 import com.edwise.completespring.testutil.BookBuilder;
 import com.edwise.completespring.testutil.IntegrationTestUtil;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -29,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,6 +36,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.edwise.completespring.testutil.IsValidFormatDateYMDMatcher.validFormatDateYMD;
@@ -53,6 +51,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -66,10 +66,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringApplicationConfiguration(classes = {Application.class, TestContext.class})
 @WebIntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
 public class ITBookControllerTest {
-    private static final Long BOOK_ID_TEST1 = 111l;
+    private static final Long BOOK_ID_TEST1 = 111L;
+    private static final Long BOOK_ID_TEST2 = 1000L;
     private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";
     private static final String BOOK_TITLE_TEST2 = "Hamlet";
-    private static final Long BOOK_ID_TEST2 = 1000l;
     private static final LocalDate BOOK_RELEASEDATE_TEST1 = LocalDate.of(2013, 1, 26);
     private static final LocalDate BOOK_RELEASEDATE_TEST2 = LocalDate.of(2011, 11, 16);
     private static final String BOOK_ISBN_TEST1 = "11-333-12";
@@ -87,8 +87,6 @@ public class ITBookControllerTest {
     private static final String CORRECT_REST_USER_PASSWORD = "password1";
     private static final String NOT_EXISTING_USER_USERNAME = "notExistUser";
     private static final String NOT_EXISTING_USER_PASSWORD = "password2";
-    private static String CORRECT_REST_USER_AUTHORIZATION_ENCODED;
-    private static String NOT_EXISTING_USER_AUTHORIZATION_ENCODED;
 
     private MockMvc mockMvc;
 
@@ -102,24 +100,10 @@ public class ITBookControllerTest {
     private SequenceIdRepository sequenceIdRepository;
 
     @Autowired
-    private FilterChainProxy springSecurityFilterChain;
-
-    @Autowired
     private SpringSecurityAuthenticationConfig springSecurityAuthenticationConfig;
 
     @Autowired
     protected WebApplicationContext webApplicationContext;
-
-    @BeforeClass
-    public static void setUpCommonStuff() {
-        String authString = CORRECT_REST_USER_USERNAME + ":" + CORRECT_REST_USER_PASSWORD;
-        byte[] authEncodecBytes = Base64.encodeBase64(authString.getBytes());
-        CORRECT_REST_USER_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
-
-        authString = NOT_EXISTING_USER_USERNAME + ":" + NOT_EXISTING_USER_PASSWORD;
-        authEncodecBytes = Base64.encodeBase64(authString.getBytes());
-        NOT_EXISTING_USER_AUTHORIZATION_ENCODED = new String(authEncodecBytes);
-    }
 
     @Before
     public void setUp() {
@@ -129,7 +113,7 @@ public class ITBookControllerTest {
         ReflectionTestUtils.setField(this.springSecurityAuthenticationConfig, "userAccountRepository", userAccountRepository);
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(this.webApplicationContext)
-                .addFilter(springSecurityFilterChain)
+                .apply(springSecurity())
                 .build();
         when(userAccountRepository.findByUsername(CORRECT_REST_USER_USERNAME)).thenReturn(createUserAccount());
     }
@@ -138,7 +122,7 @@ public class ITBookControllerTest {
     public void getAll_CorrectUserAndBooksFound_ShouldReturnFoundBooks() throws Exception {
         when(bookRepository.findAll()).thenReturn(createTestBookList());
 
-        mockMvc.perform(get("/api/books/").header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+        mockMvc.perform(get("/api/books/").with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -173,7 +157,7 @@ public class ITBookControllerTest {
     public void getAll_CorrectUserAndBooksNotFound_ShouldReturnEmptyList() throws Exception {
         when(bookRepository.findAll()).thenReturn(new ArrayList<>(0));
 
-        mockMvc.perform(get("/api/books/").header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+        mockMvc.perform(get("/api/books/").with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(0)))
@@ -184,7 +168,7 @@ public class ITBookControllerTest {
 
     @Test
     public void getAll_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
-        mockMvc.perform(get("/api/books/").header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
+        mockMvc.perform(get("/api/books/").with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
 //        verifyZeroInteractions(bookRepository);
@@ -195,7 +179,7 @@ public class ITBookControllerTest {
         Book bookFound = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -203,7 +187,7 @@ public class ITBookControllerTest {
         when(bookRepository.findOne(anyLong())).thenReturn(bookFound);
 
         mockMvc.perform(get("/api/books/{id}", BOOK_ID_TEST1)
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -227,7 +211,7 @@ public class ITBookControllerTest {
         when(bookRepository.findOne(anyLong())).thenThrow(new NotFoundException(BOOK_NOT_FOUND_EXCEPTION_MSG));
 
         mockMvc.perform(get("/api/books/{id}", BOOK_ID_TEST1)
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -242,7 +226,7 @@ public class ITBookControllerTest {
     @Test
     public void getBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
         mockMvc.perform(get("/api/books/{id}", BOOK_ID_TEST1)
-                .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
         verifyZeroInteractions(bookRepository);
@@ -252,7 +236,7 @@ public class ITBookControllerTest {
     public void postBook_CorrectUserAndBookCorrect_ShouldReturnCreatedStatusAndCorrectBook() throws Exception {
         Book bookToCreate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -260,7 +244,7 @@ public class ITBookControllerTest {
         Book bookToCreateWithId = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -271,7 +255,7 @@ public class ITBookControllerTest {
         mockMvc.perform(post("/api/books/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToCreate))
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", containsString("/api/books/" + BOOK_ID_TEST1)))
         ;
@@ -282,14 +266,14 @@ public class ITBookControllerTest {
     @Test
     public void postBook_CorrectUserAndBookIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
         Book bookToCreate = new BookBuilder()
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
                 .build();
 
         mockMvc.perform(post("/api/books/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToCreate))
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -305,7 +289,7 @@ public class ITBookControllerTest {
     public void postBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
         Book bookToCreate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -314,7 +298,7 @@ public class ITBookControllerTest {
         mockMvc.perform(post("/api/books/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToCreate))
-                .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
         verifyZeroInteractions(bookRepository);
@@ -325,7 +309,7 @@ public class ITBookControllerTest {
     public void putBook_CorrectUserAndBookExist_ShouldReturnCreatedStatus() throws Exception {
         Book bookToUpdate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
@@ -333,7 +317,7 @@ public class ITBookControllerTest {
         Book bookOld = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -341,7 +325,7 @@ public class ITBookControllerTest {
         Book bookCopiedIn = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
@@ -352,7 +336,7 @@ public class ITBookControllerTest {
         mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate))
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isNoContent())
         ;
         verify(bookRepository).findOne(BOOK_ID_TEST1);
@@ -364,7 +348,7 @@ public class ITBookControllerTest {
     public void putBook_CorrectUserAndBookNotExists_ShouldReturnNotFoundStatusAndError() throws Exception {
         Book bookToUpdate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
@@ -374,7 +358,7 @@ public class ITBookControllerTest {
         mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate))
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
@@ -388,12 +372,12 @@ public class ITBookControllerTest {
     @Test
     public void putBook_CorrectUserAndBookIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
         Book bookToUpdate = new BookBuilder()
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
                 .build();
 
         mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED)
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate)))
                 .andExpect(status().isBadRequest())
@@ -410,7 +394,7 @@ public class ITBookControllerTest {
     public void putBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
         Book bookToUpdate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
@@ -419,7 +403,7 @@ public class ITBookControllerTest {
         mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate))
-                .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
         verifyZeroInteractions(bookRepository);
@@ -428,7 +412,7 @@ public class ITBookControllerTest {
     @Test
     public void deleteBook_CorrectUserAndBookExist_ShouldReturnNoContentStatus() throws Exception {
         mockMvc.perform(delete("/api/books/{id}", BOOK_ID_TEST1)
-                .header("Authorization", "Basic " + CORRECT_REST_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isNoContent())
         ;
         verify(bookRepository).delete(BOOK_ID_TEST1);
@@ -438,7 +422,7 @@ public class ITBookControllerTest {
     @Test
     public void deleteBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
         mockMvc.perform(delete("/api/books/{id}", BOOK_ID_TEST1)
-                .header("Authorization", "Basic " + NOT_EXISTING_USER_AUTHORIZATION_ENCODED))
+                .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
         verifyZeroInteractions(bookRepository);
@@ -448,7 +432,7 @@ public class ITBookControllerTest {
         Book book1 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, false))
@@ -456,7 +440,7 @@ public class ITBookControllerTest {
         Book book2 = new BookBuilder()
                 .id(BOOK_ID_TEST2)
                 .title(BOOK_TITLE_TEST2)
-                .authors(Arrays.asList(AuthorTest.createAuthor(AUTHOR_NAME_TEST2, AUTHOR_SURNAME_TEST2)))
+                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST2, AUTHOR_SURNAME_TEST2)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(BOOK_RELEASEDATE_TEST2)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST2, true))

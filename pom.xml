@@ -4,7 +4,7 @@
 
     <groupId>com.edwise.completespring</groupId>
     <artifactId>completeSpringProject</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <packaging>war</packaging>
 
     <name>completeSpringProject</name>
@@ -72,6 +72,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
         </dependency>
 
         <dependency>
