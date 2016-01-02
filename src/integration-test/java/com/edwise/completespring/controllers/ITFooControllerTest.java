@@ -2,7 +2,7 @@ package com.edwise.completespring.controllers;
 
 import com.edwise.completespring.Application;
 import com.edwise.completespring.config.SpringSecurityAuthenticationConfig;
-import com.edwise.completespring.config.TestContext;
+import com.edwise.completespring.config.FakeMongoDBContext;
 import com.edwise.completespring.entities.Foo;
 import com.edwise.completespring.entities.FooTest;
 import com.edwise.completespring.entities.UserAccount;
@@ -45,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {Application.class, TestContext.class})
+@SpringApplicationConfiguration(classes = {Application.class, FakeMongoDBContext.class})
 @WebIntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
 public class ITFooControllerTest {
     private static final long FOO_ID_TEST1 = 1L;
