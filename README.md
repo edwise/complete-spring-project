@@ -28,6 +28,8 @@ Proyecto montado con Spring Boot y Java 8, con los siguientes frameworks / libra
  - Spring Security activo, con autenticación básica
 
  - Añadidas las developer tools de Spring Boot 1.3
+ 
+ - Uso de Fongo para simular la base de datos en los tests de integración
 
 
 Requisitos:
@@ -108,4 +110,5 @@ Fuentes:
  
  - http://docs.spring.io/spring-security/site/docs/4.0.x/reference/html/test-mockmvc.html
  
+ - https://github.com/fakemongo/fongo
  
