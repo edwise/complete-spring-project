@@ -76,6 +76,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -157,17 +158,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-
-                <!-- Configuration TO DEBUG IN INTELLIJ. And with the next command:
-                mvn spring-boot:run -Drun.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
-                -->
-
-                <!--<configuration>-->
-                <!--<jvmArguments>-->
-                <!---Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005-->
-                <!--</jvmArguments>-->
-                <!--</configuration>-->
-
             </plugin>
 
             <plugin>

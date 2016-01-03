@@ -75,7 +75,7 @@ public class ITBookControllerTest {
         mockMvc.perform(get("/api/books/").with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$", hasSize(4)))
                 .andExpect(jsonPath("$[0].book").exists())
                 .andExpect(jsonPath("$[0].book.id", is(BOOK_ID_TEST1.intValue())))
                 .andExpect(jsonPath("$[0]book.title", is(BOOK_TITLE_TEST1)))
