@@ -17,14 +17,14 @@ import java.util.Collections;
 @Component
 public class DataLoader {
     private static final String USERACCOUNTS_COLLECTION = "users";
-    private static final long BOOKS_INITIAL_SEQUENCE = 4;
-    private static final long USERACCOUNTS_INITIAL_SEQUENCE = 3;
-    private static final long BOOK_ID_1 = 1L;
-    private static final long BOOK_ID_2 = 2L;
-    private static final long BOOK_ID_3 = 3L;
-    private static final long BOOK_ID_4 = 4L;
-    private static final long USER_ID_1 = 1L;
-    private static final long USER_ID_2 = 2L;
+    private static final Long BOOKS_INITIAL_SEQUENCE = 4L;
+    private static final Long USERACCOUNTS_INITIAL_SEQUENCE = 3L;
+    public static final Long BOOK_ID_1 = 1L;
+    public static final Long BOOK_ID_2 = 2L;
+    public static final Long BOOK_ID_3 = 3L;
+    public static final Long BOOK_ID_4 = 4L;
+    public static final Long USER_ID_1 = 1L;
+    public static final Long USER_ID_2 = 2L;
     public static final String USER = "user1";
     public static final String PASSWORD_USER = "password1";
     public static final String ADMIN = "admin";

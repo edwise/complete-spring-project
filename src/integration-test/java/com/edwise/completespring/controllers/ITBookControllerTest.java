@@ -2,6 +2,7 @@ package com.edwise.completespring.controllers;
 
 import com.edwise.completespring.Application;
 import com.edwise.completespring.config.FakeMongoDBContext;
+import com.edwise.completespring.dbutils.DataLoader;
 import com.edwise.completespring.entities.Author;
 import com.edwise.completespring.entities.Book;
 import com.edwise.completespring.entities.Publisher;
@@ -30,29 +31,24 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * TODO this tests are executed with the same data that is charged only ONCE... maybe is needed to load data with each test.
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class, FakeMongoDBContext.class})
 @WebIntegrationTest({"server.port=0"})
 public class ITBookControllerTest {
-    private static final Long BOOK_ID_TEST1 = 111L;
-    private static final Long BOOK_ID_TEST2 = 1000L;
+    private static final Long BOOK_ID_NOT_EXISTS = 111L;
     private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";
-    private static final String BOOK_TITLE_TEST2 = "Hamlet";
     private static final LocalDate BOOK_RELEASEDATE_TEST1 = LocalDate.of(2013, 1, 26);
-    private static final LocalDate BOOK_RELEASEDATE_TEST2 = LocalDate.of(2011, 11, 16);
     private static final String BOOK_ISBN_TEST1 = "11-333-12";
     private static final String BOOK_ISBN_TEST2 = "11-666-77";
     private static final String PUBLISHER_NAME_TEST1 = "Planeta";
-    private static final String PUBLISHER_NAME_TEST2 = "Gigamesh";
     private static final String PUBLISHER_COUNTRY_TEST1 = "ES";
-    private static final String PUBLISHER_COUNTRY_TEST2 = "US";
     private static final String AUTHOR_NAME_TEST1 = "J.R.R.";
     private static final String AUTHOR_NAME_TEST2 = "William";
     private static final String AUTHOR_SURNAME_TEST1 = "Tolkien";
-    private static final String AUTHOR_SURNAME_TEST2 = "Shakespeare";
     private static final String BOOK_NOT_FOUND_EXCEPTION_MSG = "Book not found";
-    private static final String CORRECT_REST_USER_USERNAME = "user1";
-    private static final String CORRECT_REST_USER_PASSWORD = "password1";
     private static final String NOT_EXISTING_USER_USERNAME = "notExistUser";
     private static final String NOT_EXISTING_USER_PASSWORD = "password2";
 
@@ -72,41 +68,21 @@ public class ITBookControllerTest {
 
     @Test
     public void getAll_CorrectUserAndBooksFound_ShouldReturnFoundBooks() throws Exception {
-        mockMvc.perform(get("/api/books/").with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+        mockMvc.perform(get("/api/books/").with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(4)))
+                .andExpect(jsonPath("$", hasSize(greaterThan(1))))
                 .andExpect(jsonPath("$[0].book").exists())
-                .andExpect(jsonPath("$[0].book.id", is(BOOK_ID_TEST1.intValue())))
-                .andExpect(jsonPath("$[0]book.title", is(BOOK_TITLE_TEST1)))
-                .andExpect(jsonPath("$[0]book.authors", is(notNullValue())))
-                .andExpect(jsonPath("$[0]book.isbn", is(BOOK_ISBN_TEST1)))
-                .andExpect(jsonPath("$[0]book.releaseDate", is(notNullValue())))
-                .andExpect(jsonPath("$[0]book.releaseDate", is(validFormatDateYMD())))
-                .andExpect(jsonPath("$[0]book.publisher", is(notNullValue())))
+                .andExpect(jsonPath("$[0].book.id", is(notNullValue())))
+                .andExpect(jsonPath("$[0].book.title", is(notNullValue())))
+                .andExpect(jsonPath("$[0].book.authors", is(notNullValue())))
+                .andExpect(jsonPath("$[0].book.isbn", is(notNullValue())))
+                .andExpect(jsonPath("$[0].book.releaseDate", is(notNullValue())))
+                .andExpect(jsonPath("$[0].book.releaseDate", is(validFormatDateYMD())))
+                .andExpect(jsonPath("$[0].book.publisher", is(notNullValue())))
                 .andExpect(jsonPath("$[0].links", hasSize(1)))
                 .andExpect(jsonPath("$[0].links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$[0].links[0].href", containsString("/api/books/" + BOOK_ID_TEST1)))
-                .andExpect(jsonPath("$[1].book").exists())
-                .andExpect(jsonPath("$[1].book.id", is(BOOK_ID_TEST2.intValue())))
-                .andExpect(jsonPath("$[1]book.title", is(BOOK_TITLE_TEST2)))
-                .andExpect(jsonPath("$[1]book.authors", is(notNullValue())))
-                .andExpect(jsonPath("$[1]book.isbn", is(BOOK_ISBN_TEST2)))
-                .andExpect(jsonPath("$[1]book.releaseDate", is(notNullValue())))
-                .andExpect(jsonPath("$[1]book.releaseDate", is(validFormatDateYMD())))
-                .andExpect(jsonPath("$[1]book.publisher", is(notNullValue())))
-                .andExpect(jsonPath("$[1].links", hasSize(1)))
-                .andExpect(jsonPath("$[1].links[0].rel", is(notNullValue())))
-                .andExpect(jsonPath("$[1].links[0].href", containsString("/api/books/" + BOOK_ID_TEST2)))
-        ;
-    }
-
-    @Test
-    public void getAll_CorrectUserAndBooksNotFound_ShouldReturnEmptyList() throws Exception {
-        mockMvc.perform(get("/api/books/").with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(0)))
+                .andExpect(jsonPath("$[0].links[0].href", containsString("/api/books/")))
         ;
     }
 
@@ -119,28 +95,28 @@ public class ITBookControllerTest {
 
     @Test
     public void getBook_CorrectUserAndBookFound_ShouldReturnCorrectBook() throws Exception {
-        mockMvc.perform(get("/api/books/{id}", BOOK_ID_TEST1)
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+        mockMvc.perform(get("/api/books/{id}", DataLoader.BOOK_ID_1)
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$.book").exists())
-                .andExpect(jsonPath("$.book.id", is(BOOK_ID_TEST1.intValue())))
-                .andExpect(jsonPath("$.book.title", is(BOOK_TITLE_TEST1)))
+                .andExpect(jsonPath("$.book.id", is(DataLoader.BOOK_ID_1.intValue())))
+                .andExpect(jsonPath("$.book.title", is(notNullValue())))
                 .andExpect(jsonPath("$.book.authors", is(notNullValue())))
-                .andExpect(jsonPath("$.book.isbn", is(BOOK_ISBN_TEST1)))
+                .andExpect(jsonPath("$.book.isbn", is(notNullValue())))
                 .andExpect(jsonPath("$.book.releaseDate", is(notNullValue())))
                 .andExpect(jsonPath("$.book.releaseDate", is(validFormatDateYMD())))
                 .andExpect(jsonPath("$.book.publisher", is(notNullValue())))
                 .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.self.href", containsString("/api/books/" + BOOK_ID_TEST1)))
+                .andExpect(jsonPath("$._links.self.href", containsString("/api/books/" + DataLoader.BOOK_ID_1)))
         ;
     }
 
     @Test
     public void getBook_CorrectUserAndBookNotFound_ShouldReturnNotFoundStatusAndError() throws Exception {
-        mockMvc.perform(get("/api/books/{id}", BOOK_ID_TEST1)
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+        mockMvc.perform(get("/api/books/{id}", BOOK_ID_NOT_EXISTS)
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -152,7 +128,7 @@ public class ITBookControllerTest {
 
     @Test
     public void getBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
-        mockMvc.perform(get("/api/books/{id}", BOOK_ID_TEST1)
+        mockMvc.perform(get("/api/books/{id}", DataLoader.BOOK_ID_1)
                 .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;
@@ -171,9 +147,9 @@ public class ITBookControllerTest {
         mockMvc.perform(post("/api/books/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToCreate))
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", containsString("/api/books/" + BOOK_ID_TEST1)))
+                .andExpect(header().string("Location", containsString("/api/books/")))
         ;
     }
 
@@ -187,7 +163,7 @@ public class ITBookControllerTest {
         mockMvc.perform(post("/api/books/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToCreate))
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -216,7 +192,7 @@ public class ITBookControllerTest {
     }
 
     @Test
-    public void putBook_CorrectUserAndBookExist_ShouldReturnCreatedStatus() throws Exception {
+    public void putBook_CorrectUserAndBookExist_ShouldReturnNoContentStatus() throws Exception {
         Book bookToUpdate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
                 .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
@@ -225,10 +201,10 @@ public class ITBookControllerTest {
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
                 .build();
 
-        mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
+        mockMvc.perform(put("/api/books/{id}", DataLoader.BOOK_ID_2)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate))
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isNoContent())
         ;
     }
@@ -243,10 +219,10 @@ public class ITBookControllerTest {
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
                 .build();
 
-        mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
+        mockMvc.perform(put("/api/books/{id}", BOOK_ID_NOT_EXISTS)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate))
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
@@ -262,8 +238,8 @@ public class ITBookControllerTest {
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
                 .build();
 
-        mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD))
+        mockMvc.perform(put("/api/books/{id}", DataLoader.BOOK_ID_2)
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate)))
                 .andExpect(status().isBadRequest())
@@ -285,7 +261,7 @@ public class ITBookControllerTest {
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
                 .build();
 
-        mockMvc.perform(put("/api/books/{id}", BOOK_ID_TEST1)
+        mockMvc.perform(put("/api/books/{id}", DataLoader.BOOK_ID_2)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate))
                 .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
@@ -295,15 +271,15 @@ public class ITBookControllerTest {
 
     @Test
     public void deleteBook_CorrectUserAndBookExist_ShouldReturnNoContentStatus() throws Exception {
-        mockMvc.perform(delete("/api/books/{id}", BOOK_ID_TEST1)
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+        mockMvc.perform(delete("/api/books/{id}", DataLoader.BOOK_ID_3)
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isNoContent())
         ;
     }
 
     @Test
     public void deleteBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
-        mockMvc.perform(delete("/api/books/{id}", BOOK_ID_TEST1)
+        mockMvc.perform(delete("/api/books/{id}", DataLoader.BOOK_ID_3)
                 .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
                 .andExpect(status().isUnauthorized())
         ;

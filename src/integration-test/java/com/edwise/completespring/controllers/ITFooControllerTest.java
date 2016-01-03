@@ -1,25 +1,20 @@
 package com.edwise.completespring.controllers;
 
 import com.edwise.completespring.Application;
-import com.edwise.completespring.config.SpringSecurityAuthenticationConfig;
 import com.edwise.completespring.config.FakeMongoDBContext;
+import com.edwise.completespring.dbutils.DataLoader;
 import com.edwise.completespring.entities.Foo;
 import com.edwise.completespring.entities.FooTest;
-import com.edwise.completespring.entities.UserAccount;
-import com.edwise.completespring.entities.UserAccountType;
-import com.edwise.completespring.repositories.UserAccountRepository;
 import com.edwise.completespring.testutil.IntegrationTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -27,41 +22,22 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDate;
 
 import static com.edwise.completespring.testutil.IsValidFormatDateYMDMatcher.validFormatDateYMD;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class, FakeMongoDBContext.class})
-@WebIntegrationTest({"server.port=0", "db.resetAndLoadOnStartup=false"})
+@WebIntegrationTest({"server.port=0"})
 public class ITFooControllerTest {
     private static final long FOO_ID_TEST1 = 1L;
     private static final String ATT_TEXT_1 = "AttText1";
     private static final String FOO_TEXT_ATTR_TEST1 = ATT_TEXT_1;
     private static final LocalDate DATE_TEST1 = LocalDate.of(2013, 1, 26);
-    private static final String CORRECT_REST_USER_USERNAME = "user1";
-    private static final String CORRECT_REST_USER_PASSWORD = "password1";
     private static final String NOT_EXISTING_USER_USERNAME = "inCorrectUser";
     private static final String NOT_EXISTING_USER_PASSWORD = "password2";
-
-    @Mock
-    private UserAccountRepository userAccountRepository;
-
-    @Autowired
-    private SpringSecurityAuthenticationConfig springSecurityAuthenticationConfig;
 
     private MockMvc mockMvc;
 
@@ -71,17 +47,15 @@ public class ITFooControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(this.springSecurityAuthenticationConfig, "userAccountRepository", userAccountRepository);
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(this.webApplicationContext)
                 .apply(springSecurity())
                 .build();
-        when(userAccountRepository.findByUsername(CORRECT_REST_USER_USERNAME)).thenReturn(createUserAccount());
     }
 
     @Test
     public void getAll_CorrectUserAndFoosFound_ShouldReturnFoundFoos() throws Exception {
-        mockMvc.perform(get("/api/foos/").with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+        mockMvc.perform(get("/api/foos/").with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -112,7 +86,7 @@ public class ITFooControllerTest {
     @Test
     public void getFoo_CorrectUserAndFooFound_ShouldReturnCorrectFoo() throws Exception {
         mockMvc.perform(get("/api/foos/{id}", FOO_ID_TEST1)
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -141,7 +115,7 @@ public class ITFooControllerTest {
         mockMvc.perform(post("/api/foos/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate))
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", containsString("/api/foos/" + FOO_ID_TEST1)))
         ;
@@ -154,7 +128,7 @@ public class ITFooControllerTest {
         mockMvc.perform(post("/api/foos/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate))
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -183,7 +157,7 @@ public class ITFooControllerTest {
         mockMvc.perform(put("/api/foos/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields))
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isNoContent())
         ;
     }
@@ -195,7 +169,7 @@ public class ITFooControllerTest {
         mockMvc.perform(put("/api/foos/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields))
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
@@ -220,7 +194,7 @@ public class ITFooControllerTest {
     @Test
     public void deleteFoo_CorrectUserAndFooExist_ShouldReturnNoContentStatus() throws Exception {
         mockMvc.perform(delete("/api/foos/{id}", FOO_ID_TEST1)
-                .with(httpBasic(CORRECT_REST_USER_USERNAME, CORRECT_REST_USER_PASSWORD)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
                 .andExpect(status().isNoContent())
         ;
     }
@@ -233,11 +207,4 @@ public class ITFooControllerTest {
         ;
     }
 
-    private UserAccount createUserAccount() {
-        return new UserAccount()
-                .setId(1L)
-                .setUsername(CORRECT_REST_USER_USERNAME)
-                .setPassword(CORRECT_REST_USER_PASSWORD)
-                .setUserType(UserAccountType.REST_USER);
-    }
 }
