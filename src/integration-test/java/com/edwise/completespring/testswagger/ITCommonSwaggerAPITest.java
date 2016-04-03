@@ -15,9 +15,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Application.class})
@@ -38,7 +36,7 @@ public class ITCommonSwaggerAPITest {
     public void getApiDocsSwagger_shouldReturnGeneralInfoOfAPI() throws Exception {
         mockMvc.perform(get("/v2/api-docs").param("group", SwaggerConfig.BOOKS_API_GROUP))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.info").exists())
                 .andExpect(jsonPath("$.info.title", is("Books API")))
                 .andExpect(jsonPath("$.info.description", is("Your book database!")))
@@ -54,7 +52,7 @@ public class ITCommonSwaggerAPITest {
     public void getApiBooksDocsSwagger_shouldReturnBooksInfoOfAPI() throws Exception {
         mockMvc.perform(get("/v2/api-docs").param("group", SwaggerConfig.BOOKS_API_GROUP))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.paths").exists())
                 .andExpect(jsonPath("$.paths./api/books/").exists())
         ;
@@ -64,7 +62,7 @@ public class ITCommonSwaggerAPITest {
     public void getApiFoosDocsSwagger_shouldReturnFoosInfoOfAPI() throws Exception {
         mockMvc.perform(get("/v2/api-docs").param("group", SwaggerConfig.BOOKS_API_GROUP))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.paths").exists())
                 .andExpect(jsonPath("$.paths./api/foos/").exists())
         ;
