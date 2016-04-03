@@ -41,7 +41,7 @@ public class ITCommonSwaggerAPITest {
                 .andExpect(jsonPath("$.info.title", is("Books API")))
                 .andExpect(jsonPath("$.info.description", is("Your book database!")))
                 .andExpect(jsonPath("$.info.termsOfService", is("http://en.wikipedia.org/wiki/Terms_of_service")))
-                .andExpect(jsonPath("$.info.contact.name", is("edwise.null@gmail.com")))
+                .andExpect(jsonPath("$.info.contact.email", is("edwise.null@gmail.com")))
                 .andExpect(jsonPath("$.info.license.name", is("Apache License Version 2.0")))
                 .andExpect(jsonPath("$.info.license.url", is("http://www.apache.org/licenses/LICENSE-2.0.html")))
 

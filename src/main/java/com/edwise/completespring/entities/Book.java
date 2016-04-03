@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @ToString(doNotUseGetters = true)
 public class Book {
 
-    @ApiModelProperty(value = "The id of the book", required = false)
+    @ApiModelProperty(value = "The id of the book")
     @Id
     private Long id;
 

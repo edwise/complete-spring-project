@@ -19,7 +19,7 @@ public class Author {
     @NotEmpty
     private String name;
 
-    @ApiModelProperty(value = "The surname of the author", required = false)
+    @ApiModelProperty(value = "The surname of the author")
     @NotEmpty
     private String surname;
 
