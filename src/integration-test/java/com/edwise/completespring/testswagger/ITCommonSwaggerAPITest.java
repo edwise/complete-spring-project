@@ -17,8 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = "db.resetAndLoadOnStartup=false")
+@SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ITCommonSwaggerAPITest {
 
     private MockMvc mockMvc;
@@ -35,7 +34,7 @@ public class ITCommonSwaggerAPITest {
     public void getApiDocsSwagger_shouldReturnGeneralInfoOfAPI() throws Exception {
         mockMvc.perform(get("/v2/api-docs").param("group", SwaggerConfig.BOOKS_API_GROUP))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
+                .andExpect(content().contentTypeCompatibleWith("application/json"))
                 .andExpect(jsonPath("$.info").exists())
                 .andExpect(jsonPath("$.info.title", is("Books API")))
                 .andExpect(jsonPath("$.info.description", is("Your book database!")))
@@ -51,7 +50,7 @@ public class ITCommonSwaggerAPITest {
     public void getApiBooksDocsSwagger_shouldReturnBooksInfoOfAPI() throws Exception {
         mockMvc.perform(get("/v2/api-docs").param("group", SwaggerConfig.BOOKS_API_GROUP))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
+                .andExpect(content().contentTypeCompatibleWith("application/json"))
                 .andExpect(jsonPath("$.paths").exists())
                 .andExpect(jsonPath("$.paths./api/books/").exists())
         ;
@@ -61,7 +60,7 @@ public class ITCommonSwaggerAPITest {
     public void getApiFoosDocsSwagger_shouldReturnFoosInfoOfAPI() throws Exception {
         mockMvc.perform(get("/v2/api-docs").param("group", SwaggerConfig.BOOKS_API_GROUP))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
+                .andExpect(content().contentTypeCompatibleWith("application/json"))
                 .andExpect(jsonPath("$.paths").exists())
                 .andExpect(jsonPath("$.paths./api/foos/").exists())
         ;

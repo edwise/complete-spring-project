@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -34,7 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * TODO this tests are executed with the same data that is charged only ONCE... maybe is needed to load data with each test.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = {Application.class},
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ITBookControllerTest {
     private static final Long BOOK_ID_NOT_EXISTS = 111L;
     private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";
@@ -66,9 +66,11 @@ public class ITBookControllerTest {
 
     @Test
     public void getAll_CorrectUserAndBooksFound_ShouldReturnFoundBooks() throws Exception {
-        mockMvc.perform(get("/api/books/").with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
+        mockMvc.perform(get("/api/books/")
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(greaterThan(1))))
                 .andExpect(jsonPath("$[0].book").exists())
                 .andExpect(jsonPath("$[0].book.id", is(notNullValue())))
@@ -94,9 +96,10 @@ public class ITBookControllerTest {
     @Test
     public void getBook_CorrectUserAndBookFound_ShouldReturnCorrectBook() throws Exception {
         mockMvc.perform(get("/api/books/{id}", DataLoader.BOOK_ID_1)
-                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$.book").exists())
                 .andExpect(jsonPath("$.book.id", is(DataLoader.BOOK_ID_1.intValue())))
@@ -114,9 +117,10 @@ public class ITBookControllerTest {
     @Test
     public void getBook_CorrectUserAndBookNotFound_ShouldReturnNotFoundStatusAndError() throws Exception {
         mockMvc.perform(get("/api/books/{id}", BOOK_ID_NOT_EXISTS)
-                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].field", is("id")))
@@ -161,9 +165,10 @@ public class ITBookControllerTest {
         mockMvc.perform(post("/api/books/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToCreate))
-                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$.errors", hasSize(3)))
                 .andExpect(jsonPath("$.errors[*].field", containsInAnyOrder("title", "isbn", "releaseDate")))
@@ -220,9 +225,10 @@ public class ITBookControllerTest {
         mockMvc.perform(put("/api/books/{id}", BOOK_ID_NOT_EXISTS)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate))
-                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].field", is("id")))
                 .andExpect(jsonPath("$.errors[0].message", is(BOOK_NOT_FOUND_EXCEPTION_MSG)))
@@ -239,9 +245,10 @@ public class ITBookControllerTest {
         mockMvc.perform(put("/api/books/{id}", DataLoader.BOOK_ID_2)
                 .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate)))
+                .content(IntegrationTestUtil.convertObjectToJsonBytes(bookToUpdate))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$.errors", hasSize(3)))
                 .andExpect(jsonPath("$.errors[*].field", containsInAnyOrder("title", "isbn", "releaseDate")))
