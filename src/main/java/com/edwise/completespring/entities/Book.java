@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -54,7 +54,7 @@ public class Book {
         this.title = other.title;
         if (other.authors != null) {
             this.authors = new ArrayList<>();
-            this.authors.addAll(other.authors.stream().map(author -> new Author().copyFrom(author)).collect(Collectors.toList()));
+            this.authors.addAll(other.authors.stream().map(new Author()::copyFrom).collect(Collectors.toList()));
         }
         this.isbn = other.isbn;
         this.releaseDate = other.releaseDate;

@@ -12,12 +12,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
@@ -70,26 +71,26 @@ public class BookServiceTest {
 
     @Test
     public void testDelete() {
-        doNothing().when(bookRepository).delete(BOOK_ID_TEST1);
+        doNothing().when(bookRepository).deleteById(BOOK_ID_TEST1);
 
         service.delete(BOOK_ID_TEST1);
 
-        verify(bookRepository, times(ONE_TIME)).delete(BOOK_ID_TEST1);
+        verify(bookRepository, times(ONE_TIME)).deleteById(BOOK_ID_TEST1);
     }
 
     @Test
     public void testFindOne() {
-        when(bookRepository.findOne(BOOK_ID_TEST1)).thenReturn(new Book().setId(BOOK_ID_TEST1));
+        when(bookRepository.findById(BOOK_ID_TEST1)).thenReturn(Optional.of(new Book().setId(BOOK_ID_TEST1)));
 
         Book result = service.findOne(BOOK_ID_TEST1);
 
-        verify(bookRepository, timeout(ONE_TIME)).findOne(BOOK_ID_TEST1);
+        verify(bookRepository, timeout(ONE_TIME)).findById(BOOK_ID_TEST1);
         assertEquals(Long.valueOf(BOOK_ID_TEST1), result.getId());
     }
 
     @Test(expected = NotFoundException.class)
     public void testNotFound() {
-        when(bookRepository.findOne(BOOK_ID_TEST1)).thenReturn(null);
+        when(bookRepository.findById(BOOK_ID_TEST1)).thenReturn(Optional.empty());
 
         service.findOne(BOOK_ID_TEST1);
     }

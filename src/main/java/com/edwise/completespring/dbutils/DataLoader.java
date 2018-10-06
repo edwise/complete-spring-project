@@ -7,6 +7,7 @@ import com.edwise.completespring.repositories.UserAccountRepository;
 import com.edwise.completespring.services.impl.BookServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -22,9 +23,9 @@ public class DataLoader {
     public static final Long BOOK_ID_1 = 1L;
     public static final Long BOOK_ID_2 = 2L;
     public static final Long BOOK_ID_3 = 3L;
-    public static final Long BOOK_ID_4 = 4L;
-    public static final Long USER_ID_1 = 1L;
-    public static final Long USER_ID_2 = 2L;
+    private static final Long BOOK_ID_4 = 4L;
+    private static final Long USER_ID_1 = 1L;
+    private static final Long USER_ID_2 = 2L;
     public static final String USER = "user1";
     public static final String PASSWORD_USER = "password1";
     public static final String ADMIN = "admin";
@@ -38,6 +39,9 @@ public class DataLoader {
 
     @Autowired
     private SequenceIdRepository sequenceRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public void fillDBData() {
         log.info("Filling DB data...");
@@ -56,12 +60,12 @@ public class DataLoader {
                 new UserAccount()
                         .setId(USER_ID_1)
                         .setUsername(USER)
-                        .setPassword(PASSWORD_USER)
+                        .setPassword(passwordEncoder.encode(PASSWORD_USER))
                         .setUserType(UserAccountType.REST_USER),
                 new UserAccount()
                         .setId(USER_ID_2)
                         .setUsername(ADMIN)
-                        .setPassword(PASSWORD_ADMIN)
+                        .setPassword(passwordEncoder.encode(PASSWORD_ADMIN))
                         .setUserType(UserAccountType.ADMIN_USER))
                 .forEach(userAccountRepository::save);
     }

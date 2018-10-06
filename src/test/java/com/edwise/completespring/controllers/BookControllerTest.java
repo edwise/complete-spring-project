@@ -2,11 +2,7 @@ package com.edwise.completespring.controllers;
 
 import com.edwise.completespring.assemblers.BookResource;
 import com.edwise.completespring.assemblers.BookResourceAssembler;
-import com.edwise.completespring.entities.Author;
-import com.edwise.completespring.entities.AuthorTest;
-import com.edwise.completespring.entities.Book;
-import com.edwise.completespring.entities.Publisher;
-import com.edwise.completespring.entities.PublisherTest;
+import com.edwise.completespring.entities.*;
 import com.edwise.completespring.exceptions.InvalidRequestException;
 import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.services.BookService;
@@ -16,7 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,15 +29,8 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BookControllerTest {
@@ -87,9 +76,7 @@ public class BookControllerTest {
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .build();
-        Book bookResp = new Book().copyFrom(bookReq).setId(BOOK_ID_TEST1);
         when(errors.hasErrors()).thenReturn(true);
-        when(bookService.save(bookReq)).thenReturn(bookResp);
 
         controller.updateBook(BOOK_ID_TEST1, bookReq, errors);
     }
@@ -209,7 +196,7 @@ public class BookControllerTest {
     public void testFindAll() {
         List<Book> books = createTestBookList();
         when(bookService.findAll()).thenReturn(books);
-        when(bookResourceAssembler.toResources(anyListOf(Book.class))).thenReturn(new ArrayList<>());
+        when(bookResourceAssembler.toResources(anyList())).thenReturn(new ArrayList<>());
 
         ResponseEntity<List<BookResource>> result = controller.getAll();
 

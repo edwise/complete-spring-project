@@ -1,7 +1,6 @@
 package com.edwise.completespring.controllers;
 
 import com.edwise.completespring.Application;
-import com.edwise.completespring.config.FakeMongoDBContext;
 import com.edwise.completespring.dbutils.DataLoader;
 import com.edwise.completespring.entities.Foo;
 import com.edwise.completespring.entities.FooTest;
@@ -11,8 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,8 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {Application.class, FakeMongoDBContext.class})
-@WebIntegrationTest({"server.port=0"})
+@SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ITFooControllerTest {
     private static final long FOO_ID_TEST1 = 1L;
     private static final String ATT_TEXT_1 = "AttText1";
@@ -55,9 +52,11 @@ public class ITFooControllerTest {
 
     @Test
     public void getAll_CorrectUserAndFoosFound_ShouldReturnFoundFoos() throws Exception {
-        mockMvc.perform(get("/api/foos/").with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
+        mockMvc.perform(get("/api/foos/")
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].foo").exists())
                 .andExpect(jsonPath("$[0].foo.id", is(1)))
@@ -86,9 +85,10 @@ public class ITFooControllerTest {
     @Test
     public void getFoo_CorrectUserAndFooFound_ShouldReturnCorrectFoo() throws Exception {
         mockMvc.perform(get("/api/foos/{id}", FOO_ID_TEST1)
-                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$.foo").exists())
                 .andExpect(jsonPath("$.foo.id", is(1)))
@@ -128,9 +128,10 @@ public class ITFooControllerTest {
         mockMvc.perform(post("/api/foos/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooToCreate))
-                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$.errors", hasSize(2)))
                 .andExpect(jsonPath("$.errors[*].field", containsInAnyOrder("sampleTextAttribute", "sampleLocalDateAttribute")))
@@ -169,9 +170,10 @@ public class ITFooControllerTest {
         mockMvc.perform(put("/api/foos/{id}", FOO_ID_TEST1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(IntegrationTestUtil.convertObjectToJsonBytes(fooWithChangedFields))
-                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$.errors", hasSize(2)))
                 .andExpect(jsonPath("$.errors[*].field", containsInAnyOrder("sampleTextAttribute", "sampleLocalDateAttribute")))
