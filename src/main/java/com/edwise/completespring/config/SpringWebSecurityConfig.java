@@ -3,6 +3,7 @@ package com.edwise.completespring.config;
 import com.edwise.completespring.entities.UserAccountType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -31,7 +32,7 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/api/**").hasAnyRole(UserAccountType.REST_USER.toString(), UserAccountType.ADMIN_USER.toString())
-                .antMatchers("/admin/**").hasRole(UserAccountType.ADMIN_USER.toString())
+                .antMatchers("/actuator/**").hasRole(UserAccountType.ADMIN_USER.toString())
                 .and()
                 .httpBasic()
                 .and()

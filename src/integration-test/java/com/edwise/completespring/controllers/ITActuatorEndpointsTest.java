@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -43,22 +42,28 @@ public class ITActuatorEndpointsTest {
 
     @Test
     public void getInfoActuatorEnpoint_CorrectUser_ShouldReturnOkCode() throws Exception {
-        mockMvc.perform(get("/admin/info/").with(httpBasic(DataLoader.ADMIN, DataLoader.PASSWORD_ADMIN)))
+        mockMvc.perform(get("/actuator/info/")
+                .with(httpBasic(DataLoader.ADMIN, DataLoader.PASSWORD_ADMIN))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
         ;
     }
 
     @Test
     public void getInfoActuatorEnpoint_InCorrectUser_ShouldReturnForbiddenCode() throws Exception {
-        mockMvc.perform(get("/admin/info/").with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER)))
+        mockMvc.perform(get("/actuator/info/")
+                .with(httpBasic(DataLoader.USER, DataLoader.PASSWORD_USER))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden())
         ;
     }
 
     @Test
     public void getInfoActuatorEnpoint_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
-        mockMvc.perform(get("/admin/info/").with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
+        mockMvc.perform(get("/actuator/info/")
+                .with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
         ;
     }
