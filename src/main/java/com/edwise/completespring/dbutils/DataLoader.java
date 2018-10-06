@@ -7,6 +7,7 @@ import com.edwise.completespring.repositories.UserAccountRepository;
 import com.edwise.completespring.services.impl.BookServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -39,6 +40,9 @@ public class DataLoader {
     @Autowired
     private SequenceIdRepository sequenceRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public void fillDBData() {
         log.info("Filling DB data...");
         fillDBUsersData();
@@ -56,12 +60,12 @@ public class DataLoader {
                 new UserAccount()
                         .setId(USER_ID_1)
                         .setUsername(USER)
-                        .setPassword(PASSWORD_USER)
+                        .setPassword(passwordEncoder.encode(PASSWORD_USER))
                         .setUserType(UserAccountType.REST_USER),
                 new UserAccount()
                         .setId(USER_ID_2)
                         .setUsername(ADMIN)
-                        .setPassword(PASSWORD_ADMIN)
+                        .setPassword(passwordEncoder.encode(PASSWORD_ADMIN))
                         .setUserType(UserAccountType.ADMIN_USER))
                 .forEach(userAccountRepository::save);
     }

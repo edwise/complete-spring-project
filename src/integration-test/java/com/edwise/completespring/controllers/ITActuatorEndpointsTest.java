@@ -1,13 +1,13 @@
 package com.edwise.completespring.controllers;
 
 import com.edwise.completespring.Application;
-import com.edwise.completespring.config.FakeMongoDBContext;
 import com.edwise.completespring.dbutils.DataLoader;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {Application.class, FakeMongoDBContext.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ITActuatorEndpointsTest {
     private static final String NOT_EXISTING_USER_USERNAME = "notExists";
     private static final String NOT_EXISTING_USER_PASSWORD = "password3456";

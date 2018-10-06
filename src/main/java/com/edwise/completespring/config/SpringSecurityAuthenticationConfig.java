@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,10 +29,10 @@ public class SpringSecurityAuthenticationConfig extends GlobalAuthenticationConf
         return username -> {
             UserAccount userAccount = userAccountRepository.findByUsername(username);
             if (userAccount != null) {
-                return new User(userAccount.getUsername(),
-                        userAccount.getPassword(),
-                        true, true, true, true,
-                        AuthorityUtils.createAuthorityList(userAccount.getUserType().role()));
+                return User.withUsername(userAccount.getUsername())
+                        .password(userAccount.getPassword())
+                        .roles(userAccount.getUserType().toString())
+                        .build();
             } else {
                 log.warn("Not existing user: {}", username);
                 throw new UsernameNotFoundException("Could not find the user '" + username + "'");

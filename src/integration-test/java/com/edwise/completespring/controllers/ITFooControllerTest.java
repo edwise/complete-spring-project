@@ -1,7 +1,6 @@
 package com.edwise.completespring.controllers;
 
 import com.edwise.completespring.Application;
-import com.edwise.completespring.config.FakeMongoDBContext;
 import com.edwise.completespring.dbutils.DataLoader;
 import com.edwise.completespring.entities.Foo;
 import com.edwise.completespring.entities.FooTest;
@@ -28,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {Application.class, FakeMongoDBContext.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ITFooControllerTest {
     private static final long FOO_ID_TEST1 = 1L;
     private static final String ATT_TEXT_1 = "AttText1";
