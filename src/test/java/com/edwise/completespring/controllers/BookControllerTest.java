@@ -30,8 +30,6 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -198,7 +196,7 @@ public class BookControllerTest {
     public void testFindAll() {
         List<Book> books = createTestBookList();
         when(bookService.findAll()).thenReturn(books);
-        when(bookResourceAssembler.toResources(anyListOf(Book.class))).thenReturn(new ArrayList<>());
+        when(bookResourceAssembler.toResources(anyList())).thenReturn(new ArrayList<>());
 
         ResponseEntity<List<BookResource>> result = controller.getAll();
 

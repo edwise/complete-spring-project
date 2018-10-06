@@ -33,7 +33,6 @@ public class ErrorInfo implements Serializable {
     public static ErrorInfo generateErrorInfoFromBindingResult(BindingResult errors) {
         ErrorInfo errorInfo = new ErrorInfo();
         errors.getFieldErrors()
-                .stream()
                 .forEach(fieldError -> errorInfo.addError(fieldError.getField(), fieldError.getDefaultMessage()));
 
         return errorInfo;

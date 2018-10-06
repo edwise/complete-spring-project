@@ -53,7 +53,7 @@ public class SequenceIdRepositoryImplTest {
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void testSave() {
         repository.save(new SequenceId().setId(BookServiceImpl.BOOK_COLLECTION).setSeq(TEST_SEQUENCE_ID));
 
         verify(mongoOperation, times(ONE_TIME)).save(any(SequenceId.class));
