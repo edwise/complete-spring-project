@@ -1,9 +1,9 @@
-Proyecto montado con Spring Boot y Java 8, con los siguientes frameworks / libraries / funcionalidades:
+Proyecto montado con Spring Boot y Java 11, con los siguientes frameworks / libraries / funcionalidades:
 
- - Spring Boot: versión 1.3. posibilidad de arrancar directamente con el plugin de maven o generar un war para despliegue en 
+ - Spring Boot: versión 2. posibilidad de arrancar directamente con el plugin de maven o generar un war para despliegue en 
  tomcat o similar. Con 'actuator' activado.
 
- - Servicio completo RESTful con Spring 4 (Books)
+ - Servicio completo RESTful con Spring 5 (Books)
 
  - Uso de HATEOAS en el servicio
 
@@ -27,7 +27,7 @@ Proyecto montado con Spring Boot y Java 8, con los siguientes frameworks / libra
 
  - Spring Security activo, con autenticación básica
 
- - Añadidas las developer tools de Spring Boot 1.3
+ - Añadidas las developer tools de Spring Boot 2
  
  - Uso de Fongo para simular la base de datos en los tests de integración
 
@@ -65,7 +65,7 @@ Usuarios de acceso:
 
  - Usuario para acceso a servicios rest (/api/*)    -> user1 : password1
 
- - Usuario para acceso a administración (/admin/*)  -> admin : password1234
+ - Usuario para acceso a administración (/actuator/*)  -> admin : password1234
 
 
 Urls de acceso:
@@ -82,15 +82,9 @@ Urls de acceso:
 
  - Spring Boot actuator endpoints:
 
-     http://localhost:8080/admin/health
+     http://localhost:8080/actuator/health
 
-     http://localhost:8080/admin/env
-
-     http://localhost:8080/admin/beans
-
-     http://localhost:8080/admin/mappings
-
-     http://localhost:8080/admin/info
+     http://localhost:8080/actuator/info
 
      ...
 
