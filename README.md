@@ -1,4 +1,4 @@
-[![Build status](https://circleci.com/gh/edwise/complete-spring-project.svg?style=shield&circle-token=66bc8915d545f8ee63092a46484bfd7fbad60bb4)](https://circleci.com/gh/edwise/complete-spring-project)
+[![Build status](https://circleci.com/gh/edwise/complete-spring-project.svg?style=shield)](https://circleci.com/gh/edwise/complete-spring-project)
 
 Proyecto montado con Spring Boot y Java 11, con los siguientes frameworks / libraries / funcionalidades:
 
