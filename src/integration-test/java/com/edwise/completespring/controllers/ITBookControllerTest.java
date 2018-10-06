@@ -13,8 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,8 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * TODO this tests are executed with the same data that is charged only ONCE... maybe is needed to load data with each test.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {Application.class, FakeMongoDBContext.class})
-@WebIntegrationTest({"server.port=0"})
+@SpringBootTest(classes = {Application.class, FakeMongoDBContext.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ITBookControllerTest {
     private static final Long BOOK_ID_NOT_EXISTS = 111L;
     private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";

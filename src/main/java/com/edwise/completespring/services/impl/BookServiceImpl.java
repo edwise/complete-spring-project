@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -34,16 +35,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book findOne(Long id) {
-        Book result = bookRepository.findOne(id);
-        if (result == null) {
+        Optional<Book> result = bookRepository.findById(id);
+        if (!result.isPresent()) {
             throw new NotFoundException(BOOK_NOT_FOUND_MSG);
         }
-        return result;
+        return result.get();
     }
 
     @Override
     public void delete(Long id) {
-        bookRepository.delete(id);
+        bookRepository.deleteById(id);
     }
 
     @Override

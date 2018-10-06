@@ -11,8 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,8 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {Application.class, FakeMongoDBContext.class})
-@WebIntegrationTest({"server.port=0"})
+@SpringBootTest(classes = {Application.class, FakeMongoDBContext.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ITFooControllerTest {
     private static final long FOO_ID_TEST1 = 1L;
     private static final String ATT_TEXT_1 = "AttText1";

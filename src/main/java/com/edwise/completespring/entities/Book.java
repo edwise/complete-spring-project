@@ -54,7 +54,7 @@ public class Book {
         this.title = other.title;
         if (other.authors != null) {
             this.authors = new ArrayList<>();
-            this.authors.addAll(other.authors.stream().map(author -> new Author().copyFrom(author)).collect(Collectors.toList()));
+            this.authors.addAll(other.authors.stream().map(new Author()::copyFrom).collect(Collectors.toList()));
         }
         this.isbn = other.isbn;
         this.releaseDate = other.releaseDate;

@@ -1,13 +1,10 @@
 package com.edwise.completespring.config;
 
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
-
-import java.net.UnknownHostException;
 
 @Configuration
 public class SpringMongoConfig extends AbstractMongoConfiguration {
@@ -25,8 +22,7 @@ public class SpringMongoConfig extends AbstractMongoConfiguration {
 
     @Override
     @Bean
-    public Mongo mongo() throws UnknownHostException {
+    public MongoClient mongoClient() {
         return new MongoClient(databaseHost);
     }
-
 }
