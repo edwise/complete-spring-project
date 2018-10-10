@@ -13,8 +13,6 @@ Proyecto montado con Spring Boot y Java 11, con los siguientes frameworks / libr
 
  - Capa de base de datos con Spring DATA mongoDB
 
- - Con converters de la JSR310 (Java 8 API Date) para la configuración de mongoDB
-
  - Jacoco para la cobertura de tests (plugin para maven)
 
  - Lombok para evitar código 'boilerplate'
@@ -31,7 +29,7 @@ Proyecto montado con Spring Boot y Java 11, con los siguientes frameworks / libr
 
  - Añadidas las developer tools de Spring Boot 2
  
- - Uso de Fongo para simular la base de datos en los tests de integración
+ - Uso de flapdoodle para simular la base de datos en los tests de integración
 
 
 Requisitos:
