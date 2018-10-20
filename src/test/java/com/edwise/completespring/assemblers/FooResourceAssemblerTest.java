@@ -9,9 +9,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,8 +25,8 @@ public class FooResourceAssemblerTest {
     public void testInstantiateResource() {
         FooResource fooResource = fooResourceAssembler.instantiateResource(foo);
 
-        assertThat(fooResource, is(notNullValue()));
-        assertThat(fooResource.getFoo(), is(foo));
+        assertThat(fooResource).isNotNull();
+        assertThat(fooResource.getFoo()).isEqualTo(foo);
     }
 
     @Test
@@ -38,7 +36,7 @@ public class FooResourceAssemblerTest {
 
         FooResource fooResource = fooResourceAssembler.toResource(foo);
 
-        assertThat(fooResource, is(notNullValue()));
-        assertThat(fooResource.getFoo(), is(foo));
+        assertThat(fooResource).isNotNull();
+        assertThat(fooResource.getFoo()).isEqualTo(foo);
     }
 }

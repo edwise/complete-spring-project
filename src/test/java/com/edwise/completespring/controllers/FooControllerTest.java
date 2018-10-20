@@ -23,9 +23,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -48,12 +47,14 @@ public class FooControllerTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
     }
 
-    @Test(expected = InvalidRequestException.class)
+    @Test
     public void testUpdateInvalidRequest() {
         Foo fooReq = FooTest.createFoo(FOO_ID_TEST1, null, null);
         when(errors.hasErrors()).thenReturn(true);
 
-        controller.updateFoo(FOO_ID_TEST1, fooReq, errors);
+        Throwable thrown = catchThrowable(() -> controller.updateFoo(FOO_ID_TEST1, fooReq, errors));
+
+        assertThat(thrown).isInstanceOf(InvalidRequestException.class);
     }
 
 
@@ -66,19 +67,21 @@ public class FooControllerTest {
 
         ResponseEntity<FooResource> result = controller.createFoo(fooReq, errors);
 
-        assertNull(result.getBody());
-        assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertThat(result.getHeaders().getLocation().toString(), containsString("/api/foos/" + FOO_ID_TEST1));
+        assertThat(result.getBody()).isNull();
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(result.getHeaders().getLocation().toString()).contains("/api/foos/" + FOO_ID_TEST1);
         verify(fooResourceAssembler, times(1)).toResource(fooCreated);
         verify(errors, times(1)).hasErrors();
     }
 
-    @Test(expected = InvalidRequestException.class)
+    @Test
     public void testCreateInvalidRequest() {
         Foo FooReq = FooTest.createFoo(null, null, null);
         when(errors.hasErrors()).thenReturn(true);
 
-        controller.createFoo(FooReq, errors);
+        Throwable thrown = catchThrowable(() -> controller.createFoo(FooReq, errors));
+
+        assertThat(thrown).isInstanceOf(InvalidRequestException.class);
     }
 
     @Test
@@ -95,7 +98,7 @@ public class FooControllerTest {
 
         ResponseEntity<FooResource> result = controller.getFoo(FOO_ID_TEST1);
 
-        assertNotNull(result.getBody());
+        assertThat(result.getBody()).isNotNull();
     }
 
 
@@ -110,7 +113,7 @@ public class FooControllerTest {
 
         ResponseEntity<List<FooResource>> result = controller.getAll();
 
-        assertNotNull(result.getBody());
+        assertThat(result.getBody()).isNotNull();
     }
 
     private FooResource createFooResourceWithLink(Foo foo) {

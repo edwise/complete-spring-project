@@ -8,18 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 public class ErrorInfoTest {
     private static final int TWO_ITEMS = 2;
@@ -41,8 +31,8 @@ public class ErrorInfoTest {
         ErrorInfo errorInfo = createErrorInfo(null).addError(FIELD_TEST1, MESSAGE_TEST1).addError(FIELD_TEST2,
                 MESSAGE_TEST2);
 
-        assertNotNull(errorInfo.getErrors());
-        assertEquals(TWO_ITEMS, errorInfo.getErrors().size());
+        assertThat(errorInfo.getErrors()).isNotNull();
+        assertThat(errorInfo.getErrors()).hasSize(TWO_ITEMS);
     }
 
     @Test
@@ -52,13 +42,12 @@ public class ErrorInfoTest {
 
         ErrorInfo errorInfo = ErrorInfo.generateErrorInfoFromBindingResult(bindingResultMock);
 
-        assertNotNull(errorInfo);
-        assertThat(errorInfo.getErrors(), hasSize(THREE_ITEMS));
-        assertThat(errorInfo.getErrors(),
-                containsInAnyOrder(
-                        new ErrorItem().setField(TITLE_FIELD).setMessage(IT_CANT_BE_NULL_MSG),
-                        new ErrorItem().setField(ISBN_FIELD).setMessage(IT_CANT_BE_EMPTY_MSG),
-                        new ErrorItem().setField(RELEASE_DATE_FIELD).setMessage(IT_CANT_BE_NULL_MSG)));
+        assertThat(errorInfo).isNotNull();
+        assertThat(errorInfo.getErrors()).hasSize(THREE_ITEMS);
+        assertThat(errorInfo.getErrors()).containsExactlyInAnyOrder(
+                new ErrorItem().setField(TITLE_FIELD).setMessage(IT_CANT_BE_NULL_MSG),
+                new ErrorItem().setField(ISBN_FIELD).setMessage(IT_CANT_BE_EMPTY_MSG),
+                new ErrorItem().setField(RELEASE_DATE_FIELD).setMessage(IT_CANT_BE_NULL_MSG));
         verify(bindingResultMock).getFieldErrors();
     }
 
@@ -69,8 +58,8 @@ public class ErrorInfoTest {
 
         ErrorInfo errorInfo = ErrorInfo.generateErrorInfoFromBindingResult(bindingResultMock);
 
-        assertNotNull(errorInfo);
-        assertThat(errorInfo.getErrors(), hasSize(0));
+        assertThat(errorInfo).isNotNull();
+        assertThat(errorInfo.getErrors()).hasSize(0);
         verify(bindingResultMock).getFieldErrors();
     }
 
@@ -86,7 +75,7 @@ public class ErrorInfoTest {
         ErrorInfo errorInfo1 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
         ErrorInfo errorInfo2 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
 
-        assertTrue(errorInfo1.equals(errorInfo2) && errorInfo2.equals(errorInfo1));
+        assertThat(errorInfo1.equals(errorInfo2) && errorInfo2.equals(errorInfo1)).isTrue();
     }
 
     @Test
@@ -94,14 +83,14 @@ public class ErrorInfoTest {
         ErrorInfo errorInfo1 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
         ErrorInfo errorInfo2 = createErrorInfo(URL_TEST1).addError(FIELD_TEST2, MESSAGE_TEST2);
 
-        assertFalse(errorInfo1.equals(errorInfo2) || errorInfo2.equals(errorInfo1));
+        assertThat(errorInfo1.equals(errorInfo2) || errorInfo2.equals(errorInfo1)).isFalse();
     }
 
     @Test
     public void testNotEqualsWithDifferentsObjects() {
         ErrorInfo errorInfo = createErrorInfo(URL_TEST1);
 
-        assertFalse(errorInfo.equals(new Object()));
+        assertThat(errorInfo).isNotEqualTo(new Object());
     }
 
     @Test
@@ -109,7 +98,7 @@ public class ErrorInfoTest {
         ErrorInfo errorInfo1 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
         ErrorInfo errorInfo2 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
 
-        assertEquals(errorInfo1.hashCode(), errorInfo2.hashCode());
+        assertThat(errorInfo1.hashCode()).isEqualTo(errorInfo2.hashCode());
     }
 
     @Test
@@ -117,20 +106,19 @@ public class ErrorInfoTest {
         ErrorInfo errorInfo1 = createErrorInfo(URL_TEST1).addError(FIELD_TEST1, MESSAGE_TEST1);
         ErrorInfo errorInfo2 = createErrorInfo(URL_TEST1).addError(FIELD_TEST2, MESSAGE_TEST2);
 
-        assertNotEquals(errorInfo1.hashCode(), errorInfo2.hashCode());
+        assertThat(errorInfo1.hashCode()).isNotEqualTo(errorInfo2.hashCode());
     }
 
     @Test
     public void testToString() {
         ErrorInfo errorInfo = createErrorInfo(null);
-        String errorInfoString = errorInfo.toString();
 
-        assertThatErrorInfoStringContainsAllFields(errorInfoString);
+        assertThatErrorInfoStringContainsAllFields(errorInfo.toString());
     }
 
     private void assertThatErrorInfoStringContainsAllFields(String errorInfoString) {
-        assertThat(errorInfoString, containsString("url=null"));
-        assertThat(errorInfoString, containsString("errors=[]"));
+        assertThat(errorInfoString).contains("url=null");
+        assertThat(errorInfoString).contains("errors=[]");
     }
 
     private ErrorInfo createErrorInfo(String url) {

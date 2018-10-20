@@ -6,12 +6,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.Collections;
 
-import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BookTest {
 
@@ -41,7 +36,7 @@ public class BookTest {
 
         bookTo.copyFrom(bookFrom);
 
-        assertEquals(bookTo, bookFrom);
+        assertThat(bookTo).isEqualTo(bookFrom);
     }
 
     @Test
@@ -63,7 +58,7 @@ public class BookTest {
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
                 .build();
 
-        assertTrue(book1.equals(book2) && book2.equals(book1));
+        assertThat(book1.equals(book2) && book2.equals(book1)).isTrue();
     }
 
     @Test
@@ -85,13 +80,14 @@ public class BookTest {
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST1, false))
                 .build();
 
-        assertFalse(book1.equals(book2) || book2.equals(book1));
+        assertThat(book1.equals(book2) || book2.equals(book1)).isFalse();
     }
 
     @Test
     public void testNotEqualsWithDifferentsObjects() {
         Book book = new BookBuilder().id(BOOK_ID_TEST1).build();
-        assertFalse(book.equals(new Object()));
+
+        assertThat(book).isNotEqualTo(new Object());
     }
 
     @Test
@@ -113,7 +109,7 @@ public class BookTest {
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, true))
                 .build();
 
-        assertEquals(book1.hashCode(), book2.hashCode());
+        assertThat(book1.hashCode()).isEqualTo(book2.hashCode());
     }
 
     @Test
@@ -135,24 +131,22 @@ public class BookTest {
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST1, false))
                 .build();
 
-        assertNotEquals(book1.hashCode(), book2.hashCode());
+        assertThat(book1.hashCode()).isNotEqualTo(book2.hashCode());
     }
 
     @Test
     public void testToString() {
         Book book = new BookBuilder().build();
 
-        String bookString = book.toString();
-
-        assertThatBookStringContainsAllFields(bookString);
+        assertThatBookStringContainsAllFields(book.toString());
     }
 
     private void assertThatBookStringContainsAllFields(String bookString) {
-        assertThat(bookString, containsString("id=null"));
-        assertThat(bookString, containsString("title=null"));
-        assertThat(bookString, containsString("authors=null"));
-        assertThat(bookString, containsString("isbn=null"));
-        assertThat(bookString, containsString("releaseDate=null"));
-        assertThat(bookString, containsString("publisher=null"));
+        assertThat(bookString).contains("id=null");
+        assertThat(bookString).contains("title=null");
+        assertThat(bookString).contains("authors=null");
+        assertThat(bookString).contains("isbn=null");
+        assertThat(bookString).contains("releaseDate=null");
+        assertThat(bookString).contains("publisher=null");
     }
 }

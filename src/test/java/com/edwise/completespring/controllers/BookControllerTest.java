@@ -27,9 +27,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -69,19 +68,6 @@ public class BookControllerTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
     }
 
-    @Test(expected = InvalidRequestException.class)
-    public void testUpdateInvalidRequest() {
-        Book bookReq = new BookBuilder()
-                .title(BOOK_TITLE_TEST1)
-                .isbn(BOOK_ISBN_TEST1)
-                .releaseDate(BOOK_RELEASEDATE_TEST1)
-                .build();
-        when(errors.hasErrors()).thenReturn(true);
-
-        controller.updateBook(BOOK_ID_TEST1, bookReq, errors);
-    }
-
-
     @Test
     public void testCreate() {
         Book bookReq = new BookBuilder()
@@ -98,20 +84,22 @@ public class BookControllerTest {
 
         ResponseEntity<BookResource> result = controller.createBook(bookReq, errors);
 
-        assertNull(result.getBody());
-        assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertThat(result.getHeaders().getLocation().toString(), containsString("/api/books/" + BOOK_ID_TEST1));
+        assertThat(result.getBody()).isNull();
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(result.getHeaders().getLocation().toString()).contains("/api/books/" + BOOK_ID_TEST1);
         verify(bookResourceAssembler, times(ONE_TIME)).toResource(bookResp);
         verify(errors, times(ONE_TIME)).hasErrors();
         verify(bookService, times(ONE_TIME)).create(bookReq);
     }
 
-    @Test(expected = InvalidRequestException.class)
+    @Test
     public void testCreateInvalidRequest() {
         Book bookReq = new Book();
         when(errors.hasErrors()).thenReturn(true);
 
-        controller.createBook(bookReq, errors);
+        Throwable thrown = catchThrowable(() -> controller.createBook(bookReq, errors));
+
+        assertThat(thrown).isInstanceOf(InvalidRequestException.class);
     }
 
     @Test
@@ -141,6 +129,20 @@ public class BookControllerTest {
     }
 
     @Test
+    public void testUpdateInvalidRequest() {
+        Book bookReq = new BookBuilder()
+                .title(BOOK_TITLE_TEST1)
+                .isbn(BOOK_ISBN_TEST1)
+                .releaseDate(BOOK_RELEASEDATE_TEST1)
+                .build();
+        when(errors.hasErrors()).thenReturn(true);
+
+        Throwable thrown = catchThrowable(() -> controller.updateBook(BOOK_ID_TEST1, bookReq, errors));
+
+        assertThat(thrown).isInstanceOf(InvalidRequestException.class);
+    }
+
+    @Test
     public void testGet() {
         Book bookReq = new BookBuilder()
                 .id(BOOK_ID_TEST1)
@@ -155,21 +157,23 @@ public class BookControllerTest {
 
         ResponseEntity<BookResource> result = controller.getBook(BOOK_ID_TEST1);
 
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(bookService, times(ONE_TIME)).findOne(BOOK_ID_TEST1);
         verify(bookResourceAssembler, times(ONE_TIME)).toResource(bookReq);
-        assertNotNull(result.getBody());
-        assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testGetNotFound() {
         when(bookService.findOne(BOOK_ID_TEST2)).thenThrow(new NotFoundException("Book not exist"));
 
-        controller.getBook(BOOK_ID_TEST2);
+        Throwable thrown = catchThrowable(() -> controller.getBook(BOOK_ID_TEST2));
+
+        assertThat(thrown).isInstanceOf(NotFoundException.class);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testUpdateNotFound() {
         Book bookReq = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
@@ -180,7 +184,9 @@ public class BookControllerTest {
                 .build();
         when(bookService.findOne(BOOK_ID_TEST1)).thenThrow(new NotFoundException("Book not exist"));
 
-        controller.updateBook(BOOK_ID_TEST1, bookReq, errors);
+        Throwable thrown = catchThrowable(() -> controller.updateBook(BOOK_ID_TEST1, bookReq, errors));
+
+        assertThat(thrown).isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -200,10 +206,10 @@ public class BookControllerTest {
 
         ResponseEntity<List<BookResource>> result = controller.getAll();
 
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(bookService, times(ONE_TIME)).findAll();
         verify(bookResourceAssembler, times(ONE_TIME)).toResources(books);
-        assertNotNull(result.getBody());
-        assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
     private BookResource createBookResourceWithLink(Book book) {
