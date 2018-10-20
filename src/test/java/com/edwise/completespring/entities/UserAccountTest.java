@@ -2,12 +2,7 @@ package com.edwise.completespring.entities;
 
 import org.junit.Test;
 
-import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserAccountTest {
     private static final long ID_TEST1 = 123L;
@@ -22,7 +17,7 @@ public class UserAccountTest {
         UserAccount userAccount1 = createUserAccount(ID_TEST1, USERNAME_TEST1, PASSWORD_TEST1, USER_TYPE_TEST1);
         UserAccount userAccount2 = createUserAccount(ID_TEST1, USERNAME_TEST1, PASSWORD_TEST1, USER_TYPE_TEST1);
 
-        assertTrue(userAccount1.equals(userAccount2) && userAccount2.equals(userAccount1));
+        assertThat(userAccount1.equals(userAccount2) && userAccount2.equals(userAccount1)).isTrue();
     }
 
     @Test
@@ -30,14 +25,14 @@ public class UserAccountTest {
         UserAccount userAccount1 = createUserAccount(ID_TEST1, USERNAME_TEST1, null, USER_TYPE_TEST1);
         UserAccount userAccount2 = createUserAccount(ID_TEST1, USERNAME_TEST2, null, USER_TYPE_TEST1);
 
-        assertFalse(userAccount1.equals(userAccount2) || userAccount2.equals(userAccount1));
+        assertThat(userAccount1.equals(userAccount2) || userAccount2.equals(userAccount1)).isFalse();
     }
 
     @Test
     public void testNotEqualsWithDifferentsObjects() {
         UserAccount userAccount = createUserAccount(ID_TEST1, null, null, USER_TYPE_TEST1);
 
-        assertFalse(userAccount.equals(new Object()));
+        assertThat(userAccount).isNotEqualTo(new Object());
     }
 
     @Test
@@ -45,7 +40,7 @@ public class UserAccountTest {
         UserAccount userAccount1 = createUserAccount(ID_TEST1, USERNAME_TEST1, PASSWORD_TEST1, USER_TYPE_TEST1);
         UserAccount userAccount2 = createUserAccount(ID_TEST1, USERNAME_TEST1, PASSWORD_TEST1, USER_TYPE_TEST1);
 
-        assertEquals(userAccount1.hashCode(), userAccount2.hashCode());
+        assertThat(userAccount1.hashCode()).isEqualTo(userAccount2.hashCode());
     }
 
     @Test
@@ -53,21 +48,20 @@ public class UserAccountTest {
         UserAccount userAccount1 = createUserAccount(ID_TEST1, USERNAME_TEST1, PASSWORD_TEST1, USER_TYPE_TEST1);
         UserAccount userAccount2 = createUserAccount(ID_TEST2, USERNAME_TEST2, PASSWORD_TEST1, USER_TYPE_TEST1);
 
-        assertNotEquals(userAccount1.hashCode(), userAccount2.hashCode());
+        assertThat(userAccount1.hashCode()).isNotEqualTo(userAccount2.hashCode());
     }
 
     @Test
     public void testToString() {
         UserAccount userAccount = createUserAccount(null, null, null, USER_TYPE_TEST1);
-        String userAccountString = userAccount.toString();
 
-        assertThatUserAccountStringContainsAllFields(userAccountString);
+        assertThatUserAccountStringContainsAllFields(userAccount.toString());
     }
 
     private void assertThatUserAccountStringContainsAllFields(String userAccountString) {
-        assertThat(userAccountString, containsString("id=null"));
-        assertThat(userAccountString, containsString("username=null"));
-        assertThat(userAccountString, containsString("password=null"));
+        assertThat(userAccountString).contains("id=null");
+        assertThat(userAccountString).contains("username=null");
+        assertThat(userAccountString).contains("password=null");
     }
 
     private static UserAccount createUserAccount(Long id, String username, String password, UserAccountType userAccountType) {

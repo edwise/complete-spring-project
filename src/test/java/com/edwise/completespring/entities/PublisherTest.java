@@ -2,12 +2,7 @@ package com.edwise.completespring.entities;
 
 import org.junit.Test;
 
-import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PublisherTest {
     private static final String NAME_TEST1 = "Alfaguara";
@@ -22,7 +17,7 @@ public class PublisherTest {
 
         publisher.copyFrom(publisherFrom);
 
-        assertEquals(publisher, publisherFrom);
+        assertThat(publisher).isEqualTo(publisherFrom);
     }
 
     @Test
@@ -30,7 +25,7 @@ public class PublisherTest {
         Publisher publisher1 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
         Publisher publisher2 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
 
-        assertTrue(publisher1.equals(publisher2) && publisher2.equals(publisher1));
+        assertThat(publisher1.equals(publisher2) && publisher2.equals(publisher1)).isTrue();
     }
 
     @Test
@@ -38,14 +33,14 @@ public class PublisherTest {
         Publisher publisher1 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
         Publisher publisher2 = createPublisher(NAME_TEST1, COUNTRY_TEST2, false);
 
-        assertFalse(publisher1.equals(publisher2) || publisher2.equals(publisher1));
+        assertThat(publisher1.equals(publisher2) || publisher2.equals(publisher1)).isFalse();
     }
 
     @Test
     public void testNotEqualsWithDifferentsObjects() {
         Publisher publisher = createPublisher(NAME_TEST1, COUNTRY_TEST1, false);
 
-        assertFalse(publisher.equals(new Object()));
+        assertThat(publisher).isNotEqualTo(new Object());
     }
 
     @Test
@@ -53,7 +48,7 @@ public class PublisherTest {
         Publisher publisher1 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
         Publisher publisher2 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
 
-        assertEquals(publisher1.hashCode(), publisher2.hashCode());
+        assertThat(publisher1.hashCode()).isEqualTo(publisher2.hashCode());
     }
 
     @Test
@@ -61,22 +56,20 @@ public class PublisherTest {
         Publisher publisher1 = createPublisher(NAME_TEST1, COUNTRY_TEST1, true);
         Publisher publisher2 = createPublisher(NAME_TEST2, COUNTRY_TEST2, false);
 
-        assertNotEquals(publisher1.hashCode(), publisher2.hashCode());
+        assertThat(publisher1.hashCode()).isNotEqualTo(publisher2.hashCode());
     }
 
     @Test
     public void testToString() {
         Publisher publisher = createPublisher(null, null, false);
 
-        String publisherString = publisher.toString();
-
-        assertThatPublisherStringContainsAllFields(publisherString);
+        assertThatPublisherStringContainsAllFields(publisher.toString());
     }
 
     private void assertThatPublisherStringContainsAllFields(String publisherString) {
-        assertThat(publisherString, containsString("name=null"));
-        assertThat(publisherString, containsString("country=null"));
-        assertThat(publisherString, containsString("isOnline=false"));
+        assertThat(publisherString).contains("name=null");
+        assertThat(publisherString).contains("country=null");
+        assertThat(publisherString).contains("isOnline=false");
     }
 
     public static Publisher createPublisher(String name, String country, boolean isOnline) {

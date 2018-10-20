@@ -20,12 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BookServiceTest {
@@ -65,8 +62,8 @@ public class BookServiceTest {
 
         List<Book> result = service.findAll();
 
+        assertThat(result).as("2 elements in page").hasSize(TWO_ITEMS);
         verify(bookRepository, times(ONE_TIME)).findAll();
-        assertEquals("2 elements in page", TWO_ITEMS, result.size());
     }
 
     @Test
@@ -84,15 +81,19 @@ public class BookServiceTest {
 
         Book result = service.findOne(BOOK_ID_TEST1);
 
+        assertThat(result.getId()).isEqualTo(BOOK_ID_TEST1);
         verify(bookRepository, timeout(ONE_TIME)).findById(BOOK_ID_TEST1);
-        assertEquals(Long.valueOf(BOOK_ID_TEST1), result.getId());
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testNotFound() {
         when(bookRepository.findById(BOOK_ID_TEST1)).thenReturn(Optional.empty());
 
-        service.findOne(BOOK_ID_TEST1);
+        Throwable thrown = catchThrowable(() -> service.findOne(BOOK_ID_TEST1));
+
+        assertThat(thrown)
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Book not found");
     }
 
     @Test
@@ -104,7 +105,7 @@ public class BookServiceTest {
 
         Book saved = service.save(foo);
 
-        assertEquals(dbBook, saved);
+        assertThat(saved).isEqualTo(dbBook);
     }
 
     @Test
@@ -117,8 +118,8 @@ public class BookServiceTest {
 
         Book saved = service.create(foo);
 
-        assertEquals(dbBook, saved);
-        assertEquals(Long.valueOf(BOOK_ID_TEST3), saved.getId());
+        assertThat(saved).isEqualTo(dbBook);
+        assertThat(saved.getId()).isEqualTo(BOOK_ID_TEST3);
     }
 
     @Test
@@ -129,8 +130,8 @@ public class BookServiceTest {
 
         List<Book> result = service.findByTitle(BOOK_TITLE_TEST1);
 
+        assertThat(result).hasSize(ONE_TIME);
         verify(bookRepository, timeout(ONE_TIME)).findByTitle(BOOK_TITLE_TEST1);
-        assertEquals(ONE_TIME, result.size());
     }
 
     @Test
@@ -141,8 +142,8 @@ public class BookServiceTest {
 
         List<Book> result = service.findByReleaseDate(BOOK_RELEASEDATE_TEST1);
 
+        assertThat(result).hasSize(ONE_TIME);
         verify(bookRepository, timeout(ONE_TIME)).findByReleaseDate(BOOK_RELEASEDATE_TEST1);
-        assertEquals(ONE_TIME, result.size());
     }
 
     private List<Book> createTestBookList() {

@@ -17,10 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -54,9 +51,9 @@ public class RestExceptionProcessorTest {
 
         ErrorInfo errorInfo = restExceptionProcessor.entityNotFound(request, exception);
 
-        assertNotNull(errorInfo);
-        assertEquals(request.getRequestURL().toString(), errorInfo.getUrl());
-        assertEquals(ONE_ITEM, errorInfo.getErrors().size());
+        assertThat(errorInfo).isNotNull();
+        assertThat(errorInfo.getUrl()).isEqualTo(request.getRequestURL().toString());
+        assertThat(errorInfo.getErrors()).hasSize(ONE_ITEM);
     }
 
     @Test
@@ -66,9 +63,9 @@ public class RestExceptionProcessorTest {
 
         ErrorInfo errorInfo = restExceptionProcessor.invalidPostData(request, exception);
 
-        assertNotNull(errorInfo);
-        assertEquals(request.getRequestURL().toString(), errorInfo.getUrl());
-        assertThat(errorInfo.getErrors(), hasSize(TWO_ITEMS));
+        assertThat(errorInfo).isNotNull();
+        assertThat(errorInfo.getUrl()).isEqualTo(request.getRequestURL().toString());
+        assertThat(errorInfo.getErrors()).hasSize(TWO_ITEMS);
     }
 
     private List<FieldError> createMockListFieldErrors() {

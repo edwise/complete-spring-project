@@ -2,12 +2,7 @@ package com.edwise.completespring.entities;
 
 import org.junit.Test;
 
-import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AuthorTest {
     private static final String NAME_TEST1 = "J.";
@@ -22,7 +17,7 @@ public class AuthorTest {
 
         author.copyFrom(authorFrom);
 
-        assertEquals(author, authorFrom);
+        assertThat(author).isEqualTo(authorFrom);
     }
 
     @Test
@@ -30,7 +25,7 @@ public class AuthorTest {
         Author author1 = createAuthor(NAME_TEST1, SURNAME_TEST1);
         Author author2 = createAuthor(NAME_TEST1, SURNAME_TEST1);
 
-        assertTrue(author1.equals(author2) && author2.equals(author1));
+        assertThat(author1.equals(author2) && author2.equals(author1)).isTrue();
     }
 
     @Test
@@ -38,14 +33,14 @@ public class AuthorTest {
         Author author1 = createAuthor(NAME_TEST1, SURNAME_TEST1);
         Author author2 = createAuthor(NAME_TEST1, SURNAME_TEST2);
 
-        assertFalse(author1.equals(author2) || author2.equals(author1));
+        assertThat(author1.equals(author2) || author2.equals(author1)).isFalse();
     }
 
     @Test
     public void testNotEqualsWithDifferentsObjects() {
         Author author = createAuthor(NAME_TEST1, null);
 
-        assertFalse(author.equals(new Object()));
+        assertThat(author).isNotEqualTo(new Object());
     }
 
     @Test
@@ -53,7 +48,7 @@ public class AuthorTest {
         Author author1 = createAuthor(NAME_TEST1, SURNAME_TEST1);
         Author author2 = createAuthor(NAME_TEST1, SURNAME_TEST1);
 
-        assertEquals(author1.hashCode(), author2.hashCode());
+        assertThat(author1.hashCode()).isEqualTo(author2.hashCode());
     }
 
     @Test
@@ -61,20 +56,19 @@ public class AuthorTest {
         Author author1 = createAuthor(NAME_TEST1, SURNAME_TEST1);
         Author author2 = createAuthor(NAME_TEST2, SURNAME_TEST2);
 
-        assertNotEquals(author1.hashCode(), author2.hashCode());
+        assertThat(author1.hashCode()).isNotEqualTo(author2.hashCode());
     }
 
     @Test
     public void testToString() {
         Author author = createAuthor(null, null);
-        String authorString = author.toString();
 
-        assertThatAuthorStringContainsAllFields(authorString);
+        assertThatAuthorStringContainsAllFields(author.toString());
     }
 
     private void assertThatAuthorStringContainsAllFields(String authorString) {
-        assertThat(authorString, containsString("name=null"));
-        assertThat(authorString, containsString("surname=null"));
+        assertThat(authorString).contains("name=null");
+        assertThat(authorString).contains("surname=null");
     }
 
     public static Author createAuthor(String name, String surname) {

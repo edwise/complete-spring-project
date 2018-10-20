@@ -2,12 +2,7 @@ package com.edwise.completespring.exceptions.helpers;
 
 import org.junit.Test;
 
-import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ErrorItemTest {
     private static final String FIELD_TEST1 = "authorName";
@@ -19,7 +14,7 @@ public class ErrorItemTest {
         ErrorItem errorItem1 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
         ErrorItem errorItem2 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
 
-        assertTrue(errorItem1.equals(errorItem2) && errorItem2.equals(errorItem1));
+        assertThat(errorItem1.equals(errorItem2) && errorItem2.equals(errorItem1)).isTrue();
     }
 
     @Test
@@ -27,14 +22,14 @@ public class ErrorItemTest {
         ErrorItem errorItem1 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
         ErrorItem errorItem2 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT2);
 
-        assertFalse(errorItem1.equals(errorItem2) || errorItem2.equals(errorItem1));
+        assertThat(errorItem1.equals(errorItem2) || errorItem2.equals(errorItem1)).isFalse();
     }
 
     @Test
     public void testNotEqualsWithDifferentObjects() {
         ErrorItem errorItem = createErrorItem(FIELD_TEST1, null);
 
-        assertFalse(errorItem.equals(new Object()));
+        assertThat(errorItem).isNotEqualTo(new Object());
     }
 
     @Test
@@ -42,7 +37,7 @@ public class ErrorItemTest {
         ErrorItem errorItem1 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
         ErrorItem errorItem2 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
 
-        assertEquals(errorItem1.hashCode(), errorItem2.hashCode());
+        assertThat(errorItem1.hashCode()).isEqualTo(errorItem2.hashCode());
     }
 
     @Test
@@ -50,21 +45,19 @@ public class ErrorItemTest {
         ErrorItem errorItem1 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT1);
         ErrorItem errorItem2 = createErrorItem(FIELD_TEST1, MESSAGE_TEXT2);
 
-        assertNotEquals(errorItem1.hashCode(), errorItem2.hashCode());
+        assertThat(errorItem1.hashCode()).isNotEqualTo(errorItem2.hashCode());
     }
 
     @Test
     public void testToString() {
         ErrorItem errorItem = createErrorItem(null, null);
 
-        String errorItemString = errorItem.toString();
-
-        assertThatErrorItemStringContainsAllFields(errorItemString);
+        assertThatErrorItemStringContainsAllFields(errorItem.toString());
     }
 
     private void assertThatErrorItemStringContainsAllFields(String errorItemString) {
-        assertThat(errorItemString, containsString("field=null"));
-        assertThat(errorItemString, containsString("message=null"));
+        assertThat(errorItemString).contains("field=null");
+        assertThat(errorItemString).contains("message=null");
     }
 
     private ErrorItem createErrorItem(String field, String message) {

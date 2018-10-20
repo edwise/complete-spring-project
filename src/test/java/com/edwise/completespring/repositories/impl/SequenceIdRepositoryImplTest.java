@@ -13,12 +13,9 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SequenceIdRepositoryImplTest {
@@ -39,17 +36,21 @@ public class SequenceIdRepositoryImplTest {
 
         long seqId = repository.getNextSequenceId(BookServiceImpl.BOOK_COLLECTION);
 
+        assertThat(seqId).as("Should return a valid sequence").isGreaterThan(0);
         verify(mongoOperation, times(ONE_TIME)).findAndModify(any(Query.class), any(Update.class),
                 any(FindAndModifyOptions.class), eq(SequenceId.class));
-        assertTrue("Debe devolver un sequence valido", seqId > 0);
     }
 
-    @Test(expected = SequenceException.class)
+    @Test
     public void testGetNextSequenceIdWhenNotExistsSequence() {
         when(mongoOperation.findAndModify(any(Query.class), any(Update.class), any(FindAndModifyOptions.class),
                 eq(SequenceId.class))).thenReturn(null);
 
-        repository.getNextSequenceId(BookServiceImpl.BOOK_COLLECTION);
+        Throwable thrown = catchThrowable(() -> repository.getNextSequenceId(BookServiceImpl.BOOK_COLLECTION));
+
+        assertThat(thrown)
+                .isInstanceOf(SequenceException.class)
+                .hasMessageContaining("Unable to get sequence id for key");
     }
 
     @Test

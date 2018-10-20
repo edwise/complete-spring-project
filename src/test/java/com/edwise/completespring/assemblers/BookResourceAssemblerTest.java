@@ -9,9 +9,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,8 +25,8 @@ public class BookResourceAssemblerTest {
     public void testInstantiateResource() {
         BookResource bookResource = bookResourceAssembler.instantiateResource(book);
 
-        assertThat(bookResource, is(notNullValue()));
-        assertThat(bookResource.getBook(), is(book));
+        assertThat(bookResource).isNotNull();
+        assertThat(bookResource.getBook()).isEqualTo(book);
     }
 
     @Test
@@ -38,7 +36,7 @@ public class BookResourceAssemblerTest {
 
         BookResource bookResource = bookResourceAssembler.toResource(book);
 
-        assertThat(bookResource, is(notNullValue()));
-        assertThat(bookResource.getBook(), is(book));
+        assertThat(bookResource).isNotNull();
+        assertThat(bookResource.getBook()).isEqualTo(book);
     }
 }

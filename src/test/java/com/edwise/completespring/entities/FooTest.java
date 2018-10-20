@@ -4,12 +4,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 
-import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FooTest {
     private static final long ID_TEST1 = 123L;
@@ -23,7 +18,9 @@ public class FooTest {
         Foo fooFrom = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
         Foo foo = createFoo(ID_TEST2, null, null);
 
-        assertEquals(foo.copyFrom(fooFrom), fooFrom);
+        foo.copyFrom(fooFrom);
+
+        assertThat(foo).isEqualTo(fooFrom);
     }
 
     @Test
@@ -31,7 +28,7 @@ public class FooTest {
         Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
         Foo foo2 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
 
-        assertTrue(foo1.equals(foo2) && foo2.equals(foo1));
+        assertThat(foo1.equals(foo2) && foo2.equals(foo1)).isTrue();
     }
 
     @Test
@@ -39,14 +36,14 @@ public class FooTest {
         Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, null);
         Foo foo2 = createFoo(ID_TEST1, TEXT_ATTR_TEST2, null);
 
-        assertFalse(foo1.equals(foo2) || foo2.equals(foo1));
+        assertThat(foo1.equals(foo2) || foo2.equals(foo1)).isFalse();
     }
 
     @Test
     public void testNotEqualsWithDifferentsObjects() {
         Foo foo = createFoo(ID_TEST1, null, null);
 
-        assertFalse(foo.equals(new Object()));
+        assertThat(foo).isNotEqualTo(new Object());
     }
 
     @Test
@@ -54,7 +51,7 @@ public class FooTest {
         Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
         Foo foo2 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
 
-        assertEquals(foo1.hashCode(), foo2.hashCode());
+        assertThat(foo1.hashCode()).isEqualTo(foo2.hashCode());
     }
 
     @Test
@@ -62,21 +59,20 @@ public class FooTest {
         Foo foo1 = createFoo(ID_TEST1, TEXT_ATTR_TEST1, DATE_TEST1);
         Foo foo2 = createFoo(ID_TEST2, TEXT_ATTR_TEST2, DATE_TEST1);
 
-        assertNotEquals(foo1.hashCode(), foo2.hashCode());
+        assertThat(foo1.hashCode()).isNotEqualTo(foo2.hashCode());
     }
 
     @Test
     public void testToString() {
         Foo foo = createFoo(null, null, null);
-        String fooString = foo.toString();
 
-        assertThatFooStringContainsAllFields(fooString);
+        assertThatFooStringContainsAllFields(foo.toString());
     }
 
     private void assertThatFooStringContainsAllFields(String fooString) {
-        assertThat(fooString, containsString("id=null"));
-        assertThat(fooString, containsString("sampleTextAttribute=null"));
-        assertThat(fooString, containsString("sampleLocalDateAttribute=null"));
+        assertThat(fooString).contains("id=null");
+        assertThat(fooString).contains("sampleTextAttribute=null");
+        assertThat(fooString).contains("sampleLocalDateAttribute=null");
     }
 
     public static Foo createFoo(Long id, String textAttribute, LocalDate localDateAttribute) {
