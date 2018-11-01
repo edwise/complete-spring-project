@@ -5,7 +5,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,7 +63,7 @@ public class ErrorInfoTest {
     }
 
     private List<FieldError> createMockListFieldErrors() {
-        return Arrays.asList(
+        return List.of(
                 new FieldError(BOOK_OBJECT_NAME, TITLE_FIELD, IT_CANT_BE_NULL_MSG),
                 new FieldError(BOOK_OBJECT_NAME, ISBN_FIELD, IT_CANT_BE_EMPTY_MSG),
                 new FieldError(BOOK_OBJECT_NAME, RELEASE_DATE_FIELD, IT_CANT_BE_NULL_MSG));
