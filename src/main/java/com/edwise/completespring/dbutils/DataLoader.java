@@ -11,8 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -56,8 +56,7 @@ public class DataLoader {
                 .setSeq(USERACCOUNTS_INITIAL_SEQUENCE)
         );
         userAccountRepository.deleteAll();
-        Arrays.asList(
-                new UserAccount()
+        List.of(new UserAccount()
                         .setId(USER_ID_1)
                         .setUsername(USER)
                         .setPassword(passwordEncoder.encode(PASSWORD_USER))
@@ -76,8 +75,7 @@ public class DataLoader {
                 .setSeq(BOOKS_INITIAL_SEQUENCE)
         );
         bookRepository.deleteAll();
-        Arrays.asList(
-                new Book()
+        List.of(new Book()
                         .setId(BOOK_ID_1)
                         .setTitle("Libro prueba mongo")
                         .setAuthors(Collections.singletonList(new Author().setName("Edu").setSurname("Antón")))
@@ -88,8 +86,7 @@ public class DataLoader {
                         .setId(BOOK_ID_2)
                         .setTitle("Libro prueba mongo 2")
                         .setAuthors(
-                                Arrays.asList(
-                                        new Author().setName("Otro").setSurname("Más"),
+                                List.of(new Author().setName("Otro").setSurname("Más"),
                                         new Author().setName("S.").setSurname("King")))
                         .setIsbn("12-1234-12")
                         .setReleaseDate(LocalDate.now())

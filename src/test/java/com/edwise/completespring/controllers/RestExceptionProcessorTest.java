@@ -14,7 +14,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,7 +68,7 @@ public class RestExceptionProcessorTest {
     }
 
     private List<FieldError> createMockListFieldErrors() {
-        return Arrays.asList(
+        return List.of(
                 new FieldError(FIELD_ERROR_OBJECT_TEST1, FIELD_ERROR_FIELD_TEST1, FIELD_ERROR_MESSAGE_TEST1),
                 new FieldError(FIELD_ERROR_OBJECT_TEST1, FIELD_ERROR_FIELD_TEST2, FIELD_ERROR_MESSAGE_TEST2));
     }

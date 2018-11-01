@@ -23,7 +23,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -236,6 +235,6 @@ public class BookControllerTest {
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST2, true))
                 .build();
 
-        return Arrays.asList(book1, book2);
+        return List.of(book1, book2);
     }
 }
