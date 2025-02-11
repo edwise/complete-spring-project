@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +46,7 @@ public class FooController {
             @ApiResponse(responseCode = "200", description = "Exits one foo at least", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FooResource.class)))
     })
     public ResponseEntity<List<FooResource>> getAll() {
-        List<Foo> foos = Arrays.asList(
+        List<Foo> foos = List.of(
                 new Foo().setId(1L).setSampleTextAttribute(TEST_ATTRIBUTE_1).setSampleLocalDateAttribute(LocalDate.now()),
                 new Foo().setId(2L).setSampleTextAttribute(TEST_ATTRIBUTE_1).setSampleLocalDateAttribute(LocalDate.now())
         );

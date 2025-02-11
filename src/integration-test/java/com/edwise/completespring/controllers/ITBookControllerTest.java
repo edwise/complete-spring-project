@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.List;
 
 import static com.edwise.completespring.testutil.IsValidFormatDateYMDMatcher.validFormatDateYMD;
 import static org.hamcrest.Matchers.*;
@@ -89,8 +89,7 @@ public class ITBookControllerTest {
     @Test
     public void getAll_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
         mockMvc.perform(get("/api/books/").with(httpBasic(NOT_EXISTING_USER_USERNAME, NOT_EXISTING_USER_PASSWORD)))
-                .andExpect(status().isUnauthorized())
-        ;
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -140,7 +139,7 @@ public class ITBookControllerTest {
     public void postBook_CorrectUserAndBookCorrect_ShouldReturnCreatedStatusAndCorrectBook() throws Exception {
         Book bookToCreate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(List.of(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -158,7 +157,7 @@ public class ITBookControllerTest {
     @Test
     public void postBook_CorrectUserAndBookIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
         Book bookToCreate = new BookBuilder()
-                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(List.of(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
                 .build();
 
@@ -180,7 +179,7 @@ public class ITBookControllerTest {
     public void postBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
         Book bookToCreate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(List.of(new Author().setName(AUTHOR_NAME_TEST1).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
@@ -198,7 +197,7 @@ public class ITBookControllerTest {
     public void putBook_CorrectUserAndBookExist_ShouldReturnNoContentStatus() throws Exception {
         Book bookToUpdate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(List.of(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
@@ -216,7 +215,7 @@ public class ITBookControllerTest {
     public void putBook_CorrectUserAndBookNotExists_ShouldReturnNotFoundStatusAndError() throws Exception {
         Book bookToUpdate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(List.of(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
@@ -238,7 +237,7 @@ public class ITBookControllerTest {
     @Test
     public void putBook_CorrectUserAndBookIncorrect_ShouldReturnBadRequestStatusAndError() throws Exception {
         Book bookToUpdate = new BookBuilder()
-                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(List.of(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))
                 .build();
 
@@ -260,7 +259,7 @@ public class ITBookControllerTest {
     public void putBook_NotExistingUser_ShouldReturnUnauthorizedCode() throws Exception {
         Book bookToUpdate = new BookBuilder()
                 .title(BOOK_TITLE_TEST1)
-                .authors(Collections.singletonList(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
+                .authors(List.of(new Author().setName(AUTHOR_NAME_TEST2).setSurname(AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(true))

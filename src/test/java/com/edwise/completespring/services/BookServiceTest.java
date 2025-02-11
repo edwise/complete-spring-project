@@ -16,8 +16,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -126,7 +124,7 @@ public class BookServiceTest {
     @Test
     public void testFindByTitle() {
         List<Book> bookResults =
-                Collections.singletonList(new BookBuilder().id(BOOK_ID_TEST1).title(BOOK_TITLE_TEST1).build());
+                List.of(new BookBuilder().id(BOOK_ID_TEST1).title(BOOK_TITLE_TEST1).build());
         when(bookRepository.findByTitle(BOOK_TITLE_TEST1)).thenReturn(bookResults);
 
         List<Book> result = service.findByTitle(BOOK_TITLE_TEST1);
@@ -138,7 +136,7 @@ public class BookServiceTest {
     @Test
     public void testFindByReleaseDate() {
         List<Book> bookResults =
-                Collections.singletonList(new BookBuilder().id(BOOK_ID_TEST1).releaseDate(BOOK_RELEASEDATE_TEST1).build());
+                List.of(new BookBuilder().id(BOOK_ID_TEST1).releaseDate(BOOK_RELEASEDATE_TEST1).build());
         when(bookRepository.findByReleaseDate(BOOK_RELEASEDATE_TEST1)).thenReturn(bookResults);
 
         List<Book> result = service.findByReleaseDate(BOOK_RELEASEDATE_TEST1);
@@ -151,7 +149,7 @@ public class BookServiceTest {
         Book book1 = new BookBuilder()
                 .id(BOOK_ID_TEST1)
                 .title(BOOK_TITLE_TEST1)
-                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
+                .authors(List.of(AuthorTest.createAuthor(AUTHOR_NAME_TEST1, AUTHOR_SURNAME_TEST1)))
                 .isbn(BOOK_ISBN_TEST1)
                 .releaseDate(BOOK_RELEASEDATE_TEST1)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST1, PUBLISHER_COUNTRY_TEST1, false))
@@ -159,13 +157,13 @@ public class BookServiceTest {
         Book book2 = new BookBuilder()
                 .id(BOOK_ID_TEST2)
                 .title(BOOK_TITLE_TEST2)
-                .authors(Collections.singletonList(AuthorTest.createAuthor(AUTHOR_NAME_TEST2, AUTHOR_SURNAME_TEST2)))
+                .authors(List.of(AuthorTest.createAuthor(AUTHOR_NAME_TEST2, AUTHOR_SURNAME_TEST2)))
                 .isbn(BOOK_ISBN_TEST2)
                 .releaseDate(BOOK_RELEASEDATE_TEST2)
                 .publisher(PublisherTest.createPublisher(PUBLISHER_NAME_TEST2, PUBLISHER_COUNTRY_TEST2, true))
                 .build();
 
-        return Arrays.asList(book1, book2);
+        return List.of(book1, book2);
     }
 
 }

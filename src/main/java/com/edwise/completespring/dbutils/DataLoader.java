@@ -11,8 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -56,8 +55,7 @@ public class DataLoader {
                 .setSeq(USERACCOUNTS_INITIAL_SEQUENCE)
         );
         userAccountRepository.deleteAll();
-        Arrays.asList(
-                new UserAccount()
+        List.of(new UserAccount()
                         .setId(USER_ID_1)
                         .setUsername(USER)
                         .setPassword(passwordEncoder.encode(PASSWORD_USER))
@@ -76,11 +74,10 @@ public class DataLoader {
                 .setSeq(BOOKS_INITIAL_SEQUENCE)
         );
         bookRepository.deleteAll();
-        Arrays.asList(
-                new Book()
+        List.of(new Book()
                         .setId(BOOK_ID_1)
                         .setTitle("Libro prueba mongo")
-                        .setAuthors(Collections.singletonList(new Author().setName("Edu").setSurname("Antón")))
+                        .setAuthors(List.of(new Author().setName("Edu").setSurname("Antón")))
                         .setIsbn("11-333-12")
                         .setReleaseDate(LocalDate.now())
                         .setPublisher(new Publisher().setName("Editorial 1").setCountry("ES").setOnline(false)),
@@ -88,8 +85,7 @@ public class DataLoader {
                         .setId(BOOK_ID_2)
                         .setTitle("Libro prueba mongo 2")
                         .setAuthors(
-                                Arrays.asList(
-                                        new Author().setName("Otro").setSurname("Más"),
+                                List.of(new Author().setName("Otro").setSurname("Más"),
                                         new Author().setName("S.").setSurname("King")))
                         .setIsbn("12-1234-12")
                         .setReleaseDate(LocalDate.now())
@@ -97,14 +93,14 @@ public class DataLoader {
                 new Book()
                         .setId(BOOK_ID_3)
                         .setTitle("Libro prueba mongo 3")
-                        .setAuthors(Collections.singletonList(new Author().setName("Nadie").setSurname("Nobody")))
+                        .setAuthors(List.of(new Author().setName("Nadie").setSurname("Nobody")))
                         .setIsbn("12-9999-92")
                         .setReleaseDate(LocalDate.now())
                         .setPublisher(new Publisher().setName("Editorial 7").setCountry("ES").setOnline(true)),
                 new Book()
                         .setId(BOOK_ID_4)
                         .setTitle("Libro prueba mongo 4")
-                        .setAuthors(Collections.singletonList(new Author().setName("Perry").setSurname("Mason")))
+                        .setAuthors(List.of(new Author().setName("Perry").setSurname("Mason")))
                         .setIsbn("22-34565-12")
                         .setReleaseDate(LocalDate.now())
                         .setPublisher(new Publisher().setName("Editorial 33").setCountry("US").setOnline(true)))
