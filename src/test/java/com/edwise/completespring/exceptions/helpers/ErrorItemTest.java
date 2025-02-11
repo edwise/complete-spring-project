@@ -1,6 +1,6 @@
 package com.edwise.completespring.exceptions.helpers;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

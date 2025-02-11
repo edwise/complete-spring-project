@@ -1,43 +1,42 @@
 package com.edwise.completespring.config;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.time.LocalDate;
-
-import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
-@EnableSwagger2
 public class SwaggerConfig {
     public static final String BOOKS_API_GROUP = "books-api";
 
     @Bean
-    public Docket newsApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName(BOOKS_API_GROUP)
-                .apiInfo(apiInfo())
-                .directModelSubstitute(LocalDate.class, String.class)
-                .select()
-                .paths(regex("/api.*"))
+    public GroupedOpenApi booksApi() {
+        return GroupedOpenApi.builder()
+                .group(BOOKS_API_GROUP)
+                .packagesToScan("com.edwise.completespring.controllers") // Asegúrate de que esta es la ruta correcta de tus controladores
+                .pathsToMatch("/api/**")
                 .build();
     }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Books API")
-                .description("Your book database!")
-                .termsOfServiceUrl("http://en.wikipedia.org/wiki/Terms_of_service")
-                .contact(new Contact("edwise", "https://github.com/edwise", "edwise.null@gmail.com"))
-                .license("Apache License Version 2.0")
-                .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
-                .version("2.0")
-                .build();
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                              .title("Books API")
+                              .description("Your book database!")
+                              .termsOfService("http://en.wikipedia.org/wiki/Terms_of_service")
+                              .contact(new Contact()
+                                               .name("edwise")
+                                               .url("https://github.com/edwise")
+                                               .email("edwise.null@gmail.com"))
+                              .license(new License()
+                                               .name("Apache License Version 2.0")
+                                               .url("http://www.apache.org/licenses/LICENSE-2.0.html"))
+                              .version("2.0"))
+                .addServersItem(new io.swagger.v3.oas.models.servers.Server().url("http://localhost:8080"));
     }
 }

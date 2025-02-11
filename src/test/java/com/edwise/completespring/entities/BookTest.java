@@ -1,7 +1,7 @@
 package com.edwise.completespring.entities;
 
 import com.edwise.completespring.testutil.BookBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;

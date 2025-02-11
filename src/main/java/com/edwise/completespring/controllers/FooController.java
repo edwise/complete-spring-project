@@ -4,7 +4,14 @@ import com.edwise.completespring.assemblers.FooResource;
 import com.edwise.completespring.assemblers.FooResourceAssembler;
 import com.edwise.completespring.entities.Foo;
 import com.edwise.completespring.exceptions.InvalidRequestException;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -15,14 +22,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/foos/")
-@Api(value = "foos", description = "Foo API", produces = "application/json")
+@Tag(name = "foos", description = "Foo API")
 @Slf4j
 public class FooController {
     private static final int RESPONSE_CODE_OK = 200;
@@ -34,29 +41,29 @@ public class FooController {
     private FooResourceAssembler fooResourceAssembler;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Get Foos", notes = "Returns all foos")
+    @Operation(summary = "Get Foos", description = "Returns all foos")
     @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_OK, response = FooResource.class, message = "Exits one foo at least")
+            @ApiResponse(responseCode = "200", description = "Exits one foo at least", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FooResource.class)))
     })
     public ResponseEntity<List<FooResource>> getAll() {
         List<Foo> foos = List.of(
                 new Foo().setId(1L).setSampleTextAttribute(TEST_ATTRIBUTE_1).setSampleLocalDateAttribute(LocalDate.now()),
                 new Foo().setId(2L).setSampleTextAttribute(TEST_ATTRIBUTE_1).setSampleLocalDateAttribute(LocalDate.now())
         );
-        List<FooResource> resourceList = fooResourceAssembler.toResources(foos);
+        List<FooResource> resourceList = fooResourceAssembler.toModels(foos);
 
         log.info("Foos found: {}", foos);
         return new ResponseEntity<>(resourceList, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Get one Foo", response = FooResource.class, notes = "Returns one foo")
+    @Operation(summary = "Get one Foo", description = "Returns one foo")
     @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_OK, message = "Exists this foo")
+            @ApiResponse(responseCode = "200", description = "Exists this foo", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FooResource.class)))
     })
-    public ResponseEntity<FooResource> getFoo(@ApiParam(defaultValue = "1", value = "The id of the foo to return")
+    public ResponseEntity<FooResource> getFoo(@Parameter(description = "The id of the foo to return")
                                               @PathVariable long id) {
-        FooResource resource = fooResourceAssembler.toResource(
+        FooResource resource = fooResourceAssembler.toModel(
                 new Foo().setId(id).setSampleTextAttribute(TEST_ATTRIBUTE_1).setSampleLocalDateAttribute(LocalDate.now())
         );
 
@@ -67,9 +74,9 @@ public class FooController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Create Foo", notes = "Create a foo")
+    @Operation(summary = "Create Foo", description = "Create a foo")
     @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_CREATED, message = "Successful create of a foo")
+            @ApiResponse(responseCode = "201", description = "Successful create of a foo")
     })
     public ResponseEntity<FooResource> createFoo(@Valid @RequestBody Foo foo, BindingResult errors) {
         if (errors.hasErrors()) {
@@ -82,11 +89,11 @@ public class FooController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(method = RequestMethod.PUT, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Update Foo", notes = "Update a foo")
+    @Operation(summary = "Update Foo", description = "Update a foo")
     @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful update of foo")
+            @ApiResponse(responseCode = "204", description = "Successful update of foo")
     })
-    public void updateFoo(@ApiParam(defaultValue = "1", value = "The id of the foo to update")
+    public void updateFoo(@Parameter(description = "The id of the foo to update")
                           @PathVariable long id,
                           @Valid @RequestBody Foo foo, BindingResult errors) {
         if (errors.hasErrors()) {
@@ -97,11 +104,11 @@ public class FooController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(method = RequestMethod.DELETE, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Delete Foo", notes = "Delete a foo")
+    @Operation(summary = "Delete Foo", description = "Delete a foo")
     @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful delete of a foo")
+            @ApiResponse(responseCode = "204", description = "Successful delete of a foo")
     })
-    public void deleteFoo(@ApiParam(defaultValue = "1", value = "The id of the foo to delete")
+    public void deleteFoo(@Parameter(description = "The id of the foo to delete")
                           @PathVariable long id) {
 
         log.info("Foo deleted: {}", id);
@@ -109,8 +116,8 @@ public class FooController {
 
     private HttpHeaders createHttpHeadersWithLocation(Foo foo) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        Link selfBookLink = fooResourceAssembler.toResource(foo).getLink("self");
-        httpHeaders.setLocation(URI.create(selfBookLink != null ? selfBookLink.getHref() : ""));
+        Optional<Link> selfBookLink = fooResourceAssembler.toModel(foo).getLink("self");
+        httpHeaders.setLocation(URI.create(selfBookLink.map(Link::getHref).orElse("")));
         return httpHeaders;
     }
 }

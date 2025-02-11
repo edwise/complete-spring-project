@@ -1,16 +1,16 @@
 package com.edwise.completespring;
 
 import com.edwise.completespring.dbutils.DataLoader;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ApplicationTest {
     
     @Mock
@@ -30,7 +30,7 @@ public class ApplicationTest {
     public void testInitAppWithoutLoadDBData() {
         application.initApp(false);
 
-        verifyZeroInteractions(dataLoader);
+        verifyNoInteractions(dataLoader);
     }
 
 }

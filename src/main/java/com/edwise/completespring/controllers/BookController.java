@@ -5,7 +5,14 @@ import com.edwise.completespring.assemblers.BookResourceAssembler;
 import com.edwise.completespring.entities.Book;
 import com.edwise.completespring.exceptions.InvalidRequestException;
 import com.edwise.completespring.services.BookService;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -21,18 +28,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/books/")
-@Api(value = "books", description = "Books API", produces = "application/json")
 @Slf4j
+@Tag(name = "Books API", description = "Books management API")
 public class BookController {
-    private static final int RESPONSE_CODE_OK = 200;
-    private static final int RESPONSE_CODE_CREATED = 201;
-    private static final int RESPONSE_CODE_NO_RESPONSE = 204;
 
     @Autowired
     private BookResourceAssembler bookResourceAssembler;
@@ -41,36 +45,34 @@ public class BookController {
     private BookService bookService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Get Books", notes = "Returns all books")
+    @Operation(summary = "Get Books", description = "Returns all books")
     @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_OK, response = BookResource.class, message = "Exits one book at least")
+            @ApiResponse(responseCode = "200", description = "Exits one book at least", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookResource.class)))
     })
     public ResponseEntity<List<BookResource>> getAll() {
         List<Book> books = bookService.findAll();
-        List<BookResource> resourceList = bookResourceAssembler.toResources(books);
+        List<BookResource> resourceList = bookResourceAssembler.toModels(books);
 
         log.info("Books found: {}", books);
         return new ResponseEntity<>(resourceList, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Get one Book", response = BookResource.class, notes = "Returns one book")
-    @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_OK, message = "Exists this book")
+    @Operation(summary = "Get one Book", description = "Returns one book", responses = {
+            @ApiResponse(responseCode = "200", description = "Exists this book", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookResource.class)))
     })
-    public ResponseEntity<BookResource> getBook(@ApiParam(defaultValue = "1", value = "The id of the book to return")
-                                                @PathVariable long id) {
+    public ResponseEntity<BookResource> getBook(@Parameter(description = "The id of the book to return") @PathVariable long id) {
         Book book = bookService.findOne(id);
 
         log.info("Book found: {}", book);
-        return new ResponseEntity<>(bookResourceAssembler.toResource(book), HttpStatus.OK);
+        return new ResponseEntity<>(bookResourceAssembler.toModel(book), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Create Book", notes = "Create a book")
+    @Operation(summary = "Create Book", description = "Create a book")
     @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_CREATED, message = "Successful create of a book")
+            @ApiResponse(responseCode = "201", description = "Successful create of a book")
     })
     public ResponseEntity<BookResource> createBook(@Valid @RequestBody Book book, BindingResult errors) {
         if (errors.hasErrors()) {
@@ -85,12 +87,11 @@ public class BookController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(method = RequestMethod.PUT, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Update Book", notes = "Update a book")
+    @Operation(summary = "Update Book", description = "Update a book")
     @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful update of book")
+            @ApiResponse(responseCode = "204", description = "Successful update of book")
     })
-    public void updateBook(@ApiParam(defaultValue = "1", value = "The id of the book to update")
-                           @PathVariable long id,
+    public void updateBook(@Parameter(description = "The id of the book to update") @PathVariable long id,
                            @Valid @RequestBody Book book, BindingResult errors) {
         if (errors.hasErrors()) {
             throw new InvalidRequestException(errors);
@@ -103,12 +104,11 @@ public class BookController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(method = RequestMethod.DELETE, value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Delete Book", notes = "Delete a book")
+    @Operation(summary = "Delete Book", description = "Delete a book")
     @ApiResponses({
-            @ApiResponse(code = RESPONSE_CODE_NO_RESPONSE, message = "Successful delete of a book")
+            @ApiResponse(responseCode = "204", description = "Successful delete of a book")
     })
-    public void deleteBook(@ApiParam(defaultValue = "1", value = "The id of the book to delete")
-                           @PathVariable long id) {
+    public void deleteBook(@Parameter(description = "The id of the book to delete") @PathVariable long id) {
         bookService.delete(id);
 
         log.info("Book deleted: {}", id);
@@ -116,8 +116,8 @@ public class BookController {
 
     private HttpHeaders createHttpHeadersWithLocation(Book book) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        Link selfBookLink = bookResourceAssembler.toResource(book).getLink("self");
-        httpHeaders.setLocation(URI.create(selfBookLink != null ? selfBookLink.getHref() : ""));
+        Optional<Link> selfBookLink = bookResourceAssembler.toModel(book).getLink("self");
+        httpHeaders.setLocation(URI.create(selfBookLink.map(Link::getHref).orElse("")));
         return httpHeaders;
     }
 }
