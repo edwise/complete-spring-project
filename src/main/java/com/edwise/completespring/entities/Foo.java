@@ -2,12 +2,12 @@ package com.edwise.completespring.entities;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @ApiModel(value = "Foo entity", description = "Complete info of a entity foo")

@@ -1,6 +1,6 @@
 package com.edwise.completespring.exceptions.helpers;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -29,7 +29,7 @@ public class ErrorInfoTest {
     @Test
     public void testAddError() {
         ErrorInfo errorInfo = createErrorInfo(null).addError(FIELD_TEST1, MESSAGE_TEST1).addError(FIELD_TEST2,
-                MESSAGE_TEST2);
+                                                                                                  MESSAGE_TEST2);
 
         assertThat(errorInfo.getErrors()).isNotNull();
         assertThat(errorInfo.getErrors()).hasSize(TWO_ITEMS);

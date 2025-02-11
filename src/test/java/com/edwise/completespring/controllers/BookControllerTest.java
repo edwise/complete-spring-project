@@ -7,12 +7,12 @@ import com.edwise.completespring.exceptions.InvalidRequestException;
 import com.edwise.completespring.exceptions.NotFoundException;
 import com.edwise.completespring.services.BookService;
 import com.edwise.completespring.testutil.BookBuilder;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BookControllerTest {
     private static final long BOOK_ID_TEST1 = 1L;
     private static final String BOOK_TITLE_TEST1 = "Lord of the Rings";
@@ -63,7 +63,7 @@ public class BookControllerTest {
     @InjectMocks
     private BookController controller = new BookController();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
     }
@@ -80,14 +80,14 @@ public class BookControllerTest {
         Book bookResp = new Book().copyFrom(bookReq).setId(BOOK_ID_TEST1);
         when(errors.hasErrors()).thenReturn(false);
         when(bookService.create(bookReq)).thenReturn(bookResp);
-        when(bookResourceAssembler.toResource(any(Book.class))).thenReturn(createBookResourceWithLink(bookResp));
+        when(bookResourceAssembler.toModel(any(Book.class))).thenReturn(createBookResourceWithLink(bookResp));
 
         ResponseEntity<BookResource> result = controller.createBook(bookReq, errors);
 
         assertThat(result.getBody()).isNull();
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(result.getHeaders().getLocation().toString()).contains("/api/books/" + BOOK_ID_TEST1);
-        verify(bookResourceAssembler, times(ONE_TIME)).toResource(bookResp);
+        verify(bookResourceAssembler, times(ONE_TIME)).toModel(bookResp);
         verify(errors, times(ONE_TIME)).hasErrors();
         verify(bookService, times(ONE_TIME)).create(bookReq);
     }
@@ -153,14 +153,14 @@ public class BookControllerTest {
                 .publisher(new Publisher().setName(PUBLISHER_NAME_TEST1).setCountry(PUBLISHER_COUNTRY_TEST1).setOnline(false))
                 .build();
         when(bookService.findOne(BOOK_ID_TEST1)).thenReturn(bookReq);
-        when(bookResourceAssembler.toResource(any(Book.class))).thenReturn(new BookResource().setBook(bookReq));
+        when(bookResourceAssembler.toModel(any(Book.class))).thenReturn(new BookResource().setBook(bookReq));
 
         ResponseEntity<BookResource> result = controller.getBook(BOOK_ID_TEST1);
 
         assertThat(result.getBody()).isNotNull();
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(bookService, times(ONE_TIME)).findOne(BOOK_ID_TEST1);
-        verify(bookResourceAssembler, times(ONE_TIME)).toResource(bookReq);
+        verify(bookResourceAssembler, times(ONE_TIME)).toModel(bookReq);
     }
 
 
@@ -202,19 +202,19 @@ public class BookControllerTest {
     public void testFindAll() {
         List<Book> books = createTestBookList();
         when(bookService.findAll()).thenReturn(books);
-        when(bookResourceAssembler.toResources(anyList())).thenReturn(new ArrayList<>());
+        when(bookResourceAssembler.toModels(anyList())).thenReturn(new ArrayList<>());
 
         ResponseEntity<List<BookResource>> result = controller.getAll();
 
         assertThat(result.getBody()).isNotNull();
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(bookService, times(ONE_TIME)).findAll();
-        verify(bookResourceAssembler, times(ONE_TIME)).toResources(books);
+        verify(bookResourceAssembler, times(ONE_TIME)).toModels(books);
     }
 
     private BookResource createBookResourceWithLink(Book book) {
         BookResource bookResource = new BookResource().setBook(book);
-        bookResource.add(new Link("http://localhost:8080/api/books/" + BOOK_ID_TEST1));
+        bookResource.add(Link.of("http://localhost:8080/api/books/" + BOOK_ID_TEST1));
         return bookResource;
     }
 

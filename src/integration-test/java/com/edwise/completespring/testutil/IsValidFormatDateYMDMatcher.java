@@ -1,7 +1,6 @@
 package com.edwise.completespring.testutil;
 
 import org.hamcrest.Description;
-import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -32,9 +31,7 @@ public class IsValidFormatDateYMDMatcher extends TypeSafeMatcher<String> {
         description.appendText("not a valid YMD format date");
     }
 
-    @Factory
     public static Matcher<String> validFormatDateYMD() {
         return new IsValidFormatDateYMDMatcher();
     }
-
 }
