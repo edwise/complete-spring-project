@@ -1,6 +1,6 @@
 [![Build status](https://circleci.com/gh/edwise/complete-spring-project.svg?style=shield)](https://circleci.com/gh/edwise/complete-spring-project)
 
-Proyecto montado con Spring Boot y Java 11, con los siguientes frameworks / libraries / funcionalidades:
+Proyecto montado con Spring Boot y Java 21, con los siguientes frameworks / libraries / funcionalidades:
 
  - Spring Boot: versión 2. posibilidad de arrancar directamente con el plugin de maven o generar un war para despliegue en 
  tomcat o similar. Con 'actuator' activado.
@@ -9,7 +9,7 @@ Proyecto montado con Spring Boot y Java 11, con los siguientes frameworks / libr
 
  - Uso de HATEOAS en el servicio
 
- - Documentado servicio con Swagger 2 (Springfox)
+ - Documentado servicio con OpenAPI
 
  - Capa de base de datos con Spring DATA mongoDB
 
@@ -27,9 +27,9 @@ Proyecto montado con Spring Boot y Java 11, con los siguientes frameworks / libr
 
  - Spring Security activo, con autenticación básica
 
- - Añadidas las developer tools de Spring Boot 2
+ - Añadidas las developer tools de Spring Boot
  
- - Uso de flapdoodle para simular la base de datos en los tests de integración
+ - ~~Uso de flapdoodle para simular la base de datos en los tests de integración~~ (Pendiente meterlo)
 
 
 Requisitos:
