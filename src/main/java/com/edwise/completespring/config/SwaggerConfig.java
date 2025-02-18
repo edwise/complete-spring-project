@@ -17,7 +17,7 @@ public class SwaggerConfig {
     public GroupedOpenApi booksApi() {
         return GroupedOpenApi.builder()
                 .group(BOOKS_API_GROUP)
-                .packagesToScan("com.edwise.completespring.controllers") // Asegúrate de que esta es la ruta correcta de tus controladores
+                .packagesToScan("com.edwise.completespring.controllers")
                 .pathsToMatch("/api/**")
                 .build();
     }
@@ -36,7 +36,6 @@ public class SwaggerConfig {
                               .license(new License()
                                                .name("Apache License Version 2.0")
                                                .url("http://www.apache.org/licenses/LICENSE-2.0.html"))
-                              .version("2.0"))
-                .addServersItem(new io.swagger.v3.oas.models.servers.Server().url("http://localhost:8080"));
+                              .version("2.0"));
     }
 }
